@@ -1,6 +1,7 @@
 # coding:utf-8
 from abc import ABCMeta, abstractmethod
 import traceback
+from contextlib import contextmanager
 
 
 class AbstractFormatter(object):
@@ -137,3 +138,13 @@ class Assert(object):
 
     def __ge__(self, obj):
         assert self.obj >= obj, '{0} < {1}'.format(self.obj, obj)
+
+    @staticmethod
+    @contextmanager
+    def raises(exception):
+        try:
+            yield
+        except exception:
+            pass
+        else:
+            raise AssertionError("didn't raise {0!r}".format(exception))
