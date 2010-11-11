@@ -1,7 +1,7 @@
 # coding:utf-8
-import traceback
-import sys
 from abc import ABCMeta, abstractmethod
+import sys
+import traceback
 
 
 class AbstractFormatter(object):
