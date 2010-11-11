@@ -147,4 +147,5 @@ class Assert(object):
         except exception:
             pass
         else:
-            raise AssertionError("didn't raise {0!r}".format(exception))
+            error = exception.__name__
+            raise AssertionError("didn't raise {0}".format(error))
