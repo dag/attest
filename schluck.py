@@ -1,12 +1,15 @@
 # coding:utf-8
 from abc import ABCMeta, abstractmethod
-import sys
 import traceback
 
 
 class AbstractFormatter(object):
 
     __metaclass__ = ABCMeta
+
+    @abstractmethod
+    def __init__(self, tests):
+        raise NotImplementedError
 
     @abstractmethod
     def success(self, test):
@@ -23,19 +26,20 @@ class AbstractFormatter(object):
 
 class FancyFormatter(AbstractFormatter):
 
-    def __init__(self):
+    def __init__(self, tests):
+        from progressbar import ProgressBar
+        self.counter = 0
+        self.progress = ProgressBar(maxval=len(tests))
+        self.progress.start()
         self.failures = []
 
     def success(self, test):
-        sys.stdout.write('.')
-        sys.stdout.flush()
+        self.counter += 1
+        self.progress.update(self.counter)
 
     def failure(self, test, error, traceback):
-        if isinstance(error, AssertionError):
-            sys.stdout.write('F')
-        else:
-            sys.stdout.write('E')
-        sys.stdout.flush()
+        self.counter += 1
+        self.progress.update(self.counter)
         self.failures.append((test, traceback))
 
     def finished(self):
@@ -45,7 +49,7 @@ class FancyFormatter(AbstractFormatter):
         from pygments.lexers import PythonTracebackLexer
         from pygments.formatters import Terminal256Formatter
 
-        print
+        self.progress.finish()
         for test, trace in self.failures:
             print '—' * 80
             print colorize('bold', '.'.join((test.__module__, test.__name__)))
@@ -54,6 +58,12 @@ class FancyFormatter(AbstractFormatter):
             print '—' * 80
             print highlight(trace, PythonTracebackLexer(),
                             Terminal256Formatter())
+
+        if self.failures:
+            failed = colorize('red', str(len(self.failures)))
+        else:
+            failed = len(self.failures)
+        print 'Failures: {0}/{1}'.format(failed, self.counter)
 
 
 class Tests(object):
@@ -71,7 +81,7 @@ class Tests(object):
     def run(self, formatter=None):
         failed = False
         if formatter is None:
-            formatter = FancyFormatter()
+            formatter = FancyFormatter(self.tests)
         for test in self.tests:
             try:
                 test()
