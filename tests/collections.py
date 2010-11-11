@@ -21,14 +21,14 @@ def context():
 
     col = Tests()
 
+    @col.test
+    def test(calculated):
+        Assert(calculated) == 2
+
     @col.context
     def context():
         calculated = 1 + 1
         yield calculated,
-
-    @col.test
-    def test(calculated):
-        Assert(calculated) == 2
 
     @col.test
     def noctx():

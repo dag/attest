@@ -123,9 +123,7 @@ class Tests(object):
     def context(self, func):
         """Decorate a function as a :func:`~contextlib.contextmanager`
         for running the tests in this collection in. Corresponds to setup
-        and teardown in other testing libraries. Needs to be defined before
-        tests as the :meth:`test` decorator actually rewrites the tests
-        to run in this context and to not take any arguments.
+        and teardown in other testing libraries.
 
         ::
 
