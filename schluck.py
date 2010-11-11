@@ -1,6 +1,7 @@
 # coding:utf-8
 from __future__ import with_statement
 
+import sys
 import traceback
 from functools import wraps
 import inspect
@@ -49,34 +50,38 @@ class AbstractFormatter(object):
         """Called when all tests have run."""
         raise NotImplementedError
 
-class TextFormatter(AbstractFormatter):
-    """A simple text formatter."""
-    width = 80
-    separator = 80 * "="
+
+class PlainFormatter(AbstractFormatter):
+    """Plain text ASCII output for humans."""
 
     def __init__(self, tests):
-        self.counter = 0
+        self.total = len(tests)
         self.failures = []
 
     def success(self, test):
-        self.counter += 1
+        sys.stdout.write('.')
+        sys.stdout.flush()
 
     def failure(self, test, error, traceback):
+        if isinstance(error, AssertionError):
+            sys.stdout.write('F')
+        else:
+            sys.stdout.write('E')
+        sys.stdout.flush()
         self.failures.append((test, traceback))
 
     def finished(self):
-        import inspect
+        print
         for test, trace in self.failures:
-            print self.separator
+            print '-' * 80
             print '.'.join((test.__module__, test.__name__))
             if test.__doc__:
                 print inspect.getdoc(test)
-            print self.separator
+            print '-' * 80
             print trace
             print 
 
-        failed = len(self.failures)
-        print 'Failures: %s/%s' % (failed, self.counter)
+        print 'Failures: %s/%s' % (len(self.failures), self.total)
         
 
 class FancyFormatter(AbstractFormatter):
@@ -200,17 +205,15 @@ class Tests(object):
         """Merge in another test collection."""
         self.tests.extend(tests.tests)
 
-    def run(self, formatter=None):
+    def run(self, formatter=FancyFormatter):
         """Run all tests in this collection.
 
         :param formatter:
-            An object implementing :class:`AbstractFormatter` (not enforced).
-            Defaults to :class:`FancyFormatter`.
+            A class implementing :class:`AbstractFormatter` (not enforced).
 
         """
         failed = False
-        if formatter is None:
-            formatter = FancyFormatter(self.tests)
+        formatter = formatter(self.tests)
         for test in self.tests:
             try:
                 test()

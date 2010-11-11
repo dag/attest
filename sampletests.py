@@ -25,4 +25,9 @@ for x in xrange(17):
         time.sleep(.1)
 
 if __name__ == '__main__':
-    sample.run()
+    import sys
+    if sys.argv[1:] == ['text']:
+        from schluck import PlainFormatter
+        sample.run(PlainFormatter)
+    else:
+        sample.run()
