@@ -17,7 +17,7 @@ class Tests(object):
         return func
 
     def register(self, tests):
-        self.tests.extend(tests)
+        self.tests.extend(tests.tests)
 
     def run(self):
         failures = []
