@@ -220,11 +220,15 @@ class Tests(object):
             except Exception, e:
                 failed = True
                 lines = traceback.format_exc().splitlines()
-                for index, line in enumerate(lines):
-                    if __file__[0:-1] in line:
-                        del lines[index]
-                        del lines[index]
-                formatter.failure(test, e, '\n'.join(lines))
+                clean = lines[0:1]
+                stack = iter(lines[1:-1])  # stack traces are in the middle
+                # loop two lines at a time
+                for first, second in zip(stack, stack):
+                    # only keep if this file is not the source of the trace
+                    if __file__[0:-1] not in first:
+                        clean.extend((first, second))
+                clean.append(lines[-1])
+                formatter.failure(test, e, '\n'.join(clean))
             else:
                 formatter.success(test)
         formatter.finished()
