@@ -79,10 +79,10 @@ class PlainFormatter(AbstractFormatter):
                 print inspect.getdoc(test)
             print '-' * 80
             print trace
-            print 
+            print
 
         print 'Failures: %s/%s' % (len(self.failures), self.total)
-        
+
 
 class FancyFormatter(AbstractFormatter):
     """Heavily uses ANSI escape codes for fancy output to 256-color
