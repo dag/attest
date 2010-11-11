@@ -1,5 +1,5 @@
 Modern, Pythonic unit testing
-=============================
+-----------------------------
 
 .. image:: https://github.com/dag/schluck/raw/master/docs/images/sampletests.png
 
@@ -54,3 +54,5 @@ methods. Using the actual operators help.
         Assert(1 + 1) == 2
 
     math.run()
+
+.. _Flask: http://flask.pocoo.org/
