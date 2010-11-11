@@ -1,6 +1,6 @@
+# coding:utf-8
 import traceback
 import sys
-import inspect
 from abc import ABCMeta, abstractmethod
 
 
@@ -39,16 +39,19 @@ class FancyFormatter(AbstractFormatter):
         self.failures.append((test, traceback))
 
     def finished(self):
+        import inspect
+        from pygments.console import colorize
         from pygments import highlight
         from pygments.lexers import PythonTracebackLexer
         from pygments.formatters import Terminal256Formatter
+
         print
-        for failure, trace in self.failures:
-            print '-' * 80
-            print '.'.join((failure.__module__, failure.__name__))
-            if failure.__doc__:
-                print inspect.getdoc(failure)
-            print '-' * 80
+        for test, trace in self.failures:
+            print '—' * 80
+            print colorize('bold', '.'.join((test.__module__, test.__name__)))
+            if test.__doc__:
+                print inspect.getdoc(test)
+            print '—' * 80
             print highlight(trace, PythonTracebackLexer(),
                             Terminal256Formatter())
 
