@@ -7,12 +7,12 @@ API Reference
    :members: test, context, register, run
 
 .. autoclass:: Assert
-   :members: in_, is_, is_not, not_in
+   :members: in_, not_in, is_, is_not
 
    .. automethod:: raises(exception)
 
 .. autoclass:: AbstractFormatter
-   :members:
+   :members: success, failure, finished
 
 .. autoclass:: FancyFormatter
 
