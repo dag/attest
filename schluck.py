@@ -1,10 +1,56 @@
 import traceback
 import sys
 import inspect
+from abc import ABCMeta, abstractmethod
 
-from pygments import highlight
-from pygments.lexers import PythonTracebackLexer
-from pygments.formatters import Terminal256Formatter
+
+class AbstractFormatter(object):
+
+    __metaclass__ = ABCMeta
+
+    @abstractmethod
+    def success(self, test):
+        raise NotImplementedError
+
+    @abstractmethod
+    def failure(self, test, error, traceback):
+        raise NotImplementedError
+
+    @abstractmethod
+    def finished(self):
+        raise NotImplementedError
+
+
+class FancyFormatter(AbstractFormatter):
+
+    def __init__(self):
+        self.failures = []
+
+    def success(self, test):
+        sys.stdout.write('.')
+        sys.stdout.flush()
+
+    def failure(self, test, error, traceback):
+        if isinstance(error, AssertionError):
+            sys.stdout.write('F')
+        else:
+            sys.stdout.write('E')
+        sys.stdout.flush()
+        self.failures.append((test, traceback))
+
+    def finished(self):
+        from pygments import highlight
+        from pygments.lexers import PythonTracebackLexer
+        from pygments.formatters import Terminal256Formatter
+        print
+        for failure, trace in self.failures:
+            print '-' * 80
+            print '.'.join((failure.__module__, failure.__name__))
+            if failure.__doc__:
+                print inspect.getdoc(failure)
+            print '-' * 80
+            print highlight(trace, PythonTracebackLexer(),
+                            Terminal256Formatter())
 
 
 class Tests(object):
@@ -19,35 +65,25 @@ class Tests(object):
     def register(self, tests):
         self.tests.extend(tests.tests)
 
-    def run(self):
-        failures = []
+    def run(self, formatter=None):
+        failed = False
+        if formatter is None:
+            formatter = FancyFormatter()
         for test in self.tests:
             try:
                 test()
             except Exception as e:
-                if isinstance(e, AssertionError):
-                    sys.stdout.write('F')
-                else:
-                    sys.stdout.write('E')
+                failed = True
                 lines = traceback.format_exc().splitlines()
                 for index, line in enumerate(lines):
                     if __file__[0:-1] in line:
                         del lines[index]
                         del lines[index]
-                failures.append((test, '\n'.join(lines)))
+                formatter.failure(test, e, '\n'.join(lines))
             else:
-                sys.stdout.write('.')
-            sys.stdout.flush()
-        print
-        for failure, trace in failures:
-            print '-' * 80
-            print '.'.join((failure.__module__, failure.__name__))
-            if failure.__doc__:
-                print inspect.getdoc(failure)
-            print '-' * 80
-            print highlight(trace, PythonTracebackLexer(),
-                            Terminal256Formatter())
-        if failures:
+                formatter.success(test)
+        formatter.finished()
+        if failed:
             raise SystemExit(1)
 
 
