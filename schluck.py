@@ -1,7 +1,12 @@
 # coding:utf-8
-from abc import ABCMeta, abstractmethod
 import traceback
 from contextlib import contextmanager
+
+try:
+    from abc import ABCMeta, abstractmethod
+except ImportError:
+    ABCMeta = type
+    abstractmethod = lambda x: x
 
 
 class AbstractFormatter(object):
@@ -64,7 +69,7 @@ class FancyFormatter(AbstractFormatter):
             failed = colorize('red', str(len(self.failures)))
         else:
             failed = len(self.failures)
-        print 'Failures: {0}/{1}'.format(failed, self.counter)
+        print 'Failures: %s/%s' % (failed, self.counter)
 
 
 class Tests(object):
@@ -86,7 +91,7 @@ class Tests(object):
         for test in self.tests:
             try:
                 test()
-            except Exception as e:
+            except Exception, e:
                 failed = True
                 lines = traceback.format_exc().splitlines()
                 for index, line in enumerate(lines):
@@ -107,37 +112,37 @@ class Assert(object):
         self.obj = obj
 
     def __eq__(self, obj):
-        assert self.obj == obj, '{0} != {1}'.format(self.obj, obj)
+        assert self.obj == obj, '%s != %s' % (self.obj, obj)
 
     def __ne__(self, obj):
-        assert self.obj != obj, '{0} == {1}'.format(self.obj, obj)
+        assert self.obj != obj, '%s == %s' % (self.obj, obj)
 
     def is_(self, obj):
-        assert self.obj is obj, '{0} is not {1}'.format(self.obj, obj)
+        assert self.obj is obj, '%s is not %s' % (self.obj, obj)
 
     def is_not(self, obj):
-        assert self.obj is not obj, '{0} is {1}'.format(self.obj, obj)
+        assert self.obj is not obj, '%s is %s' % (self.obj, obj)
 
     def __contains__(self, obj):
-        assert obj in self.obj, '{0} not in {1}'.format(obj, self.obj)
+        assert obj in self.obj, '%s not in %s' % (obj, self.obj)
 
     def in_(self, obj):
-        assert self.obj in obj, '{0} not in {1}'.format(self.obj, obj)
+        assert self.obj in obj, '%s not in %s' % (self.obj, obj)
 
     def not_in(self, obj):
-        assert self.obj not in obj, '{0} in {1}'.format(self.obj, obj)
+        assert self.obj not in obj, '%s in %s' % (self.obj, obj)
 
     def __lt__(self, obj):
-        assert self.obj < obj, '{0} >= {1}'.format(self.obj, obj)
+        assert self.obj < obj, '%s >= %s' % (self.obj, obj)
 
     def __le__(self, obj):
-        assert self.obj <= obj, '{0} > {1}'.format(self.obj, obj)
+        assert self.obj <= obj, '%s > %s' % (self.obj, obj)
 
     def __gt__(self, obj):
-        assert self.obj > obj, '{0} <= {1}'.format(self.obj, obj)
+        assert self.obj > obj, '%s <= %s' % (self.obj, obj)
 
     def __ge__(self, obj):
-        assert self.obj >= obj, '{0} < {1}'.format(self.obj, obj)
+        assert self.obj >= obj, '%s < %s' % (self.obj, obj)
 
     @staticmethod
     @contextmanager
@@ -148,4 +153,4 @@ class Assert(object):
             pass
         else:
             error = exception.__name__
-            raise AssertionError("didn't raise {0}".format(error))
+            raise AssertionError("didn't raise %s" % error)
