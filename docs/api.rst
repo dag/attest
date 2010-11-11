@@ -15,3 +15,5 @@ API Reference
    :members:
 
 .. autoclass:: FancyFormatter
+
+.. autoclass:: PlainFormatter
