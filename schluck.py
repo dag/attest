@@ -49,6 +49,35 @@ class AbstractFormatter(object):
         """Called when all tests have run."""
         raise NotImplementedError
 
+class TextFormatter(AbstractFormatter):
+    """A simple text formatter."""
+    width = 80
+    separator = 80 * "="
+
+    def __init__(self, tests):
+        self.counter = 0
+        self.failures = []
+
+    def success(self, test):
+        self.counter += 1
+
+    def failure(self, test, error, traceback):
+        self.failures.append((test, traceback))
+
+    def finished(self):
+        import inspect
+        for test, trace in self.failures:
+            print self.separator
+            print '.'.join((test.__module__, test.__name__))
+            if test.__doc__:
+                print inspect.getdoc(test)
+            print self.separator
+            print trace
+            print 
+
+        failed = len(self.failures)
+        print 'Failures: %s/%s' % (failed, self.counter)
+        
 
 class FancyFormatter(AbstractFormatter):
     """Heavily uses ANSI escape codes for fancy output to 256-color
