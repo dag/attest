@@ -1,5 +1,9 @@
 # coding:utf-8
+from __future__ import with_statement
+
 import traceback
+from functools import wraps
+import inspect
 from contextlib import contextmanager
 
 try:
@@ -72,7 +76,6 @@ class FancyFormatter(AbstractFormatter):
         self.failures.append((test, traceback))
 
     def finished(self):
-        import inspect
         from pygments.console import colorize
         from pygments import highlight
         from pygments.lexers import PythonTracebackLexer
@@ -100,10 +103,70 @@ class Tests(object):
 
     def __init__(self):
         self.tests = []
+        self._context = None
 
     def test(self, func):
         """Decorate a function as a test belonging to this collection."""
-        self.tests.append(func)
+        @wraps(func)
+        def wrapper():
+            if self._context is None:
+                func()
+            else:
+                with self._context() as context:
+                    if len(inspect.getargspec(func)[0]) != 0:
+                        func(*context)
+                    else:
+                        func()
+        self.tests.append(wrapper)
+        return wrapper
+
+    def context(self, func):
+        """Decorate a function as a :func:`~contextlib.contextmanager`
+        for running the tests in this collection in. Corresponds to setup
+        and teardown in other testing libraries. Needs to be defined before
+        tests as the :meth:`test` decorator actually rewrites the tests
+        to run in this context and to not take any arguments.
+
+        ::
+
+            db = Tests()
+
+            @db.context
+            def connect():
+                con = connect_db()
+                try:
+                    yield con,
+                finally:
+                    con.disconnect()
+
+            @db.test
+            def using_connection(con):
+                Assert(con).is_not(None)
+
+        The above corresponds to::
+
+            db = Tests()
+
+            def connect():
+                con = connect_db()
+                try:
+                    yield con
+                finally:
+                    con.disconnect()
+
+            @db.test
+            def using_connection():
+                with connect() as con:
+                    Assert(con).is_not(None)
+
+        The difference is that this decorator applies the context to all
+        tests defined after it, so it's less repetitive. Note that you need
+        to yield either a tuple or nothing. The tuple is splatted as the
+        arguments to the test function - unless it doesn't take any arguments.
+
+        """
+        func = contextmanager(func)
+        self._context = func
         return func
 
     def register(self, tests):
