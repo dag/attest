@@ -273,6 +273,10 @@ class Assert(object):
     def __init__(self, obj):
         self.obj = obj
 
+    @property
+    def __class__(self):
+        return Assert(self.obj.__class__)
+
     def __eq__(self, obj):
         assert self.obj == obj, '%r != %r' % (self.obj, obj)
 

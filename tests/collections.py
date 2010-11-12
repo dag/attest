@@ -97,4 +97,5 @@ def run():
     Assert(len(result.succeeded)) == 1
 
     result.failed[0].test.is_(fail)
+    result.failed[0].error.__class__.is_(AssertionError)
     result.succeeded[0].is_(succeed)
