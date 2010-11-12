@@ -249,6 +249,14 @@ class Assert(object):
         Assert(1 + 1) == 2
         2 in Assert([1, 2, 3])
 
+    Attributes are proxied to the wrapped object, returning the result
+    wrapped as well::
+
+        hello = Assert('hello')
+        hello == 'hello'
+        hello.upper() == 'HELLO'
+        hello.capitalize() == 'Hello'
+
     """
 
     def __init__(self, obj):
