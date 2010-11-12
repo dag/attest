@@ -38,8 +38,8 @@ def decorator():
     @col.test
     def two(): pass
 
-    Assert(len(col.tests)) == 2
-    Assert(col.tests) == [one, two]
+    Assert(len(col)) == 2
+    Assert(list(col)) == [one, two]
 
 @collections.test
 def context():
@@ -102,7 +102,7 @@ def run():
         Assert(1) == 1
 
     try:
-        result = TestFormatter(col.tests)
+        result = TestFormatter(col)
         col.run(result)
     except SystemExit:
         pass

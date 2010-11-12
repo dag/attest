@@ -149,10 +149,16 @@ class Tests(object):
     """
 
     def __init__(self, tests=()):
-        self.tests = []
+        self._tests = []
         for collection in tests:
             self.register(collection)
         self._context = None
+
+    def __iter__(self):
+        return iter(self._tests)
+
+    def __len__(self):
+        return len(self._tests)
 
     def test(self, func):
         """Decorate a function as a test belonging to this collection."""
@@ -169,7 +175,7 @@ class Tests(object):
                             func(context)
                     else:
                         func()
-        self.tests.append(wrapper)
+        self._tests.append(wrapper)
         return wrapper
 
     def context(self, func):
@@ -226,7 +232,7 @@ class Tests(object):
 
     def register(self, tests):
         """Merge in another test collection."""
-        self.tests.extend(tests.tests)
+        self._tests.extend(tests)
 
     def run(self, formatter=FancyFormatter):
         """Run all tests in this collection.
@@ -237,8 +243,8 @@ class Tests(object):
         """
         failed = False
         if not isinstance(formatter, AbstractFormatter):
-            formatter = formatter(self.tests)
-        for test in self.tests:
+            formatter = formatter(self)
+        for test in self:
             try:
                 test()
             except Exception, e:
