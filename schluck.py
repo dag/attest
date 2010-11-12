@@ -148,7 +148,10 @@ class Tests(object):
             else:
                 with self._context() as context:
                     if len(inspect.getargspec(func)[0]) != 0:
-                        func(*context)
+                        if type(context) is tuple:  # type() is intentional
+                            func(*context)
+                        else:
+                            func(context)
                     else:
                         func()
         self.tests.append(wrapper)
@@ -167,7 +170,7 @@ class Tests(object):
             def connect():
                 con = connect_db()
                 try:
-                    yield con,
+                    yield con
                 finally:
                     con.disconnect()
 
@@ -192,9 +195,14 @@ class Tests(object):
                     Assert(con).is_not(None)
 
         The difference is that this decorator applies the context to all
-        tests defined after it, so it's less repetitive. Note that you need
-        to yield either a tuple or nothing. The tuple is splatted as the
-        arguments to the test function - unless it doesn't take any arguments.
+        tests defined after it, so it's less repetitive.
+
+        Yielding :const:`None` or nothing passes no arguments to the test,
+        yielding a single value other than a tuple passes that value as
+        the sole argument to the test, yielding a tuple splats the tuple
+        as the arguments to the test. If you want to yield a tuple as
+        the sole argument, wrap it in a one-tuple or unsplat the args
+        in the test.
 
         """
         func = contextmanager(func)

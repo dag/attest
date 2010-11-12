@@ -53,7 +53,7 @@ def context():
     @col.context
     def context():
         calculated = 1 + 1
-        yield calculated,
+        yield calculated
 
     @col.test
     def noctx():
@@ -73,6 +73,20 @@ def context():
         pass
 
     test2()
+
+    col3 = Tests()
+
+    @col3.context
+    def multiple():
+        yield 1, 2, 3
+
+    @col3.test
+    def test3(one, two, three):
+        Assert(one) == 1
+        Assert(two) == 2
+        Assert(three) == 3
+
+    test3()
 
 @collections.test
 def run():
