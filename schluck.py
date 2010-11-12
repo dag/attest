@@ -234,6 +234,14 @@ class Tests(object):
         """Merge in another test collection."""
         self._tests.extend(tests)
 
+    def test_suite(self):
+        """Create a :class:`unittest.TestSuite` from this collection."""
+        from unittest import TestSuite, FunctionTestCase
+        suite = TestSuite()
+        for test in self:
+            suite.addTest(FunctionTestCase(test))
+        return suite
+
     def run(self, formatter=FancyFormatter):
         """Run all tests in this collection.
 
@@ -315,7 +323,7 @@ class TestBase(object):
 
 
 class Loader(object):
-    """Run tests with distribute::
+    """Run tests with Schluck via distribute::
 
         setup(
             test_loader='schluck:Loader',
@@ -326,6 +334,13 @@ class Loader(object):
 
         from tests import collection
         collection.run()
+
+    If you want to run the tests as a normal unittest suite,
+    try :meth:`Tests.test_suite` instead::
+
+        setup(
+            test_suite='tests.collection.test_suite'
+        )
 
     """
 
