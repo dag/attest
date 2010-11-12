@@ -11,6 +11,8 @@ API Reference
 
    .. automethod:: raises(exception)
 
+.. autoclass:: Loader
+
 .. autoclass:: AbstractFormatter
    :members: success, failure, finished
 
