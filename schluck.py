@@ -74,7 +74,10 @@ class PlainFormatter(AbstractFormatter):
         print
         print
         for test, trace in self.failures:
-            print '.'.join((test.__module__, test.__name__))
+            if test.__module__ == '__main__':
+                print test.__name__
+            else:
+                print '.'.join((test.__module__, test.__name__))
             if test.__doc__:
                 print inspect.getdoc(test)
             print '-' * 80
@@ -119,7 +122,11 @@ class FancyFormatter(AbstractFormatter):
         self.progress.finish()
         print
         for test, trace in self.failures:
-            print colorize('bold', '.'.join((test.__module__, test.__name__)))
+            if test.__module__ == '__main__':
+                name = test.__name__
+            else:
+                name = '.'.join((test.__module__, test.__name__))
+            print colorize('bold', name)
             if test.__doc__:
                 print inspect.getdoc(test)
             print '—' * 80
