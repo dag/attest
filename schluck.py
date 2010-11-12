@@ -94,9 +94,10 @@ class FancyFormatter(AbstractFormatter):
     """
 
     def __init__(self, tests):
-        from progressbar import ProgressBar
+        from progressbar import ProgressBar, Percentage, Bar, ETA, SimpleProgress
+        widgets = [SimpleProgress(), ' [', ETA(), Bar(), Percentage(), ']']
         self.counter = 0
-        self.progress = ProgressBar(maxval=len(tests))
+        self.progress = ProgressBar(maxval=len(tests), widgets=widgets)
         self.progress.start()
         self.failures = []
 
