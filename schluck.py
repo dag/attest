@@ -141,7 +141,12 @@ class FancyFormatter(AbstractFormatter):
 
 
 class Tests(object):
-    """Collection of test functions."""
+    """Collection of test functions.
+
+    :param tests:
+        Iterable of other :class:`Tests` instances to register with this one.
+
+    """
 
     def __init__(self, tests=()):
         self.tests = []
