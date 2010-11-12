@@ -75,3 +75,11 @@ def proxy():
     hello.upper() == 'HELLO'
     with Assert.raises(AssertionError):
         hello.upper() == 'hello'
+
+@asserts.test
+def boolean():
+    bool(Assert(1))
+    assert Assert(1)
+    with Assert.raises(AssertionError):
+        bool(Assert(0))
+        assert Assert(0)

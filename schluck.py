@@ -257,6 +257,16 @@ class Assert(object):
         hello.upper() == 'HELLO'
         hello.capitalize() == 'Hello'
 
+    Used in boolean context, fails if non-true. These all fail:
+
+        bool(Assert(0))
+        if Assert(0): pass
+        assert Assert(0)
+
+    Identical to, except for the more helpful failure message::
+
+        Assert(bool(0)) == True
+
     """
 
     def __init__(self, obj):
@@ -323,6 +333,10 @@ class Assert(object):
 
     def __ge__(self, obj):
         assert self.obj >= obj, '%r < %r' % (self.obj, obj)
+
+    def __nonzero__(self):
+        assert self.obj, 'not %r' % self.obj
+        return True
 
     @staticmethod
     @contextmanager
