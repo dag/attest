@@ -8,7 +8,7 @@ Collecting tests
 ----------------
 
 .. autoclass:: Tests
-   :members: test, context, register, run
+   :members: test, context, register, test_suite, run
 
 .. autoclass:: TestBase
 
