@@ -277,26 +277,41 @@ def test(meth):
 
 class TestBase(object):
     """Base for test classes. Decorate test methods with :func:`test`. Needs
-    to be registered with a :class:`Tests` collection to be run.
+    to be registered with a :class:`Tests` collection to be run. For setup
+    and teardown, override :meth:`__context__` like a
+    :func:`~contextlib.contextmanager` (without the decorator).
 
     ::
 
         class Math(TestBase):
 
+            def __context__(self):
+                self.two = 1 + 1
+                yield
+                del self.two
+
             @test
             def arithmetics(self):
-                Assert(1 + 1) == 2
+                Assert(self.two) == 2
 
         suite = Tests([Math()])
         suite.run()
 
     """
 
+    def __context__(self):
+        yield
+
     def __iter__(self):
+        ctx = contextmanager(self.__context__)
         for name in dir(self):
             attr = getattr(self, name)
             if getattr(attr, '__test__', False) and callable(attr):
-                yield attr
+                @wraps(attr)
+                def wrapper():
+                    with ctx():
+                        attr()
+                yield wrapper
 
 
 class Loader(object):
