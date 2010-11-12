@@ -143,8 +143,10 @@ class FancyFormatter(AbstractFormatter):
 class Tests(object):
     """Collection of test functions."""
 
-    def __init__(self):
+    def __init__(self, tests=()):
         self.tests = []
+        for collection in tests:
+            self.register(collection)
         self._context = None
 
     def test(self, func):
