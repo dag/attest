@@ -213,7 +213,8 @@ class Tests(object):
 
         """
         failed = False
-        formatter = formatter(self.tests)
+        if not isinstance(formatter, AbstractFormatter):
+            formatter = formatter(self.tests)
         for test in self.tests:
             try:
                 test()

@@ -1,4 +1,29 @@
-from schluck import Tests, Assert
+from schluck import AbstractFormatter, Tests, Assert
+
+
+class Failure(object):
+
+    def __init__(self, test, error, traceback):
+        self.test = Assert(test)
+        self.error = Assert(error)
+        self.traceback = Assert(traceback)
+
+
+class TestFormatter(AbstractFormatter):
+
+    def __init__(self, tests):
+        self.succeeded = []
+        self.failed = []
+
+    def success(self, test):
+        self.succeeded.append(Assert(test))
+
+    def failure(self, test, error, traceback):
+        self.failed.append(Failure(test, error, traceback))
+
+    def finished(self):
+        pass
+
 
 collections = Tests()
 
@@ -48,3 +73,28 @@ def context():
         pass
 
     test2()
+
+@collections.test
+def run():
+
+    col = Tests()
+
+    @col.test
+    def fail():
+        Assert(1) == 2
+
+    @col.test
+    def succeed():
+        Assert(1) == 1
+
+    try:
+        result = TestFormatter(col.tests)
+        col.run(result)
+    except SystemExit:
+        pass
+
+    Assert(len(result.failed)) == 1
+    Assert(len(result.succeeded)) == 1
+
+    result.failed[0].test.is_(fail)
+    result.succeeded[0].is_(succeed)
