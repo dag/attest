@@ -260,6 +260,29 @@ class Tests(object):
             raise SystemExit(1)
 
 
+class Loader(object):
+    """Run tests with distribute::
+
+        setup(
+            test_loader='schluck:Loader',
+            test_suite='tests.collection',
+        )
+
+    Now, ``python setup.py -q test`` is equivalent to::
+
+        from tests import collection
+        collection.run()
+
+    """
+
+    def loadTestsFromNames(self, names, module=None):
+        mod, collection = names[0].rsplit('.', 1)
+        mod = __import__(mod, fromlist=[collection])
+        collection = getattr(mod, collection)
+        collection.run()
+        raise SystemExit
+
+
 class Assert(object):
     """Wrap an object such that boolean operations on it fails with an
     :exc:`AssertionError` if the operation results in :const:`False`,

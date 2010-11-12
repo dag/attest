@@ -18,6 +18,9 @@ setup(
         'pygments',
     ],
 
+    test_loader='schluck:Loader',
+    test_suite='tests.tests',
+
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
