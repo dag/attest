@@ -255,10 +255,10 @@ class Assert(object):
         self.obj = obj
 
     def __eq__(self, obj):
-        assert self.obj == obj, '%s != %s' % (self.obj, obj)
+        assert self.obj == obj, '%r != %r' % (self.obj, obj)
 
     def __ne__(self, obj):
-        assert self.obj != obj, '%s == %s' % (self.obj, obj)
+        assert self.obj != obj, '%r == %r' % (self.obj, obj)
 
     def is_(self, obj):
         """The :keyword:`is` operator is not overridable, for good reasons
@@ -268,7 +268,7 @@ class Assert(object):
             Assert(True).is_(True)
 
         """
-        assert self.obj is obj, '%s is not %s' % (self.obj, obj)
+        assert self.obj is obj, '%r is not %r' % (self.obj, obj)
 
     def is_not(self, obj):
         """The negated form of :meth:`is_`, corresponding to the ``is not``
@@ -277,10 +277,10 @@ class Assert(object):
             Assert([]).is_not([])
 
         """
-        assert self.obj is not obj, '%s is %s' % (self.obj, obj)
+        assert self.obj is not obj, '%r is %r' % (self.obj, obj)
 
     def __contains__(self, obj):
-        assert obj in self.obj, '%s not in %s' % (obj, self.obj)
+        assert obj in self.obj, '%r not in %r' % (obj, self.obj)
 
     def in_(self, obj):
         """Assert membership. While you can use the :keyword:`in` operator,
@@ -293,7 +293,7 @@ class Assert(object):
             Assert(2).in_([1, 2, 3])
 
         """
-        assert self.obj in obj, '%s not in %s' % (self.obj, obj)
+        assert self.obj in obj, '%r not in %r' % (self.obj, obj)
 
     def not_in(self, obj):
         """The negated form of :meth:`in_`, corresponding to the ``not in``
@@ -302,19 +302,19 @@ class Assert(object):
             Assert(0).not_in([1, 2, 3])
 
         """
-        assert self.obj not in obj, '%s in %s' % (self.obj, obj)
+        assert self.obj not in obj, '%r in %r' % (self.obj, obj)
 
     def __lt__(self, obj):
-        assert self.obj < obj, '%s >= %s' % (self.obj, obj)
+        assert self.obj < obj, '%r >= %r' % (self.obj, obj)
 
     def __le__(self, obj):
-        assert self.obj <= obj, '%s > %s' % (self.obj, obj)
+        assert self.obj <= obj, '%r > %r' % (self.obj, obj)
 
     def __gt__(self, obj):
-        assert self.obj > obj, '%s <= %s' % (self.obj, obj)
+        assert self.obj > obj, '%r <= %r' % (self.obj, obj)
 
     def __ge__(self, obj):
-        assert self.obj >= obj, '%s < %s' % (self.obj, obj)
+        assert self.obj >= obj, '%r < %r' % (self.obj, obj)
 
     @staticmethod
     @contextmanager
