@@ -335,3 +335,12 @@ class Assert(object):
         else:
             error = exception.__name__
             raise AssertionError("didn't raise %s" % error)
+
+    def __getattr__(self, name):
+        return Assert(getattr(self.obj, name))
+
+    def __call__(self, *args, **kwargs):
+        return Assert(self.obj(*args, **kwargs))
+
+    def __repr__(self):
+        return 'Assert(%r)' % self.obj

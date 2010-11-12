@@ -67,3 +67,11 @@ def identity():
         Assert(True).is_not(True)
     with Assert.raises(AssertionError):
         Assert([]).is_([])
+
+@asserts.test
+def proxy():
+    hello = Assert('hello')
+    hello == 'hello'
+    hello.upper() == 'HELLO'
+    with Assert.raises(AssertionError):
+        hello.upper() == 'hello'
