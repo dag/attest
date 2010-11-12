@@ -72,8 +72,8 @@ class PlainFormatter(AbstractFormatter):
 
     def finished(self):
         print
+        print
         for test, trace in self.failures:
-            print '-' * 80
             print '.'.join((test.__module__, test.__name__))
             if test.__doc__:
                 print inspect.getdoc(test)
@@ -117,8 +117,8 @@ class FancyFormatter(AbstractFormatter):
         from pygments.formatters import Terminal256Formatter
 
         self.progress.finish()
+        print
         for test, trace in self.failures:
-            print '—' * 80
             print colorize('bold', '.'.join((test.__module__, test.__name__)))
             if test.__doc__:
                 print inspect.getdoc(test)
