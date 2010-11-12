@@ -257,7 +257,7 @@ class Assert(object):
         hello.upper() == 'HELLO'
         hello.capitalize() == 'Hello'
 
-    Used in boolean context, fails if non-true. These all fail:
+    Used in boolean context, fails if non-true. These all fail::
 
         bool(Assert(0))
         if Assert(0): pass
