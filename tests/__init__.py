@@ -4,5 +4,6 @@ from schluck import Tests
 
 from .asserts import asserts
 from .collections import collections
+from .classy import classy
 
-tests = Tests([asserts, collections])
+tests = Tests([asserts, collections, classy])

@@ -6,6 +6,10 @@ API Reference
 .. autoclass:: Tests
    :members: test, context, register, run
 
+.. autoclass:: TestBase
+
+.. autofunction:: test
+
 .. autoclass:: Assert
    :members: in_, not_in, is_, is_not
 

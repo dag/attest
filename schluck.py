@@ -266,6 +266,39 @@ class Tests(object):
             raise SystemExit(1)
 
 
+def test(meth):
+    """Mark a method as a test, if defined in a class inheriting
+    :class:`TestBase`.
+
+    """
+    meth.__test__ = True
+    return meth
+
+
+class TestBase(object):
+    """Base for test classes. Decorate test methods with :func:`test`. Needs
+    to be registered with a :class:`Tests` collection to be run.
+
+    ::
+
+        class Math(TestBase):
+
+            @test
+            def arithmetics(self):
+                Assert(1 + 1) == 2
+
+        suite = Tests([Math()])
+        suite.run()
+
+    """
+
+    def __iter__(self):
+        for name in dir(self):
+            attr = getattr(self, name)
+            if getattr(attr, '__test__', False) and callable(attr):
+                yield attr
+
+
 class Loader(object):
     """Run tests with distribute::
 
