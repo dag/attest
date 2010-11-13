@@ -11,7 +11,7 @@ class Failure(object):
 
 class TestFormatter(AbstractFormatter):
 
-    def __init__(self, tests):
+    def begin(self, tests):
         self.succeeded = []
         self.failed = []
 
@@ -101,7 +101,7 @@ def run():
     def succeed():
         Assert(1) == 1
 
-    result = TestFormatter(col)
+    result = TestFormatter()
     col.run(result)
 
     Assert(len(result.failed)) == 1

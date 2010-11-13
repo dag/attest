@@ -35,7 +35,7 @@ def classbased_test_runs():
     Assert(len(col)) == 1
     Assert(list(col)[0].__name__) == instance.fail.__name__
 
-    result = TestFormatter(col)
+    result = TestFormatter()
     col.run(result)
 
     Assert(len(result.failed)) == 1
@@ -50,10 +50,9 @@ def class_context():
     instance = Contextual()
     col = Tests([instance])
 
-    result = TestFormatter(col)
-    try:
-        col.run(result)
-    except SystemExit:
-        raise AssertionError('Contextual test failed')
+    result = TestFormatter()
+    col.run(result)
 
     Assert(hasattr(instance, 'two')) == False
+    Assert(len(result.failed)) == 0
+    Assert(len(result.succeeded)) == 1

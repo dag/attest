@@ -25,7 +25,8 @@ class AbstractFormatter(object):
     __metaclass__ = ABCMeta
 
     @abstractmethod
-    def __init__(self, tests):
+    def begin(self, tests):
+        """Called with the list of tests when a test run has begun."""
         raise NotImplementedError
 
     @abstractmethod
@@ -54,7 +55,7 @@ class AbstractFormatter(object):
 class PlainFormatter(AbstractFormatter):
     """Plain text ASCII output for humans."""
 
-    def __init__(self, tests):
+    def begin(self, tests):
         self.total = len(tests)
         self.failures = []
 
@@ -99,7 +100,7 @@ class FancyFormatter(AbstractFormatter):
 
     """
 
-    def __init__(self, tests):
+    def begin(self, tests):
         from progressbar import ProgressBar, Percentage, Bar, ETA, SimpleProgress
         widgets = [SimpleProgress(), ' [', ETA(), Bar(), Percentage(), ']']
         self.counter = 0
@@ -256,7 +257,8 @@ class Tests(object):
 
         """
         if not isinstance(formatter, AbstractFormatter):
-            formatter = formatter(self)
+            formatter = formatter()
+        formatter.begin(self._tests)
         for test in self:
             try:
                 assert test() is not False, 'test returned False'

@@ -34,7 +34,7 @@ Formatters
 ----------
 
 .. autoclass:: AbstractFormatter
-   :members: success, failure, finished
+   :members: begin, success, failure, finished
 
 .. autoclass:: FancyFormatter
 
