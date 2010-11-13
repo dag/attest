@@ -394,9 +394,11 @@ class Assert(object):
 
     def __eq__(self, obj):
         assert self.obj == obj, '%r != %r' % (self.obj, obj)
+        return True
 
     def __ne__(self, obj):
         assert self.obj != obj, '%r == %r' % (self.obj, obj)
+        return True
 
     def is_(self, obj):
         """The :keyword:`is` operator is not overridable, for good reasons
@@ -407,6 +409,7 @@ class Assert(object):
 
         """
         assert self.obj is obj, '%r is not %r' % (self.obj, obj)
+        return True
 
     def is_not(self, obj):
         """The negated form of :meth:`is_`, corresponding to the ``is not``
@@ -416,9 +419,11 @@ class Assert(object):
 
         """
         assert self.obj is not obj, '%r is %r' % (self.obj, obj)
+        return True
 
     def __contains__(self, obj):
         assert obj in self.obj, '%r not in %r' % (obj, self.obj)
+        return True
 
     def in_(self, obj):
         """Assert membership. While you can use the :keyword:`in` operator,
@@ -432,6 +437,7 @@ class Assert(object):
 
         """
         assert self.obj in obj, '%r not in %r' % (self.obj, obj)
+        return True
 
     def not_in(self, obj):
         """The negated form of :meth:`in_`, corresponding to the ``not in``
@@ -441,18 +447,23 @@ class Assert(object):
 
         """
         assert self.obj not in obj, '%r in %r' % (self.obj, obj)
+        return True
 
     def __lt__(self, obj):
         assert self.obj < obj, '%r >= %r' % (self.obj, obj)
+        return True
 
     def __le__(self, obj):
         assert self.obj <= obj, '%r > %r' % (self.obj, obj)
+        return True
 
     def __gt__(self, obj):
         assert self.obj > obj, '%r <= %r' % (self.obj, obj)
+        return True
 
     def __ge__(self, obj):
         assert self.obj >= obj, '%r < %r' % (self.obj, obj)
+        return True
 
     def __nonzero__(self):
         assert self.obj, 'not %r' % self.obj
