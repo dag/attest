@@ -320,7 +320,7 @@ class TestBase(object):
             attr = getattr(self, name)
             if getattr(attr, '__test__', False) and callable(attr):
                 @wraps(attr)
-                def wrapper():
+                def wrapper(ctx=ctx, attr=attr):
                     with ctx():
                         attr()
                 yield wrapper
