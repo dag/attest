@@ -216,7 +216,7 @@ class Tests(object):
                     Assert(con).is_not(None)
 
         The difference is that this decorator applies the context to all
-        tests defined after it, so it's less repetitive.
+        tests defined in its collection, so it's less repetitive.
 
         Yielding :const:`None` or nothing passes no arguments to the test,
         yielding a single value other than a tuple passes that value as
