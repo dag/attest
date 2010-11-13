@@ -2,23 +2,23 @@ from setuptools import setup
 
 
 setup(
-    name='Schluck',
+    name='Attest',
     version='0.1dev',
     description='Modern, Pythonic unit testing.',
 
     author='Dag Odenhall',
     author_email='dag.odenhall@gmail.com',
     license='Simplified BSD',
-    url='http://dag.github.com/schluck/',
+    url='http://dag.github.com/attest/',
 
-    py_modules=['schluck'],
+    py_modules=['attest'],
 
     install_requires=[
         'progressbar',
         'pygments',
     ],
 
-    test_loader='schluck:Loader',
+    test_loader='attest:Loader',
     test_suite='tests.tests',
 
     classifiers=[

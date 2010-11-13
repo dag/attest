@@ -1,7 +1,7 @@
 API Reference
 =============
 
-.. module:: schluck
+.. module:: attest
 
 
 Collecting tests

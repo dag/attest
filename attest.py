@@ -323,10 +323,10 @@ class TestBase(object):
 
 
 class Loader(object):
-    """Run tests with Schluck via distribute::
+    """Run tests with Attest via distribute::
 
         setup(
-            test_loader='schluck:Loader',
+            test_loader='attest:Loader',
             test_suite='tests.collection',
         )
 

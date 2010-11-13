@@ -1,4 +1,4 @@
-from schluck import Tests, Assert
+from attest import Tests, Assert
 import time
 
 sample = Tests()
@@ -27,7 +27,7 @@ for x in xrange(17):
 if __name__ == '__main__':
     import sys
     if sys.argv[1:] == ['text']:
-        from schluck import PlainFormatter
+        from attest import PlainFormatter
         sample.run(PlainFormatter)
     else:
         sample.run()

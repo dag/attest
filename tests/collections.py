@@ -1,4 +1,4 @@
-from schluck import AbstractFormatter, Tests, Assert
+from attest import AbstractFormatter, Tests, Assert
 
 
 class Failure(object):

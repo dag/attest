@@ -1,6 +1,6 @@
 from __future__ import with_statement
 
-from schluck import Tests, Assert
+from attest import Tests, Assert
 
 asserts = Tests()
 

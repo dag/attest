@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 
-from schluck import TestBase, test, Assert, Tests
+from attest import TestBase, test, Assert, Tests
 
 from .collections import TestFormatter
 

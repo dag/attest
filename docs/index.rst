@@ -42,7 +42,7 @@ remember all the unittest assertion methods. Using the actual operators help.
 
 ::
 
-    from schluck import Tests, Assert
+    from attest import Tests, Assert
 
     math = Tests()
 

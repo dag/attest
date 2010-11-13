@@ -4,7 +4,7 @@ Modern, Pythonic unit testing
 The Shot
 --------
 
-.. image:: https://github.com/dag/schluck/raw/master/docs/images/sampletests.png
+.. image:: https://github.com/dag/attest/raw/master/docs/images/sampletests.png
 
 
 The Why
@@ -48,7 +48,7 @@ methods. Using the actual operators help.
 
 ::
 
-    from schluck import Tests, Assert
+    from attest import Tests, Assert
 
     math = Tests()
 
