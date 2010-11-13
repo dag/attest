@@ -254,7 +254,7 @@ class Tests(object):
             formatter = formatter(self)
         for test in self:
             try:
-                test()
+                assert test() is not False, 'test returned False'
             except Exception, e:
                 failed = True
                 lines = traceback.format_exc().splitlines()
