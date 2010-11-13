@@ -33,6 +33,11 @@ In my mind, tests are:
 The How
 -------
 
+.. sidebar:: Dictionary
+
+    **attest** */əˈtɛst/*
+        To affirm to be correct, true, or genuine.
+
 The API is inspired by that of `Flask`_, not for bandwagony reasons, but
 because it's a well-fit pattern for the problem of "collections of callables".
 
