@@ -489,6 +489,9 @@ class Assert(object):
             error = exception.__name__
             raise AssertionError("didn't raise %s" % error)
 
+    def __getitem__(self, key):
+        return Assert(self.obj[key])
+
     def __getattr__(self, name):
         return Assert(getattr(self.obj, name))
 
