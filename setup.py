@@ -9,7 +9,7 @@ setup(
     author='Dag Odenhall',
     author_email='dag.odenhall@gmail.com',
     license='Simplified BSD',
-    url='http://dag.github.com/attest/',
+    url='http://packages.python.org/Attest/',
 
     py_modules=['attest'],
 
