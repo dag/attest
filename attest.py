@@ -86,6 +86,9 @@ class PlainFormatter(AbstractFormatter):
 
         print 'Failures: %s/%s' % (len(self.failures), self.total)
 
+        if self.failures:
+            raise SystemExit(1)
+
 
 class FancyFormatter(AbstractFormatter):
     """Heavily uses ANSI escape codes for fancy output to 256-color
@@ -138,6 +141,9 @@ class FancyFormatter(AbstractFormatter):
         else:
             failed = len(self.failures)
         print 'Failures: %s/%s' % (failed, self.counter)
+
+        if self.failures:
+            raise SystemExit(1)
 
 
 class Tests(object):
@@ -249,14 +255,12 @@ class Tests(object):
             A class implementing :class:`AbstractFormatter` (not enforced).
 
         """
-        failed = False
         if not isinstance(formatter, AbstractFormatter):
             formatter = formatter(self)
         for test in self:
             try:
                 assert test() is not False, 'test returned False'
             except Exception, e:
-                failed = True
                 lines = traceback.format_exc().splitlines()
                 clean = lines[0:1]
                 stack = iter(lines[1:-1])  # stack traces are in the middle
@@ -270,8 +274,6 @@ class Tests(object):
             else:
                 formatter.success(test)
         formatter.finished()
-        if failed:
-            raise SystemExit(1)
 
 
 def test(meth):

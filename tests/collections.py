@@ -102,8 +102,7 @@ def run():
         Assert(1) == 1
 
     result = TestFormatter(col)
-    with Assert.raises(SystemExit):
-        col.run(result)
+    col.run(result)
 
     Assert(len(result.failed)) == 1
     Assert(len(result.succeeded)) == 1

@@ -36,8 +36,7 @@ def classbased_test_runs():
     Assert(list(col)[0].__name__) == instance.fail.__name__
 
     result = TestFormatter(col)
-    with Assert.raises(SystemExit):
-        col.run(result)
+    col.run(result)
 
     Assert(len(result.failed)) == 1
     Assert(len(result.succeeded)) == 0
