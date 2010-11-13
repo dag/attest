@@ -28,7 +28,7 @@ classy = Tests()
 
 @classy.test
 def classbased_test_runs():
-    
+
     instance = Classy()
     col = Tests([instance])
 
