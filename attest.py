@@ -258,6 +258,9 @@ class Tests(object):
 
     def register(self, tests):
         """Merge in another test collection."""
+        if inspect.isclass(tests):
+            self._tests.extend(tests())
+            return tests
         self._tests.extend(tests)
 
     def test_suite(self):

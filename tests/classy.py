@@ -60,3 +60,24 @@ def class_context():
     Assert(hasattr(instance, 'two')) == False
     Assert(len(result.failed)) == 0
     Assert(len(result.succeeded)) == 1
+
+@classy.test
+def decorative():
+
+    col = Tests()
+    Assert(len(col)) == 0
+
+    class DecoratedTest(TestBase):
+
+        @test
+        def noop(self):
+            pass
+
+        @test
+        def nothing(self):
+            pass
+
+    DecoratedTest = col.register(DecoratedTest)
+
+    Assert(issubclass(DecoratedTest, TestBase)) == True
+    Assert(len(col)) == 2
