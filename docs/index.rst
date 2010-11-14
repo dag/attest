@@ -61,10 +61,14 @@ remember all the unittest assertion methods. Using the actual operators help.
 .. image:: /images/sampletests.png
 
 
+The Rest
+--------
+
 .. toctree::
    :maxdepth: 2
-   :hidden:
 
+   guide
    api
+   Source code and issue tracking at GitHub <http://github.com/dag/attest/>
 
 .. _Flask: http://flask.pocoo.org/
