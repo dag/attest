@@ -14,6 +14,9 @@ except ImportError:
     abstractmethod = lambda x: x
 
 
+FORMATTERS = {}
+
+
 class AbstractFormatter(object):
     """Optional base for formatters, serves as documentation and improves
     errors for incomplete formatters.
@@ -90,6 +93,8 @@ class PlainFormatter(AbstractFormatter):
         if self.failures:
             raise SystemExit(1)
 
+FORMATTERS['plain'] = PlainFormatter
+
 
 class FancyFormatter(AbstractFormatter):
     """Heavily uses ANSI escape codes for fancy output to 256-color
@@ -149,6 +154,8 @@ class FancyFormatter(AbstractFormatter):
 
         if self.failures:
             raise SystemExit(1)
+
+FORMATTERS['fancy'] = FancyFormatter
 
 
 class Tests(object):

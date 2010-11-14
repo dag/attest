@@ -1,5 +1,8 @@
-from attest import Tests, Assert
 import time
+import optparse
+
+from attest import Tests, Assert, FORMATTERS
+
 
 sample = Tests()
 
@@ -24,10 +27,15 @@ for x in xrange(17):
     def passing():
         time.sleep(.1)
 
-if __name__ == '__main__':
-    import sys
-    from attest import PlainFormatter, FancyFormatter
-    if sys.argv[1:] == ['text']:
-        sample.run(PlainFormatter)
-    else:
-        sample.run(FancyFormatter('trac'))
+
+parser = optparse.OptionParser()
+parser.add_option('-f', '--formatter', metavar='NAME', default='fancy')
+parser.add_option('-s', '--color-scheme', metavar='NAME', default='trac')
+options, args = parser.parse_args()
+
+formatter = FORMATTERS[options.formatter]
+if options.formatter == 'fancy':
+    formatter = formatter(options.color_scheme)
+
+
+sample.run(formatter)
