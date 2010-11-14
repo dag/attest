@@ -142,7 +142,7 @@ class FancyFormatter(AbstractFormatter):
             print colorize('bold', name)
             if test.__doc__:
                 print inspect.getdoc(test)
-            print '—' * 80
+            print '─' * 80
             print highlight(trace, PythonTracebackLexer(),
                             Terminal256Formatter(style=self.style))
 
