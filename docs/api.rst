@@ -25,6 +25,8 @@ Asserting conditions
 
    .. automethod:: raises(exception)
 
+.. autofunction:: assert_
+
 
 Running tests with distribute
 -----------------------------
