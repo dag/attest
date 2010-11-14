@@ -13,6 +13,12 @@ def raises():
         pass
     else:
         raise AssertionError("didn't fail for missing exception")
+    with Assert.raises(ValueError) as error:
+        raise ValueError('invaluable')
+    error.__class__.is_(ValueError)
+    error.args == ('invaluable',)
+    with Assert.raises(AssertionError):
+        error.args == ('valuable',)
 
 @asserts.test
 def equality():

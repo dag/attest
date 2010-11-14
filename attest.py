@@ -402,7 +402,7 @@ class Assert(object):
 
     """
 
-    def __init__(self, obj):
+    def __init__(self, obj=None):
         self.obj = obj
 
     @property
@@ -490,18 +490,21 @@ class Assert(object):
     @contextmanager
     def raises(exception):
         """Context manager that fails if a particular exception is not
-        raised::
+        raised. Yields the caught exception wrapped in :class:`Assert`::
 
-            with Assert.raises(TypeError):
-                max(5)
+            with Assert.raises(IOError) as error:
+                open('/etc/passwd', 'w')
+
+            error.errno == 13
 
         :param exception: An exception class.
 
         """
+        proxy = Assert()
         try:
-            yield
-        except exception:
-            pass
+            yield proxy
+        except exception, error:
+            proxy.obj = error
         else:
             error = exception.__name__
             raise AssertionError("didn't raise %s" % error)
