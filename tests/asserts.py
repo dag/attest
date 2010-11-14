@@ -16,7 +16,7 @@ def raises():
     with Assert.raises(ValueError) as error:
         raise ValueError('invaluable')
     error.__class__.is_(ValueError)
-    error.args == ('invaluable',)
+    error.__str__() == 'invaluable'
     with Assert.raises(AssertionError):
         error.args == ('valuable',)
 
@@ -81,6 +81,8 @@ def proxy():
     hello.upper() == 'HELLO'
     with Assert.raises(AssertionError):
         hello.upper() == 'hello'
+    with Assert.raises(AssertionError):
+        Assert(3).__str__() == '4'
 
 @asserts.test
 def boolean():

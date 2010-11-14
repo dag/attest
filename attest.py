@@ -518,5 +518,8 @@ class Assert(object):
     def __call__(self, *args, **kwargs):
         return Assert(self.obj(*args, **kwargs))
 
+    def __str__(self):
+        return Assert(self.obj.__str__())
+
     def __repr__(self):
         return 'Assert(%r)' % self.obj
