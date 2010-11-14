@@ -31,12 +31,12 @@ def multi():
 
 
 parser = optparse.OptionParser()
-parser.add_option('-f', '--formatter', metavar='NAME', default='fancy')
+parser.add_option('-f', '--formatter', metavar='NAME', default='auto')
 parser.add_option('-s', '--color-scheme', metavar='NAME', default='trac')
 options, args = parser.parse_args()
 
 formatter = FORMATTERS[options.formatter]
-if options.formatter == 'fancy':
+if options.formatter in ('auto', 'fancy'):
     formatter = formatter(options.color_scheme)
 
 

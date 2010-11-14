@@ -108,8 +108,6 @@ class FancyFormatter(AbstractFormatter):
     terminals. Progress of running the tests is indicated by a progressbar
     and failures are shown with syntax highlighted tracebacks.
 
-    This is the default formatter.
-
     """
 
     def __init__(self, style='bw'):
@@ -164,6 +162,25 @@ class FancyFormatter(AbstractFormatter):
             raise SystemExit(1)
 
 FORMATTERS['fancy'] = FancyFormatter
+
+
+def auto_formatter(style=None):
+    """Select a formatter based on the target output.
+
+    This is the default formatter.
+
+    :param style: Passed to :class:`FancyFormatter` if it is used.
+    :rtype: :class:`FancyFormatter` if output is a terminal otherwise
+         a :class:`PlainFormatter`.
+
+    """
+    if sys.stdout.isatty():
+        if style is None:
+            return FancyFormatter()
+        return FancyFormatter(style)
+    return PlainFormatter()
+
+FORMATTERS['auto'] = auto_formatter
 
 
 class Tests(object):
@@ -271,11 +288,12 @@ class Tests(object):
             suite.addTest(FunctionTestCase(test))
         return suite
 
-    def run(self, formatter=FancyFormatter):
+    def run(self, formatter=auto_formatter):
         """Run all tests in this collection.
 
         :param formatter:
-            A class implementing :class:`AbstractFormatter` (not enforced).
+            An instance of :class:`AbstractFormatter` or a callable
+            returning something implementing that API (not enforced).
 
         """
         if not isinstance(formatter, AbstractFormatter):

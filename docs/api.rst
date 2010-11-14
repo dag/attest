@@ -39,3 +39,5 @@ Formatters
 .. autoclass:: FancyFormatter
 
 .. autoclass:: PlainFormatter
+
+.. autofunction:: auto_formatter
