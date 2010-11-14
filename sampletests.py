@@ -1,4 +1,7 @@
+from __future__ import division
+
 import time
+import random
 import optparse
 
 from attest import Tests, Assert, FORMATTERS
@@ -7,25 +10,24 @@ from attest import Tests, Assert, FORMATTERS
 sample = Tests()
 
 @sample.test
-def arithmetics():
-    """Test that basic arithmetics don't make sense."""
-    time.sleep(.1)
-    Assert(1 + 1) == 3
-
-@sample.test
 def compare():
-    time.sleep(.1)
     Assert(5) < 10
 
 @sample.test
 def contains():
-    time.sleep(.1)
     5 in Assert([1, 2, 3])
 
 for x in xrange(17):
     @sample.test
     def passing():
-        time.sleep(.1)
+        time.sleep(random.randint(1, 3) / 10)
+
+@sample.test
+def multi():
+    """Multiple assertions on the same object."""
+    hello = Assert('hello')
+    hello.upper() == 'HELLO'
+    hello.capitalize() == 'hello'
 
 
 parser = optparse.OptionParser()
