@@ -100,6 +100,9 @@ class FancyFormatter(AbstractFormatter):
 
     """
 
+    def __init__(self, style='bw'):
+        self.style = style
+
     def begin(self, tests):
         from progressbar import ProgressBar, Percentage, \
                                 Bar, ETA, SimpleProgress
@@ -136,7 +139,7 @@ class FancyFormatter(AbstractFormatter):
                 print inspect.getdoc(test)
             print '—' * 80
             print highlight(trace, PythonTracebackLexer(),
-                            Terminal256Formatter())
+                            Terminal256Formatter(style=self.style))
 
         if self.failures:
             failed = colorize('red', str(len(self.failures)))

@@ -26,8 +26,8 @@ for x in xrange(17):
 
 if __name__ == '__main__':
     import sys
+    from attest import PlainFormatter, FancyFormatter
     if sys.argv[1:] == ['text']:
-        from attest import PlainFormatter
         sample.run(PlainFormatter)
     else:
-        sample.run()
+        sample.run(FancyFormatter('trac'))
