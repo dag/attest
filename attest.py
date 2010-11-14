@@ -280,12 +280,16 @@ class Tests(object):
 
 
 def test(meth):
-    """Mark a method as a test, if defined in a class inheriting
-    :class:`TestBase`.
+    """Mark a :class:`TestBase` method as a test and wrap it to run in the
+    :meth:`TestBase.__context__` of the subclass.
 
     """
-    meth.__test__ = True
-    return meth
+    @wraps(meth)
+    def wrapper(self):
+        with self.__context__():
+            meth(self)
+    wrapper.__test__ = True
+    return wrapper
 
 
 class TestBase(object):
@@ -316,15 +320,13 @@ class TestBase(object):
         yield
 
     def __iter__(self):
-        ctx = contextmanager(self.__context__)
+        if not getattr(self, '_context_initiated', False):
+            self.__context__ = contextmanager(self.__context__)
+            self._context_initiated = True
         for name in dir(self):
             attr = getattr(self, name)
             if getattr(attr, '__test__', False) and callable(attr):
-                @wraps(attr)
-                def wrapper(ctx=ctx, attr=attr):
-                    with ctx():
-                        attr()
-                yield wrapper
+                yield attr
 
 
 class Loader(object):

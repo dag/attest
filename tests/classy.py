@@ -37,7 +37,7 @@ def classbased_test_runs():
     col = Tests([instance])
 
     Assert(len(col)) == 2
-    Assert(list(col)[0].__name__) == instance.fail.__name__
+    Assert(list(col)[0]) == instance.fail
 
     result = TestFormatter()
     col.run(result)
@@ -45,7 +45,7 @@ def classbased_test_runs():
     Assert(len(result.succeeded)) == 1
     Assert(len(result.failed)) == 1
 
-    result.failed[0].test.__name__ == instance.fail.__name__
+    result.failed[0].test == instance.fail
     result.failed[0].error.__class__.is_(AssertionError)
 
 @classy.test
