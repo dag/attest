@@ -1,6 +1,7 @@
 # coding:utf-8
 from __future__ import with_statement
 
+import threading
 import sys
 import traceback
 from functools import wraps
@@ -15,6 +16,10 @@ except ImportError:
 
 
 FORMATTERS = {}
+
+
+statistics = threading.local()
+statistics.assertions = 0
 
 
 class AbstractFormatter(object):
@@ -88,7 +93,9 @@ class PlainFormatter(AbstractFormatter):
             print trace
             print
 
-        print 'Failures: %s/%s' % (len(self.failures), self.total)
+        print 'Failures: %s/%s (%s assertions)' % (len(self.failures),
+                                                   self.total,
+                                                   statistics.assertions)
 
         if self.failures:
             raise SystemExit(1)
@@ -150,7 +157,8 @@ class FancyFormatter(AbstractFormatter):
             failed = colorize('red', str(len(self.failures)))
         else:
             failed = len(self.failures)
-        print 'Failures: %s/%s' % (failed, self.counter)
+        print 'Failures: %s/%s (%s assertions)' % (failed, self.counter,
+                                                   statistics.assertions)
 
         if self.failures:
             raise SystemExit(1)
@@ -369,6 +377,13 @@ class Loader(object):
         raise SystemExit
 
 
+def assert_(expr, msg=None):
+    """Like :keyword:`assert`, but counts the assertion."""
+    statistics.assertions += 1
+    assert expr, msg
+    return expr
+
+
 class Assert(object):
     """Wrap an object such that boolean operations on it fails with an
     :exc:`AssertionError` if the operation results in :const:`False`,
@@ -410,12 +425,10 @@ class Assert(object):
         return Assert(self.obj.__class__)
 
     def __eq__(self, obj):
-        assert self.obj == obj, '%r != %r' % (self.obj, obj)
-        return True
+        return assert_(self.obj == obj, '%r != %r' % (self.obj, obj))
 
     def __ne__(self, obj):
-        assert self.obj != obj, '%r == %r' % (self.obj, obj)
-        return True
+        return assert_(self.obj != obj, '%r == %r' % (self.obj, obj))
 
     def is_(self, obj):
         """The :keyword:`is` operator is not overridable, for good reasons
@@ -425,8 +438,7 @@ class Assert(object):
             Assert(True).is_(True)
 
         """
-        assert self.obj is obj, '%r is not %r' % (self.obj, obj)
-        return True
+        return assert_(self.obj is obj, '%r is not %r' % (self.obj, obj))
 
     def is_not(self, obj):
         """The negated form of :meth:`is_`, corresponding to the ``is not``
@@ -435,12 +447,10 @@ class Assert(object):
             Assert([]).is_not([])
 
         """
-        assert self.obj is not obj, '%r is %r' % (self.obj, obj)
-        return True
+        return assert_(self.obj is not obj, '%r is %r' % (self.obj, obj))
 
     def __contains__(self, obj):
-        assert obj in self.obj, '%r not in %r' % (obj, self.obj)
-        return True
+        return assert_(obj in self.obj, '%r not in %r' % (obj, self.obj))
 
     def in_(self, obj):
         """Assert membership. While you can use the :keyword:`in` operator,
@@ -453,8 +463,7 @@ class Assert(object):
             Assert(2).in_([1, 2, 3])
 
         """
-        assert self.obj in obj, '%r not in %r' % (self.obj, obj)
-        return True
+        return assert_(self.obj in obj, '%r not in %r' % (self.obj, obj))
 
     def not_in(self, obj):
         """The negated form of :meth:`in_`, corresponding to the ``not in``
@@ -463,28 +472,22 @@ class Assert(object):
             Assert(0).not_in([1, 2, 3])
 
         """
-        assert self.obj not in obj, '%r in %r' % (self.obj, obj)
-        return True
+        return assert_(self.obj not in obj, '%r in %r' % (self.obj, obj))
 
     def __lt__(self, obj):
-        assert self.obj < obj, '%r >= %r' % (self.obj, obj)
-        return True
+        return assert_(self.obj < obj, '%r >= %r' % (self.obj, obj))
 
     def __le__(self, obj):
-        assert self.obj <= obj, '%r > %r' % (self.obj, obj)
-        return True
+        return assert_(self.obj <= obj, '%r > %r' % (self.obj, obj))
 
     def __gt__(self, obj):
-        assert self.obj > obj, '%r <= %r' % (self.obj, obj)
-        return True
+        return assert_(self.obj > obj, '%r <= %r' % (self.obj, obj))
 
     def __ge__(self, obj):
-        assert self.obj >= obj, '%r < %r' % (self.obj, obj)
-        return True
+        return assert_(self.obj >= obj, '%r < %r' % (self.obj, obj))
 
     def __nonzero__(self):
-        assert self.obj, 'not %r' % self.obj
-        return True
+        return assert_(self.obj, 'not %r' % self.obj)
 
     @staticmethod
     @contextmanager
@@ -500,6 +503,7 @@ class Assert(object):
         :param exception: An exception class.
 
         """
+        statistics.assertions += 1
         proxy = Assert()
         try:
             yield proxy
