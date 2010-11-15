@@ -101,10 +101,15 @@ def run():
     def succeed():
         Assert(1) == 1
 
-    result = TestFormatter()
-    col.run(result)
+    @col.test
+    def exit():
+        raise SystemExit
 
-    Assert(len(result.failed)) == 1
+    result = TestFormatter()
+    with Assert.not_raising(SystemExit):
+        col.run(result)
+
+    Assert(len(result.failed)) == 2
     Assert(len(result.succeeded)) == 1
 
     result.failed[0].test.is_(fail)
