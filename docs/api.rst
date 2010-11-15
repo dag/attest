@@ -25,6 +25,8 @@ Asserting conditions
 
    .. automethod:: raises(exception)
 
+   .. automethod:: not_raising(exception)
+
 .. autofunction:: assert_
 
 

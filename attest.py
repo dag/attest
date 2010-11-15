@@ -555,6 +555,28 @@ class Assert(object):
             error = exception.__name__
             raise AssertionError("didn't raise %s" % error)
 
+    @staticmethod
+    @contextmanager
+    def not_raising(exception):
+        """Context manager that fails if a particular exception is raised.
+        A raised exception consitutes a failure in itself but this can be
+        used for exceptions such as :exc:`SystemExit` and for improving
+        the failure report.
+
+        ::
+
+            with Assert.not_raising(IOError):
+                open('/etc/passwd', 'r')
+
+        :param exception: An exception class.
+
+        """
+        statistics.assertions += 1
+        try:
+            yield
+        except exception:
+            raise AssertionError('raised %s' % exception.__name__)
+
     def __getitem__(self, key):
         return Assert(self.obj[key])
 

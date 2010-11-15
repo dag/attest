@@ -21,6 +21,17 @@ def raises():
         error.args == ('valuable',)
 
 @asserts.test
+def not_raising():
+    with Assert.raises(AssertionError):
+        with Assert.not_raising(RuntimeError):
+            raise RuntimeError
+    try:
+        with Assert.not_raising(RuntimeError):
+            pass
+    except Exception:
+        raise AssertionError('failed despite not raising RuntimeError')
+
+@asserts.test
 def equality():
     Assert(1) == 1
     Assert(1) != 0
