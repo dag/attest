@@ -323,7 +323,9 @@ class Tests(object):
         for test in self:
             try:
                 assert test() is not False, 'test returned False'
-            except Exception, e:
+            except BaseException, e:
+                if isinstance(e, KeyboardInterrupt):
+                    break
                 lines = traceback.format_exc().splitlines()
                 clean = lines[0:1]
                 stack = iter(lines[1:-1])  # stack traces are in the middle
