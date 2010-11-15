@@ -45,3 +45,5 @@ Formatters
 .. autoclass:: PlainFormatter
 
 .. autofunction:: auto_formatter
+
+.. autofunction:: get_formatter_by_name

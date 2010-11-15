@@ -183,6 +183,27 @@ def auto_formatter(style=None):
 FORMATTERS['auto'] = auto_formatter
 
 
+def get_formatter_by_name(name, default='auto'):
+    """Get an :class:`AbstractFormatter` by name, falling back on a default.
+
+    Available formatters:
+
+    * ``'fancy'`` — :class:`FancyFormatter`
+    * ``'plain'`` — :class:`PlainFormatter`
+    * ``'auto'`` — :func:`auto_formatter`
+
+    :param name: One of the above strings.
+    :param default:
+        The fallback formatter if no formatter has the supplied name,
+        defaulting to ``'auto'``.
+    :raises KeyError:
+        If neither the name or the default is a valid name of a formatter.
+    :rtype: Callable returning an instance of an :class:`AbstractFormatter`.
+
+    """
+    return FORMATTERS.get(name, FORMATTERS[default])
+
+
 class Tests(object):
     """Collection of test functions.
 
