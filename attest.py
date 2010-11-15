@@ -561,9 +561,8 @@ class Assert(object):
     @contextmanager
     def not_raising(exception):
         """Context manager that fails if a particular exception is raised.
-        A raised exception consitutes a failure in itself but this can be
-        used for exceptions such as :exc:`SystemExit` and for improving
-        the failure report.
+        A raised exception consitutes a failure anyway and this is mainly
+        used for testing Attest itself.
 
         ::
 
