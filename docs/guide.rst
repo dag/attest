@@ -1,6 +1,8 @@
 How to attest to the correctness of an application
 ==================================================
 
+.. module:: attest
+
 .. sidebar:: Directory structure
 
     * runtests.py
@@ -68,5 +70,88 @@ there is support for the use of tests wrapped in a class. These however are
 quite unlike the test classes of the unittest library — rather than modelling
 a Java package they, too, closely follow conventional Python idioms.
 
-
 .. _Flask: http://flask.pocoo.org/
+
+
+Functional style
+----------------
+
+In functional style, we make an instance of :class:`Tests` and add
+tests to it with a decorator method on the instance.
+
+.. centered:: tests/math.py
+
+::
+
+    from attest import Tests
+
+    math = Tests()
+
+    @math.test
+    def arithmetics():
+        assert 1 + 1 == 2
+
+Optionally, we add this at the end to be able to run this collection
+alone::
+
+    if __name__ == '__main__':
+        math.run()
+
+.. code-block:: text
+
+    $ python tests/math.py
+    1 of 1 [Time: 00:00:00|###################################################|100%]
+
+    Failures: 0/1 (0 assertions)
+
+Wait a minute, zero assertions? It's because we're using :keyword:`assert`
+which attest can't detect. To have the assertion counted you can use
+:func:`assert_` instead::
+
+    assert_(1 + 1 == 2)
+
+.. code-block:: text
+
+    Failures: 0/1 (1 assertions)
+
+That's better, but what happens on failure?
+
+::
+
+    value = 1 + 1
+    assert_(value == 3)
+
+.. code-block:: pytb
+
+    arithmetics
+    ────────────────────────────────────────────────────────────────────────────────
+    Traceback (most recent call last):
+      File "math.py", line 8, in arithmetics
+        assert_(value == 3)
+    AssertionError
+
+The value of the variable is hidden from us making it harder to debug
+failed tests, that's no good! :class:`Assert` to the rescue - by
+wrapping the value we can have better failure reports using operator
+overloading::
+
+    value = Assert(1 + 1)
+    assert value == 3
+
+.. code-block:: pytb
+
+    arithmetics
+    ────────────────────────────────────────────────────────────────────────────────
+    Traceback (most recent call last):
+      File "math.py", line 8, in arithmetics
+        assert value == 3
+    AssertionError: 2 != 3
+
+That's more like it!
+
+.. note::
+
+    It's not necessary to use :keyword:`assert` with :class:`Assert` but it
+    can help readability and avoids some mistakes that would otherwise make
+    tests pass silently, for example if an object unexpectedly is not wrapped
+    in :class:`Assert`.
