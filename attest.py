@@ -348,7 +348,7 @@ def test(meth):
     """
     @wraps(meth)
     def wrapper(self):
-        with self.__context__():
+        with contextmanager(self.__context__)():
             meth(self)
     wrapper.__test__ = True
     return wrapper
@@ -382,9 +382,6 @@ class TestBase(object):
         yield
 
     def __iter__(self):
-        if not getattr(self, '_context_initiated', False):
-            self.__context__ = contextmanager(self.__context__)
-            self._context_initiated = True
         for name in dir(self):
             attr = getattr(self, name)
             if getattr(attr, '__test__', False) and callable(attr):
