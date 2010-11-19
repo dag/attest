@@ -466,12 +466,6 @@ class Assert(object):
 
     @property
     def __class__(self):
-        """The class of the wrapped object, also wrapped in
-        :class:`Assert`. Can be used for type testing::
-
-            Assert('Hello World').__class__.is_(str)
-
-        """
         return Assert(self.obj.__class__)
 
     def __str__(self):
@@ -488,7 +482,7 @@ class Assert(object):
     def __getattr__(self, name):
         """Proxy all attributes to the wrapped object, wrapping the
         result.
-        
+
         """
         return Assert(getattr(self.obj, name))
 
