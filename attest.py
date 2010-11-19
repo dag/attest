@@ -458,17 +458,67 @@ class Assert(object):
 
     """
 
+    #: The wrapped object
+    obj = None
+
     def __init__(self, obj=None):
         self.obj = obj
 
     @property
     def __class__(self):
+        """The class of the wrapped object, also wrapped in
+        :class:`Assert`. Can be used for type testing::
+
+            Assert('Hello World').__class__.is_(str)
+
+        """
         return Assert(self.obj.__class__)
 
+    def __str__(self):
+        """Wrapped proxy to the wrapped object's *__str__*, can be used for
+        testing the string adaption of the object::
+
+            Assert(1).__str__() == '1'
+
+        .. warning:: :func:`str` on :class:`Assert` objects does not work.
+
+        """
+        return Assert(self.obj.__str__())
+
+    def __getattr__(self, name):
+        """Proxy all attributes to the wrapped object, wrapping the
+        result.
+        
+        """
+        return Assert(getattr(self.obj, name))
+
+    def __call__(self, *args, **kwargs):
+        """Allow calling of wrapped callables, wrapping the return value.
+        Useful for testing methods on a wrapped object via attribute
+        proxying::
+
+            Assert('Hello').upper() == 'HELLO'
+
+        """
+        return Assert(self.obj(*args, **kwargs))
+
+    def __getitem__(self, key):
+        """Access an item on the wrapped object and return the result
+        wrapped as well.
+
+        ::
+
+            Assert([1, 2, 3])[1] == 2
+
+        """
+        return Assert(self.obj[key])
+
     def __eq__(self, obj):
+        """Test for equality with ``==``."""
         return assert_(self.obj == obj, '%r != %r' % (self.obj, obj))
 
     def __ne__(self, obj):
+        """Test for inequality with ``!=``."""
         return assert_(self.obj != obj, '%r == %r' % (self.obj, obj))
 
     def is_(self, obj):
@@ -491,6 +541,7 @@ class Assert(object):
         return assert_(self.obj is not obj, '%r is %r' % (self.obj, obj))
 
     def __contains__(self, obj):
+        """Test for membership with :keyword:`in`."""
         return assert_(obj in self.obj, '%r not in %r' % (obj, self.obj))
 
     def in_(self, obj):
@@ -516,18 +567,23 @@ class Assert(object):
         return assert_(self.obj not in obj, '%r in %r' % (self.obj, obj))
 
     def __lt__(self, obj):
+        """Test for lesserness with ``<``."""
         return assert_(self.obj < obj, '%r >= %r' % (self.obj, obj))
 
     def __le__(self, obj):
+        """Test for lesserness or equality with ``<=``."""
         return assert_(self.obj <= obj, '%r > %r' % (self.obj, obj))
 
     def __gt__(self, obj):
+        """Test for greaterness with ``>``."""
         return assert_(self.obj > obj, '%r <= %r' % (self.obj, obj))
 
     def __ge__(self, obj):
+        """Test for greaterness or equality with ``>=``."""
         return assert_(self.obj >= obj, '%r < %r' % (self.obj, obj))
 
     def __nonzero__(self):
+        """Test for truthiness in boolean context."""
         return assert_(self.obj, 'not %r' % self.obj)
 
     @staticmethod
@@ -575,17 +631,11 @@ class Assert(object):
         except exception:
             raise AssertionError('raised %s' % exception.__name__)
 
-    def __getitem__(self, key):
-        return Assert(self.obj[key])
-
-    def __getattr__(self, name):
-        return Assert(getattr(self.obj, name))
-
-    def __call__(self, *args, **kwargs):
-        return Assert(self.obj(*args, **kwargs))
-
-    def __str__(self):
-        return Assert(self.obj.__str__())
-
     def __repr__(self):
+        """Not proxied to the wrapped object. To test that do something
+        like::
+
+            Assert(repr(obj)) == 'expectation'
+
+        """
         return 'Assert(%r)' % self.obj
