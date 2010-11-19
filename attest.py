@@ -183,6 +183,42 @@ def auto_formatter(style=None):
 FORMATTERS['auto'] = auto_formatter
 
 
+class XmlFormatter(AbstractFormatter):
+    """Report the result of a testrun in an XML format. Not compatible with
+    JUnit or XUnit.
+
+    """
+
+    def __init__(self):
+        self.escape = __import__('cgi').escape
+
+    def begin(self, tests):
+        print '<?xml version="1.0" encoding="UTF-8"?>'
+        print '<testreport tests="%d">' % len(tests)
+
+    def success(self, test):
+        name = '.'.join((test.__module__, test.__name__))
+        print '  <pass name="%s"/>' % name
+
+    def failure(self, test, error, traceback):
+        name = '.'.join((test.__module__, test.__name__))
+        if isinstance(error, AssertionError):
+            tag = 'fail'
+        else:
+            tag = 'error'
+        print '  <%s name="%s" type="%s">' % (tag, name,
+                                              error.__class__.__name__)
+        print self.escape('\n'.join(' ' * 4 + line
+                                    for line in
+                                    traceback.splitlines()), quote=True)
+        print '  </%s>' % tag
+
+    def finished(self):
+        print '</testreport>'
+
+FORMATTERS['xml'] = XmlFormatter
+
+
 def get_formatter_by_name(name, default='auto'):
     """Get an :class:`AbstractFormatter` by name, falling back on a default.
 
@@ -190,6 +226,7 @@ def get_formatter_by_name(name, default='auto'):
 
     * ``'fancy'`` — :class:`FancyFormatter`
     * ``'plain'`` — :class:`PlainFormatter`
+    * ``'xml'`` — :class:`XmlFormatter`
     * ``'auto'`` — :func:`auto_formatter`
 
     :param name: One of the above strings.
