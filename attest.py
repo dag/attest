@@ -170,8 +170,9 @@ def auto_reporter(style=None):
     This is the default reporter.
 
     :param style: Passed to :class:`FancyReporter` if it is used.
-    :rtype: :class:`FancyReporter` if output is a terminal otherwise
-         a :class:`PlainReporter`.
+    :rtype:
+        :class:`FancyReporter` if output is a terminal otherwise a
+        :class:`PlainReporter`.
 
     """
     if sys.stdout.isatty():
