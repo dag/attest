@@ -48,7 +48,7 @@ Asserting conditions
 
             Assert('Hello World').__class__.is_(str)
 
-   .. automethod:: raises(exception)
+   .. automethod:: raises(exceptions)
 
    .. automethod:: not_raising(exception)
 
