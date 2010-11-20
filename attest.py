@@ -245,7 +245,7 @@ class Tests(object):
     """Collection of test functions.
 
     :param tests:
-        Iterable of other :class:`Tests` instances to register with this one.
+        Iterable of other test collections to register with this one.
 
     """
 
