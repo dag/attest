@@ -1,4 +1,4 @@
-from attest import AbstractFormatter, Tests, Assert
+from attest import AbstractReporter, Tests, Assert
 
 
 class Failure(object):
@@ -9,7 +9,7 @@ class Failure(object):
         self.traceback = Assert(traceback)
 
 
-class TestFormatter(AbstractFormatter):
+class TestReporter(AbstractReporter):
 
     def begin(self, tests):
         self.succeeded = []
@@ -105,7 +105,7 @@ def run():
     def exit():
         raise SystemExit
 
-    result = TestFormatter()
+    result = TestReporter()
     with Assert.not_raising(SystemExit):
         col.run(result)
 

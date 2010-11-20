@@ -15,16 +15,16 @@ except ImportError:
     abstractmethod = lambda x: x
 
 
-FORMATTERS = {}
+REPORTERS = {}
 
 
 statistics = threading.local()
 statistics.assertions = 0
 
 
-class AbstractFormatter(object):
-    """Optional base for formatters, serves as documentation and improves
-    errors for incomplete formatters.
+class AbstractReporter(object):
+    """Optional base for reporters, serves as documentation and improves
+    errors for incomplete reporters.
 
     :param tests: The list of test functions we will be running.
 
@@ -60,7 +60,7 @@ class AbstractFormatter(object):
         raise NotImplementedError
 
 
-class PlainFormatter(AbstractFormatter):
+class PlainReporter(AbstractReporter):
     """Plain text ASCII output for humans."""
 
     def begin(self, tests):
@@ -100,10 +100,10 @@ class PlainFormatter(AbstractFormatter):
         if self.failures:
             raise SystemExit(1)
 
-FORMATTERS['plain'] = PlainFormatter
+REPORTERS['plain'] = PlainReporter
 
 
-class FancyFormatter(AbstractFormatter):
+class FancyReporter(AbstractReporter):
     """Heavily uses ANSI escape codes for fancy output to 256-color
     terminals. Progress of running the tests is indicated by a progressbar
     and failures are shown with syntax highlighted tracebacks.
@@ -161,29 +161,29 @@ class FancyFormatter(AbstractFormatter):
         if self.failures:
             raise SystemExit(1)
 
-FORMATTERS['fancy'] = FancyFormatter
+REPORTERS['fancy'] = FancyReporter
 
 
-def auto_formatter(style=None):
-    """Select a formatter based on the target output.
+def auto_reporter(style=None):
+    """Select a reporter based on the target output.
 
-    This is the default formatter.
+    This is the default reporter.
 
-    :param style: Passed to :class:`FancyFormatter` if it is used.
-    :rtype: :class:`FancyFormatter` if output is a terminal otherwise
-         a :class:`PlainFormatter`.
+    :param style: Passed to :class:`FancyReporter` if it is used.
+    :rtype: :class:`FancyReporter` if output is a terminal otherwise
+         a :class:`PlainReporter`.
 
     """
     if sys.stdout.isatty():
         if style is None:
-            return FancyFormatter()
-        return FancyFormatter(style)
-    return PlainFormatter()
+            return FancyReporter()
+        return FancyReporter(style)
+    return PlainReporter()
 
-FORMATTERS['auto'] = auto_formatter
+REPORTERS['auto'] = auto_reporter
 
 
-class XmlFormatter(AbstractFormatter):
+class XmlReporter(AbstractReporter):
     """Report the result of a testrun in an XML format. Not compatible with
     JUnit or XUnit.
 
@@ -216,29 +216,29 @@ class XmlFormatter(AbstractFormatter):
     def finished(self):
         print '</testreport>'
 
-FORMATTERS['xml'] = XmlFormatter
+REPORTERS['xml'] = XmlReporter
 
 
-def get_formatter_by_name(name, default='auto'):
-    """Get an :class:`AbstractFormatter` by name, falling back on a default.
+def get_reporter_by_name(name, default='auto'):
+    """Get an :class:`AbstractReporter` by name, falling back on a default.
 
-    Available formatters:
+    Available reporters:
 
-    * ``'fancy'`` — :class:`FancyFormatter`
-    * ``'plain'`` — :class:`PlainFormatter`
-    * ``'xml'`` — :class:`XmlFormatter`
-    * ``'auto'`` — :func:`auto_formatter`
+    * ``'fancy'`` — :class:`FancyReporter`
+    * ``'plain'`` — :class:`PlainReporter`
+    * ``'xml'`` — :class:`XmlReporter`
+    * ``'auto'`` — :func:`auto_reporter`
 
     :param name: One of the above strings.
     :param default:
-        The fallback formatter if no formatter has the supplied name,
+        The fallback reporter if no reporter has the supplied name,
         defaulting to ``'auto'``.
     :raises KeyError:
-        If neither the name or the default is a valid name of a formatter.
-    :rtype: Callable returning an instance of an :class:`AbstractFormatter`.
+        If neither the name or the default is a valid name of a reporter.
+    :rtype: Callable returning an instance of an :class:`AbstractReporter`.
 
     """
-    return FORMATTERS.get(name, FORMATTERS[default])
+    return REPORTERS.get(name, REPORTERS[default])
 
 
 class Tests(object):
@@ -346,17 +346,17 @@ class Tests(object):
             suite.addTest(FunctionTestCase(test))
         return suite
 
-    def run(self, formatter=auto_formatter):
+    def run(self, reporter=auto_reporter):
         """Run all tests in this collection.
 
-        :param formatter:
-            An instance of :class:`AbstractFormatter` or a callable
+        :param reporter:
+            An instance of :class:`AbstractReporter` or a callable
             returning something implementing that API (not enforced).
 
         """
-        if not isinstance(formatter, AbstractFormatter):
-            formatter = formatter()
-        formatter.begin(self._tests)
+        if not isinstance(reporter, AbstractReporter):
+            reporter = reporter()
+        reporter.begin(self._tests)
         for test in self:
             try:
                 assert test() is not False, 'test returned False'
@@ -372,10 +372,10 @@ class Tests(object):
                     if __file__[0:-1] not in first:
                         clean.extend((first, second))
                 clean.append(lines[-1])
-                formatter.failure(test, e, '\n'.join(clean))
+                reporter.failure(test, e, '\n'.join(clean))
             else:
-                formatter.success(test)
-        formatter.finished()
+                reporter.success(test)
+        reporter.finished()
 
 
 def test(meth):

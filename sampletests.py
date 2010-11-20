@@ -4,7 +4,7 @@ import time
 import random
 import optparse
 
-from attest import Tests, Assert, FORMATTERS
+from attest import Tests, Assert, REPORTERS
 
 
 sample = Tests()
@@ -31,13 +31,13 @@ def multi():
 
 
 parser = optparse.OptionParser()
-parser.add_option('-f', '--formatter', metavar='NAME', default='auto')
+parser.add_option('-r', '--reporter', metavar='NAME', default='auto')
 parser.add_option('-s', '--color-scheme', metavar='NAME', default='trac')
 options, args = parser.parse_args()
 
-formatter = FORMATTERS[options.formatter]
-if options.formatter in ('auto', 'fancy'):
-    formatter = formatter(options.color_scheme)
+reporter = REPORTERS[options.reporter]
+if options.reporter in ('auto', 'fancy'):
+    reporter = reporter(options.color_scheme)
 
 
-sample.run(formatter)
+sample.run(reporter)

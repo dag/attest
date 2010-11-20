@@ -2,7 +2,7 @@ from __future__ import absolute_import
 
 from attest import TestBase, test, Assert, Tests
 
-from .collections import TestFormatter
+from .collections import TestReporter
 
 
 class Classy(TestBase):
@@ -39,7 +39,7 @@ def classbased_test_runs():
     Assert(len(col)) == 2
     Assert(list(col)[0]) == instance.fail
 
-    result = TestFormatter()
+    result = TestReporter()
     col.run(result)
 
     Assert(len(result.succeeded)) == 1
@@ -54,7 +54,7 @@ def class_context():
     instance = Contextual()
     col = Tests([instance])
 
-    result = TestFormatter()
+    result = TestReporter()
     col.run(result)
 
     Assert(hasattr(instance, 'two')) == False

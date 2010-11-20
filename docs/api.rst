@@ -10,7 +10,7 @@ Collecting tests
 .. autoclass:: Tests
    :members: test, context, register, test_suite
 
-   .. automethod:: run(formatter=auto_formatter)
+   .. automethod:: run(reporter=auto_reporter)
 
 .. autoclass:: TestBase
 
@@ -47,18 +47,18 @@ Running tests with distribute
 .. autoclass:: Loader
 
 
-Formatters
+Reporters
 ----------
 
-.. autoclass:: AbstractFormatter
+.. autoclass:: AbstractReporter
    :members: begin, success, failure, finished
 
-.. autoclass:: FancyFormatter
+.. autoclass:: FancyReporter
 
-.. autoclass:: PlainFormatter
+.. autoclass:: PlainReporter
 
-.. autoclass:: XmlFormatter
+.. autoclass:: XmlReporter
 
-.. autofunction:: auto_formatter
+.. autofunction:: auto_reporter
 
-.. autofunction:: get_formatter_by_name
+.. autofunction:: get_reporter_by_name
