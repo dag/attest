@@ -4,7 +4,7 @@ import time
 import random
 import optparse
 
-from attest import Tests, Assert, REPORTERS
+from attest import Tests, Assert, get_reporter_by_name
 
 
 sample = Tests()
@@ -35,7 +35,7 @@ parser.add_option('-r', '--reporter', metavar='NAME', default='auto')
 parser.add_option('-s', '--color-scheme', metavar='NAME', default='trac')
 options, args = parser.parse_args()
 
-reporter = REPORTERS[options.reporter]
+reporter = get_reporter_by_name(options.reporter)
 if options.reporter in ('auto', 'fancy'):
     reporter = reporter(options.color_scheme)
 
