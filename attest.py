@@ -620,7 +620,7 @@ class Assert(object):
 
     @staticmethod
     @contextmanager
-    def raises(exception):
+    def raises(*exceptions):
         """Context manager that fails if a particular exception is not
         raised. Yields the caught exception wrapped in :class:`Assert`::
 
@@ -629,18 +629,21 @@ class Assert(object):
 
             error.errno == 13
 
-        :param exception: An exception class.
+        :param exceptions: Expected exception classes.
 
         """
         statistics.assertions += 1
         proxy = Assert()
         try:
             yield proxy
-        except exception, error:
+        except exceptions, error:
             proxy.obj = error
         else:
-            error = exception.__name__
-            raise AssertionError("didn't raise %s" % error)
+            if len(exceptions) > 1:
+                errors = '(' + ', '.join(e.__name__ for e in exceptions) + ')'
+            else:
+                errors = exceptions[0].__name__
+            raise AssertionError("didn't raise %s" % errors)
 
     @staticmethod
     @contextmanager

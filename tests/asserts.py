@@ -9,14 +9,30 @@ def raises():
     try:
         with Assert.raises(RuntimeError):
             pass
-    except AssertionError:
-        pass
+    except AssertionError, e:
+        Assert(e).__str__() == "didn't raise RuntimeError"
     else:
         raise AssertionError("didn't fail for missing exception")
-    with Assert.raises(ValueError) as error:
+
+    # Groups of allowed exceptions
+    try:
+        with Assert.raises(RuntimeError, ValueError):
+            pass
+    except AssertionError, e:
+        Assert(e).__str__() == "didn't raise (RuntimeError, ValueError)"
+    else:
+        raise AssertionError("didn't fail for missing exception")
+
+    with Assert.raises(RuntimeError, ValueError) as error:
+        raise RuntimeError
+
+    error.__class__.is_(RuntimeError)
+
+    with Assert.raises(RuntimeError, ValueError) as error:
         raise ValueError('invaluable')
     error.__class__.is_(ValueError)
     error.__str__() == 'invaluable'
+
     with Assert.raises(AssertionError):
         error.args == ('valuable',)
 
