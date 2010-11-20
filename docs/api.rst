@@ -7,6 +7,20 @@ API Reference
 Collecting tests
 ----------------
 
+To run tests, they must be collected in a :class:`Tests` instance. There
+are many ways this can be achieved, allowing flexibility and separation.
+
+* Register individual functions with the :meth:`Tests.test` decorator.
+* Register other collections with :meth:`Tests.register` or as arguments to
+  the constructor. A collection according to Attest is an iterable yielding
+  test callables, this includes:
+
+  * Lists of lambdas and function references.
+  * :class:`Tests` instances.
+  * Instances of subclasses of :class:`TestBase`.
+  * Classes are instantiated and returned, allowing :meth:`Tests.register`
+    to be used as a class decorator in Python 2.6 or later.
+
 .. autoclass:: Tests
    :members: test, context, register, test_suite
 
@@ -49,6 +63,10 @@ Running tests with distribute
 
 Reporters
 ----------
+
+Reporters are in charge of handling the state and outcome of test-runs.
+They might output machine- or human-readable reports on the console, or
+display the results in a graphical user interface.
 
 .. autoclass:: AbstractReporter
    :members: begin, success, failure, finished
