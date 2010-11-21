@@ -2,6 +2,7 @@ from __future__ import division
 
 import time
 import random
+import sys
 import optparse
 
 from attest import Tests, Assert, get_reporter_by_name
@@ -15,6 +16,8 @@ def compare():
 
 @sample.test
 def contains():
+    print 'Checking membership...'
+    print >>sys.stderr, 'Expecting utter failure.'
     5 in Assert([1, 2, 3])
 
 for x in xrange(17):

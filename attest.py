@@ -136,7 +136,7 @@ class FancyReporter(AbstractReporter):
     def failure(self, test, error, traceback, stdout, stderr):
         self.counter += 1
         self.progress.update(self.counter)
-        self.failures.append((test, traceback))
+        self.failures.append((test, traceback, stdout, stderr))
 
     def finished(self):
         from pygments.console import colorize
@@ -146,7 +146,7 @@ class FancyReporter(AbstractReporter):
 
         self.progress.finish()
         print
-        for test, trace in self.failures:
+        for test, trace, out, err in self.failures:
             if test.__module__ == '__main__':
                 name = test.__name__
             else:
@@ -155,6 +155,10 @@ class FancyReporter(AbstractReporter):
             if test.__doc__:
                 print inspect.getdoc(test)
             print '─' * 80
+            if out:
+                print colorize('faint', '\n'.join(out))
+            if err:
+                print colorize('darkred', '\n'.join(err))
             print highlight(trace, PythonTracebackLexer(),
                             Terminal256Formatter(style=self.style))
 
@@ -267,9 +271,9 @@ def capture_output():
     out, err = [], []
     try:
         yield out, err
+    finally:
         out.extend(sys.stdout.getvalue().splitlines())
         err.extend(sys.stderr.getvalue().splitlines())
-    finally:
         sys.stdout, sys.stderr = stdout, stderr
 
 
