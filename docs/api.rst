@@ -54,6 +54,8 @@ Asserting conditions
 
 .. autofunction:: assert_
 
+.. autofunction:: capture_output()
+
 
 Running tests with distribute
 -----------------------------

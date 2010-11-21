@@ -1,4 +1,8 @@
-from attest import AbstractReporter, Tests, Assert
+from __future__ import with_statement
+
+import sys
+
+from attest import AbstractReporter, Tests, Assert, capture_output
 
 
 class Failure(object):
@@ -87,6 +91,18 @@ def context():
         Assert(three) == 3
 
     test3()
+
+@collections.test
+def capture():
+    with capture_output() as (out, err):
+        print 'Capture the flag!'
+        print >>sys.stderr, 'Rapture the flag?'
+
+    Assert(out) == ['Capture the flag!']
+    Assert(err) == ['Rapture the flag?']
+
+    Assert(sys.stdout).is_(sys.__stdout__)
+    Assert(sys.stderr).is_(sys.__stderr__)
 
 @collections.test
 def run():

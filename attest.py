@@ -14,6 +14,11 @@ except ImportError:
     ABCMeta = type
     abstractmethod = lambda x: x
 
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
+
 
 REPORTERS = {}
 
@@ -240,6 +245,29 @@ def get_reporter_by_name(name, default='auto'):
 
     """
     return REPORTERS.get(name, REPORTERS[default])
+
+
+@contextmanager
+def capture_output():
+    """Context manager capturing standard output and error. Yields a tuple
+    of the two streams as lists of lines.
+
+    ::
+
+        with capture_output() as (out, err):
+            print 'Captured'
+
+        Assert(out) == ['Captured']
+
+    """
+    sys.stdout, sys.stderr = StringIO(), StringIO()
+    out, err = [], []
+    try:
+        yield out, err
+        out.extend(sys.stdout.getvalue().splitlines())
+        err.extend(sys.stderr.getvalue().splitlines())
+    finally:
+        sys.stdout, sys.stderr = sys.__stdout__, sys.__stderr__
 
 
 class Tests(object):
