@@ -7,10 +7,12 @@ from attest import AbstractReporter, Tests, Assert, capture_output
 
 class Failure(object):
 
-    def __init__(self, test, error, traceback):
+    def __init__(self, test, error, traceback, stdout, stderr):
         self.test = Assert(test)
         self.error = Assert(error)
         self.traceback = Assert(traceback)
+        self.stdout = Assert(stdout)
+        self.stderr = Assert(stderr)
 
 
 class TestReporter(AbstractReporter):
@@ -19,11 +21,11 @@ class TestReporter(AbstractReporter):
         self.succeeded = []
         self.failed = []
 
-    def success(self, test):
+    def success(self, test, stdout, stderr):
         self.succeeded.append(Assert(test))
 
-    def failure(self, test, error, traceback):
-        self.failed.append(Failure(test, error, traceback))
+    def failure(self, test, error, traceback, stdout, stderr):
+        self.failed.append(Failure(test, error, traceback, stdout, stderr))
 
     def finished(self):
         pass
@@ -94,6 +96,8 @@ def context():
 
 @collections.test
 def capture():
+    stdout, stderr = sys.stdout, sys.stderr
+
     with capture_output() as (out, err):
         print 'Capture the flag!'
         print >>sys.stderr, 'Rapture the flag?'
@@ -101,8 +105,8 @@ def capture():
     Assert(out) == ['Capture the flag!']
     Assert(err) == ['Rapture the flag?']
 
-    Assert(sys.stdout).is_(sys.__stdout__)
-    Assert(sys.stderr).is_(sys.__stderr__)
+    Assert(sys.stdout).is_(stdout)
+    Assert(sys.stderr).is_(stderr)
 
 @collections.test
 def run():

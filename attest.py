@@ -43,18 +43,20 @@ class AbstractReporter(object):
         raise NotImplementedError
 
     @abstractmethod
-    def success(self, test):
+    def success(self, test, stdout, stderr):
         """When a test succeeds, this method is called with the test
-        function.
+        function and the captured stdout and stderr output as lists of
+        lines.
 
         """
         raise NotImplementedError
 
     @abstractmethod
-    def failure(self, test, error, traceback):
+    def failure(self, test, error, traceback, stdout, stderr):
         """When a test fails, this method is called with the test
-        function, the exception instance that was raised,
-        and a cleaned up traceback string.
+        function, the exception instance that was raised, a cleaned up
+        traceback string and the captured stdout and stderr output as lists
+        of lines.
 
         """
         raise NotImplementedError
@@ -72,11 +74,11 @@ class PlainReporter(AbstractReporter):
         self.total = len(tests)
         self.failures = []
 
-    def success(self, test):
+    def success(self, test, stdout, stderr):
         sys.stdout.write('.')
         sys.stdout.flush()
 
-    def failure(self, test, error, traceback):
+    def failure(self, test, error, traceback, stdout, stderr):
         if isinstance(error, AssertionError):
             sys.stdout.write('F')
         else:
@@ -127,11 +129,11 @@ class FancyReporter(AbstractReporter):
         self.progress.start()
         self.failures = []
 
-    def success(self, test):
+    def success(self, test, stdout, stderr):
         self.counter += 1
         self.progress.update(self.counter)
 
-    def failure(self, test, error, traceback):
+    def failure(self, test, error, traceback, stdout, stderr):
         self.counter += 1
         self.progress.update(self.counter)
         self.failures.append((test, traceback))
@@ -202,11 +204,11 @@ class XmlReporter(AbstractReporter):
         print '<?xml version="1.0" encoding="UTF-8"?>'
         print '<testreport tests="%d">' % len(tests)
 
-    def success(self, test):
+    def success(self, test, stdout, stderr):
         name = '.'.join((test.__module__, test.__name__))
         print '  <pass name="%s"/>' % name
 
-    def failure(self, test, error, traceback):
+    def failure(self, test, error, traceback, stdout, stderr):
         name = '.'.join((test.__module__, test.__name__))
         if isinstance(error, AssertionError):
             tag = 'fail'
@@ -260,6 +262,7 @@ def capture_output():
         Assert(out) == ['Captured']
 
     """
+    stdout, stderr = sys.stdout, sys.stderr
     sys.stdout, sys.stderr = StringIO(), StringIO()
     out, err = [], []
     try:
@@ -267,7 +270,7 @@ def capture_output():
         out.extend(sys.stdout.getvalue().splitlines())
         err.extend(sys.stderr.getvalue().splitlines())
     finally:
-        sys.stdout, sys.stderr = sys.__stdout__, sys.__stderr__
+        sys.stdout, sys.stderr = stdout, stderr
 
 
 class Tests(object):
@@ -388,7 +391,8 @@ class Tests(object):
         reporter.begin(self._tests)
         for test in self:
             try:
-                assert test() is not False, 'test returned False'
+                with capture_output() as (out, err):
+                    assert test() is not False, 'test returned False'
             except BaseException, e:
                 if isinstance(e, KeyboardInterrupt):
                     break
@@ -401,9 +405,9 @@ class Tests(object):
                     if __file__[0:-1] not in first:
                         clean.extend((first, second))
                 clean.append(lines[-1])
-                reporter.failure(test, e, '\n'.join(clean))
+                reporter.failure(test, e, '\n'.join(clean), out, err)
             else:
-                reporter.success(test)
+                reporter.success(test, out, err)
         reporter.finished()
 
 
