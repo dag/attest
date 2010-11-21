@@ -1,8 +1,6 @@
-from __future__ import absolute_import
-
 from attest import TestBase, test, Assert, Tests
 
-from .collections import TestReporter
+from tests.collections import TestReporter
 
 
 class Classy(TestBase):

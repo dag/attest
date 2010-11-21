@@ -1,9 +1,7 @@
-from __future__ import absolute_import
-
 from attest import Tests
 
-from .asserts import asserts
-from .collections import collections
-from .classy import classy
+from tests.asserts import asserts
+from tests.collections import collections
+from tests.classy import classy
 
 tests = Tests([asserts, collections, classy])
