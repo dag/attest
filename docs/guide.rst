@@ -6,7 +6,6 @@ How to attest to the correctness of an application
 .. sidebar:: Directory structure
 
     * runtests.py
-
     * tests/
 
       * __init__.py
@@ -155,3 +154,42 @@ That's more like it!
     can help readability and avoids some mistakes that would otherwise make
     tests pass silently, for example if an object unexpectedly is not wrapped
     in :class:`Assert`.
+
+How about testing the same precomputed value in multiple tests? In other
+testing frameworks we'd use setup and teardown; Attest uses context
+managers via :meth:`Tests.context`::
+
+    @math.context
+    def compute_value():
+        value = 1 + 1
+        yield value
+
+The value will now be passed to tests in the ``math`` collection, as an
+argument::
+
+    @math.test
+    def value_of_value(value):
+        Assert(value) == 2
+
+Now lets set up our tests so we can combine many collections into one.
+
+.. centered:: tests/__init__.py
+
+::
+
+    from attest import Tests
+
+    from tests.math import math
+
+    tests = Tests([math])
+
+As you make more collections, just import them here and add to the list.
+
+.. centered:: runtests.py
+
+::
+
+    from tests import tests
+    tests.run()
+
+With this we can run the full suite with ``python runtests.py``.
