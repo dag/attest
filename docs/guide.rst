@@ -178,7 +178,6 @@ Now lets set up our tests so we can combine many collections into one.
 ::
 
     from attest import Tests
-
     from tests.math import math
 
     tests = Tests([math])
@@ -193,3 +192,38 @@ As you make more collections, just import them here and add to the list.
     tests.run()
 
 With this we can run the full suite with ``python runtests.py``.
+
+
+Object-oriented style
+---------------------
+
+If you prefer to write test collections as classes, there's an API for
+that. Here's the above example in object-oriented style:
+
+.. centered:: tests/math.py
+
+::
+
+    from attest import TestBase, test, Assert
+
+    class Math(TestBase):
+
+        def __context__(self):
+            self.value = 1 + 1
+            yield
+
+        @test
+        def arithmetics(self):
+            Assert(self.value) == 2
+
+.. centered:: tests/__init__.py
+
+::
+
+    from attest import Tests
+    from tests.math import Math
+
+    tests = Tests([Math])
+
+You can also list instances and have your own ``__init__()`` to create
+different tests from the same collection.
