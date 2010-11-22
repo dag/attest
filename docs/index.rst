@@ -38,8 +38,15 @@ The How
     **attest** */əˈtɛst/*
         To affirm to be correct, true, or genuine.
 
-The API is inspired by that of `Flask`_, not for bandwagony reasons, but
-because it's a well-fit pattern for the problem of "collections of callables".
+*Attest* provides two styles for writing tests, one functional and one
+object-oriented. The functional API is inspired by that of `Flask`_, not
+for bandwagony reasons, but because it's a well-fit pattern for the problem
+of "collections of callables". The object-oriented style follows standard
+Python idioms for writing classes. It's easy to invent your own style
+because Attest only assumes that a test is a callable and a collection an
+iterable. There is no magic you have to account for - Attest is a library
+for writing tests rather than a scriptable program for running tests. It's
+up to you to organize and collect tests, though Attest will assist you.
 
 Assertions are done with operator overloading; while I'm not usually too fond
 of :abbr:`DSLs (Domain Specific Languages)`, I also find it difficult to
