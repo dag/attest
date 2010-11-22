@@ -33,8 +33,10 @@ class TestReporter(AbstractReporter):
 
 collections = Tests()
 
+
 @collections.test
 def decorator():
+    """@Tests().test"""
 
     col = Tests()
 
@@ -47,8 +49,10 @@ def decorator():
     Assert(len(col)) == 2
     Assert(list(col)) == [one, two]
 
+
 @collections.test
 def context():
+    """@Tests().context"""
 
     col = Tests()
 
@@ -94,8 +98,11 @@ def context():
 
     test3()
 
+
 @collections.test
 def capture():
+    """capture_output()"""
+
     stdout, stderr = sys.stdout, sys.stderr
 
     with capture_output() as (out, err):
@@ -108,8 +115,10 @@ def capture():
     Assert(sys.stdout).is_(stdout)
     Assert(sys.stderr).is_(stderr)
 
+
 @collections.test
 def run():
+    """Tests().run"""
 
     col = Tests()
 

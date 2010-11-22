@@ -28,8 +28,10 @@ class Contextual(TestBase):
 
 classy = Tests()
 
+
 @classy.test
 def classbased_test_runs():
+    """Tests().register(TestBase())"""
 
     instance = Classy()
     col = Tests([instance])
@@ -46,8 +48,10 @@ def classbased_test_runs():
     result.failed[0].test == instance.fail
     result.failed[0].error.__class__.is_(AssertionError)
 
+
 @classy.test
 def class_context():
+    """TestBase().__context__"""
 
     instance = Contextual()
     col = Tests([instance])
@@ -59,8 +63,10 @@ def class_context():
     Assert(len(result.failed)) == 0
     Assert(len(result.succeeded)) == 1
 
+
 @classy.test
 def decorative():
+    """@Tests().register(TestBase)"""
 
     col = Tests()
     Assert(len(col)) == 0
