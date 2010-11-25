@@ -132,7 +132,20 @@ That's better, but what happens on failure?
 The value of the variable is hidden from us making it harder to debug
 failed tests, that's no good! :class:`Assert` to the rescue - by
 wrapping the value we can have better failure reports using operator
-overloading::
+overloading:
+
+.. warning::
+
+    :class:`Assert` will not behave properly with the :keyword:`is` or
+    ``not in`` operations because we can't override those. Instead use the
+    :meth:`~Assert.is_`, :meth:`~Assert.is_not` and :meth:`~Assert.not_in`
+    methods. For consistency there's also an :meth:`~Assert.in_` method.
+
+    Operations that do work: ``==``, ``!=``. :keyword:`in`, ``<``, ``<=``,
+    ``>`` and ``>=``. :class:`Assert` also does a lot more, see the API
+    documentation.
+
+::
 
     value = Assert(1 + 1)
     assert value == 3
