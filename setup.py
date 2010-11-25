@@ -31,7 +31,7 @@ from setuptools import setup
 
 setup(
     name='Attest',
-    version='0.1dev',
+    version='0.1',
     description='Modern, Pythonic unit testing.',
     long_description=__doc__,
 
@@ -51,7 +51,7 @@ setup(
     test_suite='tests.tests',
 
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
         'Programming Language :: Python',
