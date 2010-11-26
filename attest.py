@@ -374,10 +374,29 @@ class Tests(object):
         return func
 
     def register(self, tests):
-        """Merge in another test collection."""
+        """Merge in another test collection.
+
+        :param tests:
+            * A class, which is then instantiated and return allowing it to be
+              used as a decorator for :class:`TestBase` classes.
+            * A string, representing the import path to an iterable yielding
+              tests, in the form of ``'package.module.object'``.
+            * Otherwise any iterable object is assumed to yield tests.
+
+        Any of these can be passed in a list to the :class:`Tests`
+        constructor.
+
+        .. versionadded:: 0.2
+           Refer to collections by import path as a string
+
+        """
         if inspect.isclass(tests):
             self._tests.extend(tests())
             return tests
+        elif isinstance(tests, basestring):
+            package, collection = tests.rsplit('.', 1)
+            module = package.rsplit('.', 1)[1]
+            tests = getattr(__import__(package, fromlist=[module]), collection)
         self._tests.extend(tests)
 
     def test_suite(self):

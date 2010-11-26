@@ -1,7 +1,6 @@
 from attest import Tests
 
-from tests.asserts import asserts
-from tests.collections import collections
-from tests.classy import classy
-
-tests = Tests([asserts, collections, classy])
+tests = Tests(['tests.asserts.asserts',
+               'tests.collections.collections',
+               'tests.classy.classy',
+              ])
