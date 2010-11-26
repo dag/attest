@@ -6,7 +6,7 @@ import sys
 import traceback
 from functools import wraps
 import inspect
-from contextlib import contextmanager
+from contextlib import contextmanager, nested
 
 try:
     from abc import ABCMeta, abstractmethod
@@ -289,7 +289,7 @@ class Tests(object):
         self._tests = []
         for collection in tests:
             self.register(collection)
-        self._context = None
+        self._contexts = []
 
     def __iter__(self):
         return iter(self._tests)
@@ -301,17 +301,17 @@ class Tests(object):
         """Decorate a function as a test belonging to this collection."""
         @wraps(func)
         def wrapper():
-            if self._context is None:
-                func()
-            else:
-                with self._context() as context:
-                    if len(inspect.getargspec(func)[0]) != 0:
-                        if type(context) is tuple:  # type() is intentional
-                            func(*context)
+            with nested(*[ctx() for ctx in self._contexts]) as context:
+                if len(inspect.getargspec(func)[0]) != 0:
+                    args = []
+                    for arg in context:
+                        if type(arg) is tuple:  # type() is intentional
+                            args.extend(arg)
                         else:
-                            func(context)
-                    else:
-                        func()
+                            args.append(arg)
+                    func(*args)
+                else:
+                    func()
         self._tests.append(wrapper)
         return wrapper
 
@@ -362,9 +362,15 @@ class Tests(object):
         the sole argument, wrap it in a one-tuple or unsplat the args
         in the test.
 
+        You can have many more than one context, which will be run in order
+        using :func:`contextlib.nested`, and their yields will be passed in
+        order to the test functions.
+
+        .. versionadded:: 0.2 Nested contexts.
+
         """
         func = contextmanager(func)
-        self._context = func
+        self._contexts.append(func)
         return func
 
     def register(self, tests):

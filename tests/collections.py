@@ -98,6 +98,23 @@ def context():
 
     test3()
 
+    col4 = Tests()
+
+    @col4.context
+    def nested():
+        yield 1
+
+    @col4.context
+    def nested():
+        yield 2
+
+    @col4.test
+    def test4(one, two):
+        Assert(one) == 1
+        Assert(two) == 2
+
+    test4()
+
 
 @collections.test
 def capture():
