@@ -3,9 +3,8 @@ from __future__ import division
 import time
 import random
 import sys
-import optparse
 
-from attest import Tests, Assert, get_reporter_by_name
+from attest import Tests, Assert
 
 
 sample = Tests()
@@ -32,15 +31,4 @@ def multi():
     hello.upper() == 'HELLO'
     hello.capitalize() == 'hello'
 
-
-parser = optparse.OptionParser()
-parser.add_option('-r', '--reporter', metavar='NAME', default='auto')
-parser.add_option('-s', '--color-scheme', metavar='NAME', default='trac')
-options, args = parser.parse_args()
-
-reporter = get_reporter_by_name(options.reporter)
-if options.reporter in ('auto', 'fancy'):
-    reporter = reporter(options.color_scheme)
-
-
-sample.run(reporter)
+sample.main()

@@ -420,6 +420,28 @@ class Tests(object):
                 reporter.success(test, out, err)
         reporter.finished()
 
+    def main(self, argv=sys.argv):
+        """Interface to :meth:`run` with command-line options.
+
+        ``-h``, ``--help``
+            Show a help message
+
+        ``-r NAME``, ``--reporter NAME``
+            Select reporter by name with :func:`get_reporter_by_name`
+
+        Remaining arguments are passed to the reporter.
+
+        .. versionadded:: 0.2
+
+        """
+        from optparse import OptionParser
+        parser = OptionParser()
+        parser.add_option('-r', '--reporter', metavar='NAME',
+                          help='select reporter by name')
+        options, args = parser.parse_args()
+        reporter = get_reporter_by_name(options.reporter)(*args)
+        self.run(reporter)
+
 
 def test(meth):
     """Mark a :class:`TestBase` method as a test and wrap it to run in the

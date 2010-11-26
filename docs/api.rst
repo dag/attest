@@ -26,6 +26,8 @@ are many ways this can be achieved, allowing flexibility and separation.
 
    .. automethod:: run(reporter=auto_reporter)
 
+   .. automethod:: main(argv=sys.argv)
+
 .. autoclass:: TestBase
 
 .. autofunction:: test
