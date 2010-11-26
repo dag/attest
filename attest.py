@@ -362,7 +362,7 @@ class Tests(object):
         the sole argument, wrap it in a one-tuple or unsplat the args
         in the test.
 
-        You can have many more than one context, which will be run in order
+        You can have more than one context, which will be run in order
         using :func:`contextlib.nested`, and their yields will be passed in
         order to the test functions.
 
