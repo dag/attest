@@ -302,6 +302,7 @@ class Tests(object):
         @wraps(func)
         def wrapper():
             with nested(*[ctx() for ctx in self._contexts]) as context:
+                context = [c for c in context if c is not None]
                 if len(inspect.getargspec(func)[0]) != 0:
                     args = []
                     for arg in context:

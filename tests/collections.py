@@ -106,6 +106,10 @@ def context():
 
     @col4.context
     def nested():
+        yield
+
+    @col4.context
+    def nested():
         yield 2
 
     @col4.test
