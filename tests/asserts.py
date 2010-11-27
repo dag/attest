@@ -123,6 +123,8 @@ def identity():
 
     Assert(True).is_(True)
     Assert(False).is_not(True)
+    Assert(True).is_(Assert(True))
+    Assert(False).is_not(Assert(True))
     Assert([]).is_not([])
 
     with Assert.raises(AssertionError):
@@ -130,6 +132,12 @@ def identity():
 
     with Assert.raises(AssertionError):
         Assert(True).is_not(True)
+
+    with Assert.raises(AssertionError):
+        Assert(False).is_(Assert(True))
+
+    with Assert.raises(AssertionError):
+        Assert(True).is_not(Assert(True))
 
     with Assert.raises(AssertionError):
         Assert([]).is_([])

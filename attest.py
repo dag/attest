@@ -644,7 +644,12 @@ class Assert(object):
 
             Assert(True).is_(True)
 
+        .. versionchanged:: 0.3
+            Checks the wrapped object for :class:`Assert` instances.
+
         """
+        if isinstance(obj, Assert):
+            obj = obj.obj
         return assert_(self.obj is obj, '%r is not %r' % (self.obj, obj))
 
     def is_not(self, obj):
@@ -653,7 +658,12 @@ class Assert(object):
 
             Assert([]).is_not([])
 
+        .. versionchanged:: 0.3
+            Checks the wrapped object for :class:`Assert` instances.
+
         """
+        if isinstance(obj, Assert):
+            obj = obj.obj
         return assert_(self.obj is not obj, '%r is %r' % (self.obj, obj))
 
     def __contains__(self, obj):
