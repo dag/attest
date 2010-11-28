@@ -26,10 +26,10 @@ class Contextual(TestBase):
         Assert(self.two) == 2
 
 
-classy = Tests()
+suite = Tests()
 
 
-@classy.test
+@suite.test
 def classbased_test_runs():
     """Tests().register(TestBase())"""
 
@@ -49,7 +49,7 @@ def classbased_test_runs():
     result.failed[0].error.__class__.is_(AssertionError)
 
 
-@classy.test
+@suite.test
 def class_context():
     """TestBase().__context__"""
 
@@ -64,7 +64,7 @@ def class_context():
     Assert(len(result.succeeded)) == 1
 
 
-@classy.test
+@suite.test
 def decorative():
     """@Tests().register(TestBase)"""
 

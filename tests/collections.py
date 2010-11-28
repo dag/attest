@@ -31,10 +31,10 @@ class TestReporter(AbstractReporter):
         pass
 
 
-collections = Tests()
+suite = Tests()
 
 
-@collections.test
+@suite.test
 def decorator():
     """@Tests().test"""
 
@@ -50,7 +50,7 @@ def decorator():
     Assert(list(col)) == [one, two]
 
 
-@collections.test
+@suite.test
 def context():
     """@Tests().context"""
 
@@ -120,7 +120,7 @@ def context():
     test4()
 
 
-@collections.test
+@suite.test
 def capture():
     """capture_output()"""
 
@@ -137,7 +137,7 @@ def capture():
     Assert(sys.stderr).is_(stderr)
 
 
-@collections.test
+@suite.test
 def run():
     """Tests().run"""
 

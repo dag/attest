@@ -1,2 +1,2 @@
-from tests import tests
-tests.main()
+import tests
+tests.all.main()

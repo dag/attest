@@ -1,6 +1,9 @@
 from attest import Tests
 
-tests = Tests(['tests.asserts.asserts',
-               'tests.collections.collections',
-               'tests.classy.classy',
-              ])
+
+suite = lambda mod: 'tests.' + mod + '.suite'
+
+all = Tests([suite('asserts'),
+             suite('collections'),
+             suite('classy'),
+            ])

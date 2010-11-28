@@ -48,7 +48,7 @@ setup(
     ],
 
     test_loader='attest:Loader',
-    test_suite='tests.tests',
+    test_suite='tests.all',
 
     classifiers=[
         'Development Status :: 3 - Alpha',

@@ -3,10 +3,10 @@ from __future__ import with_statement
 from attest import Tests, Assert
 
 
-asserts = Tests()
+suite = Tests()
 
 
-@asserts.test
+@suite.test
 def raises():
     """Assert.raises"""
 
@@ -40,7 +40,7 @@ def raises():
         error.args == ('valuable',)
 
 
-@asserts.test
+@suite.test
 def not_raising():
     """Assert.not_raising"""
 
@@ -55,7 +55,7 @@ def not_raising():
         raise AssertionError('failed despite not raising RuntimeError')
 
 
-@asserts.test
+@suite.test
 def equality():
     """Assert() == and !="""
 
@@ -69,7 +69,7 @@ def equality():
         Assert(1) != 1
 
 
-@asserts.test
+@suite.test
 def compare():
     """Assert() comparisons"""
 
@@ -99,7 +99,7 @@ def compare():
         Assert(1) <= 0
 
 
-@asserts.test
+@suite.test
 def contains():
     """Assert() membership"""
 
@@ -117,7 +117,7 @@ def contains():
         Assert(1).not_in([0,1,2])
 
 
-@asserts.test
+@suite.test
 def identity():
     """Assert() object identity"""
 
@@ -143,7 +143,7 @@ def identity():
         Assert([]).is_([])
 
 
-@asserts.test
+@suite.test
 def proxy():
     """Assert().remote_attribute"""
 
@@ -158,7 +158,7 @@ def proxy():
         Assert(3).__str__() == '4'
 
 
-@asserts.test
+@suite.test
 def boolean():
     """Assert() in boolean context"""
 
