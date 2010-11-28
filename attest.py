@@ -395,7 +395,7 @@ class Tests(object):
             self._tests.extend(tests())
             return tests
         elif isinstance(tests, basestring):
-            package, collection = tests.rsplit('.', 1)
+            package, collection = str(tests).rsplit('.', 1)
             module = package.rsplit('.', 1)[1]
             tests = getattr(__import__(package, fromlist=[module]), collection)
         self._tests.extend(tests)
