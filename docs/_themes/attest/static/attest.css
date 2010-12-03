@@ -1,0 +1,100 @@
+@import url("basic.css");
+
+body
+{ font-family: 'Ubuntu', 'Helvetica', 'sans-serif';
+  font-size: 95%;
+  color: #404040;
+}
+
+h1, h2, h3, h4, h5, h6
+{ font-family: 'Garamond', 'Georgia', 'serif';
+  font-weight: normal;
+  font-style: italic;
+  color: #F92672;
+  margin-top: 2em;
+}
+
+pre, tt, tt.descname
+{ font-family: 'Liberation Mono', 'Consolas', 'monospace';
+  font-size: 90%;
+}
+
+pre
+{ padding: 2em;
+  background: #333;
+}
+
+div.sidebar
+{ background: #333;
+}
+
+div.sidebar *
+{ color: #ddd;
+}
+
+p.sidebar-title
+{ display: none;
+}
+
+a
+{ color: #8262bf;
+}
+
+div.admonition
+{ border: 1px solid #333;
+}
+
+div.admonition.warning
+{ background: #bd4861;
+}
+
+div.admonition.warning *
+{ color: #ddd;
+}
+
+div.admonition.note
+{ background: #e4ffa1;
+}
+
+
+div.document
+{ margin: 0 auto;
+  width: 950px;
+  position: relative;
+}
+
+div.body
+{ width: 650px;
+  margin-right: 250px;
+}
+
+div.body p
+{ text-align: justify;
+}
+
+div.body ul
+{ list-style-type: circle;
+}
+
+div.sphinxsidebar
+{ position: absolute;
+  top: 1em;
+  right: 0;
+}
+
+div.sphinxsidebarwrapper
+{ position: fixed;
+  width: 250px;
+}
+
+div.sphinxsidebar a, a.headerlink
+{ text-decoration: none;
+}
+
+div.sphinxsidebar ul
+{ padding-left: 0;
+}
+
+div.related, div.footer
+{ display: none;
+}
