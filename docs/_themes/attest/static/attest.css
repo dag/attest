@@ -99,3 +99,16 @@ div.sphinxsidebar ul
 div.related, div.footer
 { display: none;
 }
+
+
+dl.dictionary-entry
+{ text-align: center;
+}
+
+dl.dictionary-entry dt
+{ font-family: 'Garamond', 'Georgia', 'serif';
+}
+
+dl.dictionary-entry dd
+{ font-style: italic;
+}

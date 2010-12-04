@@ -1,6 +1,14 @@
 Modern, Pythonic unit testing
 =============================
 
+.. raw:: html
+
+    <dl class="dictionary-entry">
+        <dt><strong>attest</strong> <em>/əˈtɛst/</em>
+        <dd>To affirm to be correct, true, or genuine.</dd>
+    </dl>
+
+
 The Why
 -------
 
@@ -32,11 +40,6 @@ In my mind, tests are:
 
 The How
 -------
-
-.. sidebar:: Dictionary
-
-    **attest** */əˈtɛst/*
-        To affirm to be correct, true, or genuine.
 
 *Attest* provides two styles for writing tests, one functional and one
 object-oriented. The functional API is inspired by that of `Flask`_, not
