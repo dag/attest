@@ -19,10 +19,13 @@ pre, tt, tt.descname
   font-size: 90%;
 }
 
+pre, div.admonition
+{ margin: 1em -40px;
+  padding: 1em 40px;
+}
+
 pre
-{ margin: 1em -3em;
-  padding: 2em 4em;
-  background: #d3ffc7;
+{ background: #d3ffc7;
 }
 
 div.sidebar
@@ -41,20 +44,13 @@ a
 { color: #8262bf;
 }
 
-div.admonition
-{ border: 1px solid #333;
-}
 
 div.admonition.warning
-{ background: #bd4861;
-}
-
-div.admonition.warning *
-{ color: #ddd;
+{ background: #ffbfc8;
 }
 
 div.admonition.note
-{ background: #e4ffa1;
+{ background: #f2ffc4;
 }
 
 
