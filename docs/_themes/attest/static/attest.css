@@ -20,8 +20,9 @@ pre, tt, tt.descname
 }
 
 pre
-{ padding: 2em;
-  background: #333;
+{ margin: 1em -3em;
+  padding: 2em 4em;
+  background: #d3ffc7;
 }
 
 div.sidebar
