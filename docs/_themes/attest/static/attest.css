@@ -28,18 +28,6 @@ pre
 { background: #d3ffc7;
 }
 
-div.sidebar
-{ background: #333;
-}
-
-div.sidebar *
-{ color: #ddd;
-}
-
-p.sidebar-title
-{ display: none;
-}
-
 a
 { color: #8262bf;
 }

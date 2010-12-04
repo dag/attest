@@ -3,15 +3,6 @@ How to attest to the correctness of an application
 
 .. module:: attest
 
-.. sidebar:: Directory structure
-
-    * runtests.py
-    * tests/
-
-      * __init__.py
-      * math.py
-
-
 Because mathematics never lie, except when it claims ``0.9… = 1``, we'll be
 testing math in this guide.
 
