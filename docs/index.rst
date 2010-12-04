@@ -65,8 +65,6 @@ remember all the unittest assertion methods. Using the actual operators help.
 
     math.run()
 
-.. image:: /images/sampletests.png
-
 
 The Rest
 --------

@@ -1,12 +1,6 @@
 Modern, Pythonic unit testing
 =============================
 
-The Shot
---------
-
-.. image:: https://github.com/dag/attest/raw/master/docs/images/sampletests.png
-
-
 The Why
 -------
 
