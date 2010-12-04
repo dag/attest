@@ -99,7 +99,7 @@ alone::
 .. code-block:: text
 
     $ python tests/math.py
-    1 of 1 [Time: 00:00:00|###################################################|100%]
+    1 of 1 [Time: 00:00:00|#########################################|100%]
 
     Failures: 0/1 (0 assertions)
 
@@ -123,7 +123,7 @@ That's better, but what happens on failure?
 .. code-block:: pytb
 
     arithmetics
-    ────────────────────────────────────────────────────────────────────────────────
+    ──────────────────────────────────────────────────────────────────────
     Traceback (most recent call last):
       File "math.py", line 8, in arithmetics
         assert_(value == 3)
@@ -153,7 +153,7 @@ overloading:
 .. code-block:: pytb
 
     arithmetics
-    ────────────────────────────────────────────────────────────────────────────────
+    ──────────────────────────────────────────────────────────────────────
     Traceback (most recent call last):
       File "math.py", line 8, in arithmetics
         assert value == 3
