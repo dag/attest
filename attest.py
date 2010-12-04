@@ -115,6 +115,12 @@ class FancyReporter(AbstractReporter):
     terminals. Progress of running the tests is indicated by a progressbar
     and failures are shown with syntax highlighted tracebacks.
 
+    :param style:
+        `Pygments`_ style for tracebacks, defaults to ``'bw'`` because it
+        looks good on most terminals.
+
+    .. _Pygments: http://pygments.org/
+
     """
 
     def __init__(self, style='bw'):
