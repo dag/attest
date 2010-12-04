@@ -1,7 +1,7 @@
 How to attest to the correctness of an application
 ==================================================
 
-.. module:: attest
+.. currentmodule:: attest
 
 Because mathematics never lie, except when it claims ``0.9… = 1``, we'll be
 testing math in this guide.
