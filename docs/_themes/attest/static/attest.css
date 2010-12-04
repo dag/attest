@@ -88,7 +88,7 @@ div.sphinxsidebarwrapper
   width: 250px;
 }
 
-div.sphinxsidebar a, a.headerlink
+div.sphinxsidebar a, a.headerlink, div.toctree-wrapper a
 { text-decoration: none;
 }
 
