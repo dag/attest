@@ -341,6 +341,7 @@ class Tests(object):
 
             db = Tests()
 
+            @contextmanager
             def connect():
                 con = connect_db()
                 try:
