@@ -36,6 +36,9 @@ h3 a
 { color: #a6194d;
 }
 
+div.sphinxsidebar input
+{ border: 1px solid #000;
+}
 
 div.admonition.warning
 { background: #ffbfc8;
