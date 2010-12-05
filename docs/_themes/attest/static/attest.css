@@ -1,13 +1,13 @@
 @import url("basic.css");
 
 body
-{ font-family: 'Ubuntu', 'Helvetica', 'sans-serif';
+{ font-family: 'Delicious', 'Ubuntu', 'Helvetica', 'sans-serif';
   font-size: 95%;
   color: #404040;
 }
 
 h1, h2, h3, h4, h5, h6
-{ font-family: 'Garamond', 'Georgia', 'serif';
+{ font-family: 'Garamond', 'Times', 'Times New Roman', 'Georgia', 'serif';
   font-weight: normal;
   font-style: italic;
   color: #a6194d;
@@ -15,7 +15,7 @@ h1, h2, h3, h4, h5, h6
 }
 
 pre, tt, tt.descname
-{ font-family: 'Liberation Mono', 'Consolas', 'monospace';
+{ font-family: 'Envy Code R', 'Liberation Mono', 'Consolas', 'monospace';
   font-size: 90%;
 }
 
@@ -89,8 +89,8 @@ dl.dictionary-entry
 { text-align: center;
 }
 
-dl.dictionary-entry dt
-{ font-family: 'Garamond', 'Georgia', 'serif';
+dl.dictionary-entry
+{ font-family: 'Garamond', 'Times', 'Times New Roman', 'Georgia', 'serif';
 }
 
 dl.dictionary-entry dd
