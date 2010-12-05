@@ -32,6 +32,10 @@ a
 { color: #8262bf;
 }
 
+h3 a
+{ color: #a6194d;
+}
+
 
 div.admonition.warning
 { background: #ffbfc8;
