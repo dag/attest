@@ -15,7 +15,8 @@ h1, h2, h3, h4, h5, h6
 }
 
 pre, tt, tt.descname
-{ font-family: 'Envy Code R', 'Liberation Mono', 'Consolas', 'monospace';
+{ font-family: 'Liberation Mono', 'DejaVu Sans Mono', 'Consolas',
+               'Andale Mono', 'Anonymous', 'Aurulent Sans Mono', 'monospace';
   font-size: 90%;
 }
 
