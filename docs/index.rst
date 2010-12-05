@@ -4,7 +4,7 @@ Modern, Pythonic unit testing
 .. raw:: html
 
     <dl class="dictionary-entry">
-        <dt><strong>attest</strong> <em>/əˈtɛst/</em>
+        <dt><strong>at·test</strong> <em>/əˈtɛst/</em>
         <dd>To affirm to be correct, true, or genuine.</dd>
     </dl>
 
