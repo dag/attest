@@ -37,6 +37,15 @@ class AbstractReporter(object):
 
     __metaclass__ = ABCMeta
 
+    def get_test_name(self, test, force_module=False):
+        parts = []
+        if force_module or test.__module__ != '__main__':
+            parts.append(test.__module__)
+        if hasattr(test, 'im_class'):
+            parts.append(test.im_class.__name__)
+        parts.append(test.__name__)
+        return '.'.join(parts)
+
     @abstractmethod
     def begin(self, tests):
         """Called with the list of tests when a test run has begun."""
@@ -90,10 +99,7 @@ class PlainReporter(AbstractReporter):
         print
         print
         for test, trace in self.failures:
-            if test.__module__ == '__main__':
-                print test.__name__
-            else:
-                print '.'.join((test.__module__, test.__name__))
+            print self.get_test_name(test)
             if test.__doc__:
                 print inspect.getdoc(test)
             print '-' * 80
@@ -153,10 +159,7 @@ class FancyReporter(AbstractReporter):
         self.progress.finish()
         print
         for test, trace, out, err in self.failures:
-            if test.__module__ == '__main__':
-                name = test.__name__
-            else:
-                name = '.'.join((test.__module__, test.__name__))
+            name = self.get_test_name(test)
             print colorize('bold', name)
             if test.__doc__:
                 print inspect.getdoc(test)
@@ -215,11 +218,11 @@ class XmlReporter(AbstractReporter):
         print '<testreport tests="%d">' % len(tests)
 
     def success(self, test, stdout, stderr):
-        name = '.'.join((test.__module__, test.__name__))
+        name = self.get_test_name(test, force_module=True)
         print '  <pass name="%s"/>' % name
 
     def failure(self, test, error, traceback, stdout, stderr):
-        name = '.'.join((test.__module__, test.__name__))
+        name = self.get_test_name(test, force_module=True)
         if isinstance(error, AssertionError):
             tag = 'fail'
         else:
