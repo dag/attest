@@ -4,10 +4,17 @@ import time
 import random
 import sys
 
-from attest import Tests, Assert
+from attest import TestBase, test, Tests, Assert
 
 
-sample = Tests()
+class Sample(TestBase):
+
+    @test
+    def stylish_and_classy(self):
+        Assert(True).is_(False)
+
+
+sample = Tests([Sample])
 
 @sample.test
 def compare():
@@ -19,7 +26,7 @@ def contains():
     print >>sys.stderr, 'Expecting utter failure.'
     5 in Assert([1, 2, 3])
 
-for x in xrange(17):
+for x in xrange(16):
     @sample.test
     def passing():
         time.sleep(random.randint(1, 3) / 10)
