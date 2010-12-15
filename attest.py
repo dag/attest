@@ -594,7 +594,10 @@ class Assert(object):
     obj = None
 
     def __init__(self, obj=None):
-        self.obj = obj
+        if isinstance(obj, Assert):
+            self.obj = obj.obj
+        else:
+            self.obj = obj
 
     @property
     def __class__(self):

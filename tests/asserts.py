@@ -170,3 +170,10 @@ def boolean():
 
     with Assert.raises(AssertionError):
         assert Assert(0)
+
+
+@suite.test
+def nested_assert():
+    """Assert(Assert(var)) is Assert(var)"""
+
+    Assert(Assert('hello')).__class__.is_(str)
