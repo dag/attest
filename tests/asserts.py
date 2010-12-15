@@ -177,3 +177,33 @@ def nested_assert():
     """Assert(Assert(var)) is Assert(var)"""
 
     Assert(Assert('hello')).__class__.is_(str)
+
+
+@suite.test
+def isinstance():
+    """Assert.isinstance"""
+
+    with Assert.raises(AssertionError) as error:
+        Assert.isinstance('hello', (int, float))
+    error.__str__() == "not isinstance('hello', (int, float))"
+
+    with Assert.raises(AssertionError) as error:
+        Assert.isinstance('hello', int)
+    error.__str__() == "not isinstance('hello', int)"
+
+    Assert.isinstance('hello', basestring)
+
+
+@suite.test
+def not_isinstance():
+    """Assert.not_isinstance"""
+
+    with Assert.raises(AssertionError) as error:
+        Assert.not_isinstance('hello', (str, unicode))
+    error.__str__() == "isinstance('hello', (str, unicode))"
+
+    with Assert.raises(AssertionError) as error:
+        Assert.not_isinstance('hello', basestring)
+    error.__str__() == "isinstance('hello', basestring)"
+
+    Assert.not_isinstance('hello', int)

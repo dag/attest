@@ -773,6 +773,32 @@ class Assert(object):
         except exception:
             raise AssertionError('raised %s' % exception.__name__)
 
+    @staticmethod
+    def isinstance(obj, classinfo):
+        """Test that an object is an instance of a class or a :func:`tuple`
+        of classes. Corresponds to :func:`~.isinstance`.
+
+        .. versionadded:: 0.4
+
+        """
+        if isinstance(obj, Assert):
+            obj = obj.obj
+        return assert_(isinstance(obj, classinfo),
+                       'not isinstance(%r, %s)' % (obj, _repr(classinfo)))
+
+    @staticmethod
+    def not_isinstance(obj, classinfo):
+        """Negated version of :meth:`isinstance`.
+
+        .. versionadded:: 0.4
+
+        """
+
+        if isinstance(obj, Assert):
+            obj = obj.obj
+        return assert_(not isinstance(obj, classinfo),
+                       'isinstance(%r, %s)' % (obj, _repr(classinfo)))
+
     def __repr__(self):
         """Not proxied to the wrapped object. To test that do something
         like::
@@ -781,3 +807,15 @@ class Assert(object):
 
         """
         return 'Assert(%r)' % self.obj
+
+
+def _repr(obj):
+    """Internal :func:`repr` that tries to be more close to original
+    code.
+
+    """
+    if inspect.isclass(obj):
+        return obj.__name__
+    elif type(obj) is tuple:
+        return '(%s)' % ', '.join(map(_repr, obj))
+    return repr(obj)
