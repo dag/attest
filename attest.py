@@ -405,9 +405,9 @@ class Tests(object):
             self._tests.extend(tests())
             return tests
         elif isinstance(tests, basestring):
-            package, collection = str(tests).rsplit('.', 1)
-            module = package.rsplit('.', 1)[1]
-            tests = getattr(__import__(package, fromlist=[module]), collection)
+            module, collection = str(tests).rsplit('.', 1)
+            module = __import__(module, fromlist=[collection])
+            tests = getattr(module, collection)
         self._tests.extend(tests)
 
     def test_suite(self):
