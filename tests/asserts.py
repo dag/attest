@@ -207,3 +207,11 @@ def not_isinstance():
     error.__str__() == "isinstance('hello', basestring)"
 
     Assert.not_isinstance('hello', int)
+
+
+@suite.test
+def json():
+    """Assert.json"""
+
+    Assert.json('{"works": true}') == dict(works=True)
+    Assert.json('{"works": true}') != dict(works=False)

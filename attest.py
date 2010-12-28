@@ -793,11 +793,24 @@ class Assert(object):
         .. versionadded:: 0.4
 
         """
-
         if isinstance(obj, Assert):
             obj = obj.obj
         return assert_(not isinstance(obj, classinfo),
                        'isinstance(%r, %s)' % (obj, _repr(classinfo)))
+
+    @staticmethod
+    def json(obj):
+        """Parse JSON and wrap in :class:`Assert`. Requires Python 2.6 or
+        the simplejson package.
+
+        .. versionadded:: 0.4
+
+        """
+        try:
+            import simplejson as json
+        except ImportError:
+            import json
+        return Assert(json.loads(obj))
 
     def __repr__(self):
         """Not proxied to the wrapped object. To test that do something

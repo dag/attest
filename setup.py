@@ -47,6 +47,10 @@ setup(
         'pygments',
     ],
 
+    tests_require=[
+        'simplejson',
+    ],
+
     test_loader='attest:Loader',
     test_suite='tests.all',
 
