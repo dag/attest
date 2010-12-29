@@ -199,12 +199,12 @@ def not_isinstance():
     """Assert.not_isinstance"""
 
     with Assert.raises(AssertionError) as error:
-        Assert.not_isinstance('hello', (str, unicode))
-    error.__str__() == "isinstance('hello', (str, unicode))"
+        Assert.not_isinstance(1, (int, float))
+    error.__str__() == "isinstance(1, (int, float))"
 
     with Assert.raises(AssertionError) as error:
-        Assert.not_isinstance('hello', basestring)
-    error.__str__() == "isinstance('hello', basestring)"
+        Assert.not_isinstance(1, int)
+    error.__str__() == "isinstance(1, int)"
 
     Assert.not_isinstance('hello', int)
 

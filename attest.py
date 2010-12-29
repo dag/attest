@@ -723,7 +723,7 @@ class Assert(object):
 
     def __nonzero__(self):
         """Test for truthiness in boolean context."""
-        return assert_(self.obj, 'not %r' % self.obj)
+        return bool(assert_(self.obj, 'not %r' % self.obj))
 
     @staticmethod
     @contextmanager
