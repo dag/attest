@@ -215,3 +215,9 @@ def json():
 
     Assert.json('{"works": true}') == dict(works=True)
     Assert.json('{"works": true}') != dict(works=False)
+
+    with Assert.raises(AssertionError):
+        Assert.json('{"works": true}') != dict(works=True)
+
+    with Assert.raises(AssertionError):
+        Assert.json('{"works": true}') == dict(works=False)
