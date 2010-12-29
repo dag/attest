@@ -41,18 +41,16 @@ setup(
     url='http://packages.python.org/Attest/',
 
     py_modules=['attest'],
+    packages=['tests'],
 
     install_requires=[
         'progressbar',
         'pygments',
     ],
 
-    tests_require=[
-        'simplejson',
-    ],
-
     test_loader='attest:Loader',
     test_suite='tests.all',
+    use_2to3=True,
 
     classifiers=[
         'Development Status :: 3 - Alpha',
