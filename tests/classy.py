@@ -85,3 +85,29 @@ def decorative():
 
     Assert(issubclass(DecoratedTest, TestBase)) == True
     Assert(len(col)) == 2
+
+@suite.test
+def conditional():
+    """@test(condition)"""
+
+    col = Tests()
+
+    class TestClass(TestBase):
+        @test
+        def foo(self):
+            pass
+
+        @test(True)
+        def bar(self):
+            pass
+
+        @test(False)
+        def baz(self):
+            assert False
+
+    col.register(TestClass)
+
+    result = TestReporter()
+    col.run(result)
+    Assert(len(result.failed)) == 0
+    Assert(len(result.succeeded)) == 2

@@ -473,17 +473,27 @@ class Tests(object):
         self.run(reporter)
 
 
-def test(meth):
+def test(meth_or_condition):
     """Mark a :class:`TestBase` method as a test and wrap it to run in the
     :meth:`TestBase.__context__` of the subclass.
 
+    If you want to include the test depending on a condition, you can call
+    this decorator with it.
+
     """
-    @wraps(meth)
-    def wrapper(self):
-        with contextmanager(self.__context__)():
-            meth(self)
-    wrapper.__test__ = True
-    return wrapper
+    def decorate(meth):
+        @wraps(meth)
+        def wrapper(self):
+            with contextmanager(self.__context__)():
+                meth(self)
+        wrapper.__test__ = True
+        return wrapper
+    if callable(meth_or_condition):
+        return decorate(meth_or_condition)
+    elif not callable(meth_or_condition) and meth_or_condition:
+        return decorate
+    else:
+        return lambda x: x
 
 
 class TestBase(object):
