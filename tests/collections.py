@@ -165,3 +165,21 @@ def run():
     result.failed[0].test.is_(fail)
     result.failed[0].error.__class__.is_(AssertionError)
     result.succeeded[0].is_(succeed)
+
+
+@suite.test
+def conditional():
+    """@Tests().test(condition)"""
+
+    col = Tests()
+
+    @col.test(True)
+    def include():
+        pass
+
+    @col.test(False)
+    def exclude():
+        pass
+
+    Assert(include).in_(col)
+    Assert(exclude).not_in(col)

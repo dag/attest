@@ -306,24 +306,36 @@ class Tests(object):
     def __len__(self):
         return len(self._tests)
 
-    def test(self, func):
-        """Decorate a function as a test belonging to this collection."""
-        @wraps(func)
-        def wrapper():
-            with nested(*[ctx() for ctx in self._contexts]) as context:
-                context = [c for c in context if c is not None]
-                if len(inspect.getargspec(func)[0]) != 0:
-                    args = []
-                    for arg in context:
-                        if type(arg) is tuple:  # type() is intentional
-                            args.extend(arg)
-                        else:
-                            args.append(arg)
-                    func(*args)
-                else:
-                    func()
-        self._tests.append(wrapper)
-        return wrapper
+    def test(self, func_or_condition):
+        """Decorate a function as a test belonging to this collection.
+
+        If you want to include the function depending on a condition, you can
+        call this decorator with the condition.
+        
+        """
+        def decorate(func):
+            @wraps(func)
+            def wrapper():
+                with nested(*[ctx() for ctx in self._contexts]) as context:
+                    context = [c for c in context if c is not None]
+                    if len(inspect.getargspec(func)[0]) != 0:
+                        args = []
+                        for arg in context:
+                            if type(arg) is tuple:  # type() is intentional
+                                args.extend(arg)
+                            else:
+                                args.append(arg)
+                        func(*args)
+                    else:
+                        func()
+            self._tests.append(wrapper)
+            return wrapper
+        if callable(func_or_condition):
+            return decorate(func_or_condition)
+        elif func_or_condition:
+            return decorate
+        else:
+            return lambda x: x
 
     def context(self, func):
         """Decorate a function as a :func:`~contextlib.contextmanager`
