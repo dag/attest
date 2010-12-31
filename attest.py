@@ -490,7 +490,7 @@ def test(meth_or_condition):
         return wrapper
     if callable(meth_or_condition):
         return decorate(meth_or_condition)
-    elif not callable(meth_or_condition) and meth_or_condition:
+    elif meth_or_condition:
         return decorate
     else:
         return lambda x: x
