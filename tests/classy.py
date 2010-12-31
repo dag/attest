@@ -1,4 +1,4 @@
-from attest import TestBase, test, Assert, Tests
+from attest import TestBase, test, Assert, Tests, test_if
 
 from tests.collections import TestReporter
 
@@ -114,8 +114,8 @@ def decorative_conditional():
         def eggs(self):
             pass
 
-    col.register(True)(IncludedTest)
-    col.register(False)(ExcludedTest)
+    col.register_if(True)(IncludedTest)
+    col.register_if(False)(ExcludedTest)
 
     Assert(len(col)) == 2
     Assert(sorted(test.__name__ for test in col)) == ['bar', 'foo']
@@ -132,11 +132,11 @@ def conditional():
         def foo(self):
             pass
 
-        @test(True)
+        @test_if(True)
         def bar(self):
             pass
 
-        @test(False)
+        @test_if(False)
         def baz(self):
             assert False
 

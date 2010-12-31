@@ -173,11 +173,11 @@ def conditional():
 
     col = Tests()
 
-    @col.test(True)
+    @col.test_if(True)
     def include():
         pass
 
-    @col.test(False)
+    @col.test_if(False)
     def exclude():
         pass
 

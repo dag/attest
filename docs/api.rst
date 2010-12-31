@@ -22,7 +22,7 @@ are many ways this can be achieved, allowing flexibility and separation.
     to be used as a class decorator in Python 2.6 or later.
 
 .. autoclass:: Tests
-   :members: test, context, register, test_suite
+   :members: test, test_if, context, register, register_if, test_suite
 
    .. automethod:: run(reporter=auto_reporter)
 
@@ -31,6 +31,8 @@ are many ways this can be achieved, allowing flexibility and separation.
 .. autoclass:: TestBase
 
 .. autofunction:: test
+
+.. autofunction:: test_if
 
 
 Asserting conditions

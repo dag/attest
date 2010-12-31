@@ -306,37 +306,34 @@ class Tests(object):
     def __len__(self):
         return len(self._tests)
 
-    def test(self, func_or_condition):
-        """Decorate a function as a test belonging to this collection.
+    def test_if(self, condition):
+        """Returns :meth:`test` if the `condition` is ``True``.
 
         .. versionadded:: 0.4
-            If you want to include the function depending on a condition, you
-            can call this decorator with the condition.
-        
+
         """
-        def decorate(func):
-            @wraps(func)
-            def wrapper():
-                with nested(*[ctx() for ctx in self._contexts]) as context:
-                    context = [c for c in context if c is not None]
-                    if len(inspect.getargspec(func)[0]) != 0:
-                        args = []
-                        for arg in context:
-                            if type(arg) is tuple:  # type() is intentional
-                                args.extend(arg)
-                            else:
-                                args.append(arg)
-                        func(*args)
-                    else:
-                        func()
-            self._tests.append(wrapper)
-            return wrapper
-        if callable(func_or_condition):
-            return decorate(func_or_condition)
-        elif func_or_condition:
-            return decorate
-        else:
-            return lambda x: x
+        if condition:
+            return self.test
+        return lambda x: x
+
+    def test(self, func):
+        """Decorate a function as a test belonging to this collection."""
+        @wraps(func)
+        def wrapper():
+            with nested(*[ctx() for ctx in self._contexts]) as context:
+                context = [c for c in context if c is not None]
+                if len(inspect.getargspec(func)[0]) != 0:
+                    args = []
+                    for arg in context:
+                        if type(arg) is tuple:  # type() is intentional
+                            args.extend(arg)
+                        else:
+                            args.append(arg)
+                    func(*args)
+                else:
+                    func()
+        self._tests.append(wrapper)
+        return wrapper
 
     def context(self, func):
         """Decorate a function as a :func:`~contextlib.contextmanager`
@@ -397,17 +394,25 @@ class Tests(object):
         self._contexts.append(func)
         return func
 
-    def register(self, tests_or_condition):
+    def register_if(self, condition):
+        """Returns :meth:`register` if the `condition` is ``True``.
+
+        .. versionadded:: 0.4
+
+        """
+        if condition:
+            return self.register
+        return lambda x: x
+
+    def register(self, tests):
         """Merge in another test collection.
 
-        :param tests_or_condition:
+        :param tests:
             * A class, which is then instantiated and return allowing it to be
               used as a decorator for :class:`TestBase` classes.
             * A string, representing the import path to an iterable yielding
               tests, in the form of ``'package.module.object'``.
             * Otherwise any iterable object is assumed to yield tests.
-            * A boolean depending on which a returned callable merges the
-              collection.
 
         Any of these can be passed in a list to the :class:`Tests`
         constructor.
@@ -415,22 +420,15 @@ class Tests(object):
         .. versionadded:: 0.2
            Refer to collections by import path as a string
 
-        .. versionadded:: 0.4
-           Passing a boolean.
-
         """
-        def decorate(tests):
-            if inspect.isclass(tests):
-                self._tests.extend(tests())
-                return tests
-            elif isinstance(tests, basestring):
-                module, collection = str(tests).rsplit('.', 1)
-                module = __import__(module, fromlist=[collection])
-                tests = getattr(module, collection)
-            self._tests.extend(tests)
-        if isinstance(tests_or_condition, bool):
-            return decorate if tests_or_condition else lambda x: x
-        return decorate(tests_or_condition)
+        if inspect.isclass(tests):
+            self._tests.extend(tests())
+            return tests
+        elif isinstance(tests, basestring):
+            module, collection = str(tests).rsplit('.', 1)
+            module = __import__(module, fromlist=[collection])
+            tests = getattr(module, collection)
+        self._tests.extend(tests)
 
     def test_suite(self):
         """Create a :class:`unittest.TestSuite` from this collection."""
@@ -495,28 +493,28 @@ class Tests(object):
         self.run(reporter)
 
 
-def test(meth_or_condition):
+def test_if(condition):
+    """Returns :func:`test` if the `condition` is ``True``.
+
+    .. versionadded:: 0.4
+
+    """
+    if condition:
+        return test
+    return lambda x: x
+
+
+def test(meth):
     """Mark a :class:`TestBase` method as a test and wrap it to run in the
     :meth:`TestBase.__context__` of the subclass.
 
-    .. versionadded:: 0.4
-       If you want to include the test depending on a condition, you can call
-       this decorator with it.
-
     """
-    def decorate(meth):
-        @wraps(meth)
-        def wrapper(self):
-            with contextmanager(self.__context__)():
-                meth(self)
-        wrapper.__test__ = True
-        return wrapper
-    if callable(meth_or_condition):
-        return decorate(meth_or_condition)
-    elif meth_or_condition:
-        return decorate
-    else:
-        return lambda x: x
+    @wraps(meth)
+    def wrapper(self):
+        with contextmanager(self.__context__)():
+            meth(self)
+    wrapper.__test__ = True
+    return wrapper
 
 
 class TestBase(object):
