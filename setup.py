@@ -38,7 +38,7 @@ setup(
     author='Dag Odenhall',
     author_email='dag.odenhall@gmail.com',
     license='Simplified BSD',
-    url='http://packages.python.org/Attest/',
+    url='https://github.com/dag/attest',
 
     py_modules=['attest'],
     packages=['tests'],
@@ -51,6 +51,7 @@ setup(
     test_loader='attest:Loader',
     test_suite='tests.all',
     use_2to3=True,
+    zip_safe=False,
 
     classifiers=[
         'Development Status :: 3 - Alpha',
@@ -60,6 +61,7 @@ setup(
         'Programming Language :: Python :: 2.5',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.1',
         'Topic :: Software Development :: Testing',
     ]
 )
