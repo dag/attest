@@ -41,7 +41,6 @@ setup(
     url='https://github.com/dag/attest',
 
     py_modules=['attest'],
-    packages=['tests'],
 
     install_requires=[
         'progressbar',
