@@ -86,6 +86,41 @@ def decorative():
     Assert(issubclass(DecoratedTest, TestBase)) == True
     Assert(len(col)) == 2
 
+
+@suite.test
+def decorative_conditional():
+    """@Tests().register(condition)(TestBase)"""
+
+    col = Tests()
+
+    class IncludedTest(TestBase):
+
+        @test
+        def foo(self):
+            pass
+
+        @test
+        def bar(self):
+            pass
+
+
+    class ExcludedTest(TestBase):
+
+        @test
+        def spam(self):
+            pass
+
+        @test
+        def eggs(self):
+            pass
+
+    col.register(True)(IncludedTest)
+    col.register(False)(ExcludedTest)
+
+    Assert(len(col)) == 2
+    Assert(sorted(test.__name__ for test in col)) == ['bar', 'foo']
+
+
 @suite.test
 def conditional():
     """@test(condition)"""

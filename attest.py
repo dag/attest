@@ -396,15 +396,17 @@ class Tests(object):
         self._contexts.append(func)
         return func
 
-    def register(self, tests):
+    def register(self, tests_or_condition):
         """Merge in another test collection.
 
-        :param tests:
+        :param tests_or_condition:
             * A class, which is then instantiated and return allowing it to be
               used as a decorator for :class:`TestBase` classes.
             * A string, representing the import path to an iterable yielding
               tests, in the form of ``'package.module.object'``.
             * Otherwise any iterable object is assumed to yield tests.
+            * A boolean depending on which a returned callable merges the
+              collection.
 
         Any of these can be passed in a list to the :class:`Tests`
         constructor.
@@ -413,14 +415,18 @@ class Tests(object):
            Refer to collections by import path as a string
 
         """
-        if inspect.isclass(tests):
-            self._tests.extend(tests())
-            return tests
-        elif isinstance(tests, basestring):
-            module, collection = str(tests).rsplit('.', 1)
-            module = __import__(module, fromlist=[collection])
-            tests = getattr(module, collection)
-        self._tests.extend(tests)
+        def decorate(tests):
+            if inspect.isclass(tests):
+                self._tests.extend(tests())
+                return tests
+            elif isinstance(tests, basestring):
+                module, collection = str(tests).rsplit('.', 1)
+                module = __import__(module, fromlist=[collection])
+                tests = getattr(module, collection)
+            self._tests.extend(tests)
+        if isinstance(tests_or_condition, bool):
+            return decorate if tests_or_condition else lambda x: x
+        return decorate(tests_or_condition)
 
     def test_suite(self):
         """Create a :class:`unittest.TestSuite` from this collection."""
