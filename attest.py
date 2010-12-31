@@ -830,6 +830,31 @@ class Assert(object):
                        'isinstance(%r, %s)' % (obj, _repr(classinfo)))
 
     @staticmethod
+    def issubclass(obj, cls):
+        """Test that `obj` is a subclass of `cls` or a subclass of a class
+        inside `cls`. Corresponds to :func:`issubclass`.
+
+        .. versionadded:: 0.4
+
+        """
+        if isinstance(obj, Assert):
+            obj = obj.obj
+        return assert_(issubclass(obj, cls),
+                       'not issubclass(%r, %s)' % (obj, _repr(cls)))
+
+    @staticmethod
+    def not_issubclass(obj, cls):
+        """Negated version of :meth:`issubclass`.
+
+        .. versionadded:: 0.4
+
+        """
+        if isinstance(obj, Assert):
+            obj = obj.obj
+        return assert_(not issubclass(obj, cls),
+                       'issubclass(%r, %s)' % (obj, _repr(cls)))
+
+    @staticmethod
     def json(obj):
         """Parse JSON and wrap in :class:`Assert`. Requires Python 2.6 or
         the simplejson package.

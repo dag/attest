@@ -210,6 +210,36 @@ def not_isinstance():
 
 
 @suite.test
+def issubclass():
+    """Assert.issubclass"""
+
+    with Assert.raises(AssertionError) as error:
+        Assert.issubclass(str, (int, float))
+    error.__str__() == "not issubclass(<type 'str'>, (int, float))"
+
+    with Assert.raises(AssertionError) as error:
+        Assert.issubclass(str, int)
+    error.__str__() == "not issubclass(<type 'str'>, int)"
+
+    Assert.issubclass(str, str)
+
+
+@suite.test
+def not_issubclass():
+    """Assert.not_issubclass"""
+
+    with Assert.raises(AssertionError) as error:
+        Assert.not_issubclass(int, (int, float))
+    error.__str__() == "issubclass(<type 'int'>, (int, float))"
+
+    with Assert.raises(AssertionError) as error:
+        Assert.not_issubclass(int, int)
+    error.__str__() == "issubclass(<type 'int'>, int)"
+
+    Assert.not_issubclass(int, str)
+
+
+@suite.test
 def json():
     """Assert.json"""
 
