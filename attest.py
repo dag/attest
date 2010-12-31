@@ -309,8 +309,9 @@ class Tests(object):
     def test(self, func_or_condition):
         """Decorate a function as a test belonging to this collection.
 
-        If you want to include the function depending on a condition, you can
-        call this decorator with the condition.
+        .. versionadded:: 0.4
+            If you want to include the function depending on a condition, you
+            can call this decorator with the condition.
         
         """
         def decorate(func):
@@ -414,6 +415,9 @@ class Tests(object):
         .. versionadded:: 0.2
            Refer to collections by import path as a string
 
+        .. versionadded:: 0.4
+           Passing a boolean.
+
         """
         def decorate(tests):
             if inspect.isclass(tests):
@@ -495,8 +499,9 @@ def test(meth_or_condition):
     """Mark a :class:`TestBase` method as a test and wrap it to run in the
     :meth:`TestBase.__context__` of the subclass.
 
-    If you want to include the test depending on a condition, you can call
-    this decorator with it.
+    .. versionadded:: 0.4
+       If you want to include the test depending on a condition, you can call
+       this decorator with it.
 
     """
     def decorate(meth):
