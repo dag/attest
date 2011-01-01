@@ -215,11 +215,11 @@ def issubclass():
 
     with Assert.raises(AssertionError) as error:
         Assert.issubclass(str, (int, float))
-    error.__str__() == "not issubclass(<type 'str'>, (int, float))"
+    error.__str__() == "not issubclass(str, (int, float))"
 
     with Assert.raises(AssertionError) as error:
         Assert.issubclass(str, int)
-    error.__str__() == "not issubclass(<type 'str'>, int)"
+    error.__str__() == "not issubclass(str, int)"
 
     Assert.issubclass(str, str)
 
@@ -230,11 +230,11 @@ def not_issubclass():
 
     with Assert.raises(AssertionError) as error:
         Assert.not_issubclass(int, (int, float))
-    error.__str__() == "issubclass(<type 'int'>, (int, float))"
+    error.__str__() == "issubclass(int, (int, float))"
 
     with Assert.raises(AssertionError) as error:
         Assert.not_issubclass(int, int)
-    error.__str__() == "issubclass(<type 'int'>, int)"
+    error.__str__() == "issubclass(int, int)"
 
     Assert.not_issubclass(int, str)
 

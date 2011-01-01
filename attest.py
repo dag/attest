@@ -840,7 +840,7 @@ class Assert(object):
         if isinstance(obj, Assert):
             obj = obj.obj
         return assert_(issubclass(obj, cls),
-                       'not issubclass(%r, %s)' % (obj, _repr(cls)))
+                       'not issubclass(%s, %s)' % (_repr(obj), _repr(cls)))
 
     @staticmethod
     def not_issubclass(obj, cls):
@@ -852,7 +852,7 @@ class Assert(object):
         if isinstance(obj, Assert):
             obj = obj.obj
         return assert_(not issubclass(obj, cls),
-                       'issubclass(%r, %s)' % (obj, _repr(cls)))
+                       'issubclass(%s, %s)' % (_repr(obj), _repr(cls)))
 
     @staticmethod
     def json(obj):
