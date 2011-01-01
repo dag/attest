@@ -26,7 +26,7 @@ free to write tests however you prefer.
 
 """
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 
 setup(
@@ -40,8 +40,7 @@ setup(
     license='Simplified BSD',
     url='https://github.com/dag/attest',
 
-    py_modules=['attest'],
-    packages=['tests'],
+    packages=find_packages(),
 
     install_requires=[
         'progressbar',
@@ -49,7 +48,7 @@ setup(
     ],
 
     test_loader='attest:Loader',
-    test_suite='tests.all',
+    test_suite='attest.tests.all',
     use_2to3=True,
     zip_safe=False,
 

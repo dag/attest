@@ -1,2 +1,2 @@
-import tests
-tests.all.main()
+import attest.tests
+attest.tests.all.main()
