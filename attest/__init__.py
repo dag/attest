@@ -878,7 +878,7 @@ class Assert(object):
         .. note::
 
             Not tested on Python 2.5 and PyPy due to difficulties
-            installing lxml on these implementations.
+            installing lxml for these implementations.
 
         .. versionadded:: 0.4
 
@@ -896,7 +896,7 @@ class Assert(object):
         .. note::
 
             Not tested on Python 2.5 and PyPy due to difficulties
-            installing lxml on these implementations.
+            installing lxml for these implementations.
 
         .. versionadded:: 0.4
 
