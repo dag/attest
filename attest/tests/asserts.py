@@ -243,11 +243,11 @@ def not_issubclass():
 def json():
     """Assert.json"""
 
-    Assert.json('{"works": true}') == dict(works=True)
-    Assert.json('{"works": true}') != dict(works=False)
+    Assert('{"works": true}').json == dict(works=True)
+    Assert('{"works": true}').json != dict(works=False)
 
     with Assert.raises(AssertionError):
-        Assert.json('{"works": true}') != dict(works=True)
+        Assert('{"works": true}').json != dict(works=True)
 
     with Assert.raises(AssertionError):
-        Assert.json('{"works": true}') == dict(works=False)
+        Assert('{"works": true}').json == dict(works=False)

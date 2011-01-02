@@ -854,10 +854,10 @@ class Assert(object):
         return assert_(not issubclass(obj, cls),
                        'issubclass(%s, %s)' % (_repr(obj), _repr(cls)))
 
-    @staticmethod
-    def json(obj):
-        """Parse JSON and wrap in :class:`Assert`. Requires Python 2.6 or
-        the simplejson package.
+    @property
+    def json(self):
+        """Parse the wrapped object as JSON. Requires Python 2.6 or the
+        simplejson package.
 
         .. versionadded:: 0.4
 
@@ -866,7 +866,7 @@ class Assert(object):
             import simplejson as json
         except ImportError:
             import json
-        return Assert(json.loads(obj))
+        return Assert(json.loads(self.obj))
 
     def __repr__(self):
         """Not proxied to the wrapped object. To test that do something
