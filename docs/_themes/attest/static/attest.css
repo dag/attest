@@ -1,22 +1,22 @@
+@import url("http://fonts.googleapis.com/css?family=Cantarell:r,b,i|Old+Standard+TT:r,b,i|Anonymous+Pro:r,b,i");
 @import url("basic.css");
 
 body
-{ font-family: 'Delicious', 'Ubuntu', 'Helvetica', 'sans-serif';
-  font-size: 95%;
+{ font-family: 'Cantarell', 'sans-serif';
   color: #404040;
 }
 
 h1, h2, h3, h4, h5, h6
-{ font-family: 'Garamond', 'Times', 'Times New Roman', 'Georgia', 'serif';
+{ font-family: 'Old Standard TT', 'serif';
   font-weight: normal;
   font-style: italic;
   color: #a6194d;
   margin-top: 2em;
 }
 
+
 pre, tt, tt.descname
-{ font-family: 'Liberation Mono', 'DejaVu Sans Mono', 'Consolas',
-               'Andale Mono', 'Anonymous', 'Aurulent Sans Mono', 'monospace';
+{ font-family: 'Anonymous Pro', 'monospace';
   font-size: 90%;
 }
 
@@ -98,7 +98,7 @@ dl.dictionary-entry
 }
 
 dl.dictionary-entry
-{ font-family: 'Garamond', 'Times', 'Times New Roman', 'Georgia', 'serif';
+{ font-family: 'Old Standard TT', 'serif';
 }
 
 dl.dictionary-entry dd
