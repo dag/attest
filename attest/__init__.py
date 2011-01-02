@@ -886,6 +886,24 @@ class Assert(object):
         from lxml import html
         return Assert(html.fromstring(self.obj).cssselect(selector))
 
+    def xpath(self, path):
+        """Parse the wrapped object as
+        :abbr:`XML (eXtensible Markup Language)` and return a list (wrapped
+        in :class:`Assert`) of elements matching the
+        :abbr:`XPath (XML Path Language)` *path*.  Requires lxml 2.0
+        or newer.
+
+        .. note::
+
+            Not tested on Python 2.5 and PyPy due to difficulties
+            installing lxml on these implementations.
+
+        .. versionadded:: 0.4
+
+        """
+        from lxml import etree
+        return Assert(etree.fromstring(self.obj).xpath(path))
+
     def __repr__(self):
         """Not proxied to the wrapped object. To test that do something
         like::

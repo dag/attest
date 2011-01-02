@@ -274,3 +274,22 @@ def css():
 
     with Assert.raises(AssertionError):
         html.css('#maincontent .container p')[0].text != 'Hello World'
+
+
+@suite.test_if(lxml)
+def xpath():
+    """Assert.xpath"""
+
+    xml = Assert("""
+        <div id="maincontent">
+            <div class="container">
+                <p>Hello World</p>
+            </div>
+        </div>
+    """)
+
+    path = '/div[@id="maincontent"]/div[@class="container"]/p'
+    xml.xpath(path)[0].text == 'Hello World'
+
+    with Assert.raises(AssertionError):
+        xml.xpath(path)[0].text != 'Hello World'
