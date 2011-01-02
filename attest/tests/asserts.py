@@ -251,3 +251,26 @@ def json():
 
     with Assert.raises(AssertionError):
         Assert('{"works": true}').json == dict(works=False)
+
+
+try:
+    import lxml
+except ImportError:
+    lxml = None
+
+@suite.test_if(lxml)
+def css():
+    """Assert.css"""
+
+    html = Assert("""
+        <div id="maincontent">
+            <div class="container">
+                <p>Hello World</p>
+            </div>
+        </div>
+    """)
+
+    html.css('#maincontent .container p')[0].text == 'Hello World'
+
+    with Assert.raises(AssertionError):
+        html.css('#maincontent .container p')[0].text != 'Hello World'

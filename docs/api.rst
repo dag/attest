@@ -39,7 +39,8 @@ Asserting conditions
 --------------------
 
 .. autoclass:: Assert
-   :members: isinstance, not_isinstance, issubclass, not_issubclass, json,
+   :members:
+       isinstance, not_isinstance, issubclass, not_issubclass, json, css,
        __str__, __getattr__, __call__, __getitem__, __eq__, __ne__, is_,
        is_not, __contains__, in_, not_in, __lt__, __le__, __gt__, __ge__,
        __nonzero__, __repr__

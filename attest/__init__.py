@@ -868,6 +868,24 @@ class Assert(object):
             import json
         return Assert(json.loads(self.obj))
 
+    def css(self, selector):
+        """Parse the wrapped object as
+        :abbr:`HTML (HyperText Markup Language)` and return a list (wrapped
+        in :class:`Assert`) of elements matching the
+        :abbr:`CSS (Cascading Style Sheets)` *selector*.  Requires lxml 2.0
+        or newer.
+
+        .. note::
+
+            Not tested on Python 2.5 and PyPy due to difficulties
+            installing lxml on these implementations.
+
+        .. versionadded:: 0.4
+
+        """
+        from lxml import html
+        return Assert(html.fromstring(self.obj).cssselect(selector))
+
     def __repr__(self):
         """Not proxied to the wrapped object. To test that do something
         like::
