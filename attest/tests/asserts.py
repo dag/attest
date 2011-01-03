@@ -293,3 +293,25 @@ def xpath():
 
     with Assert.raises(AssertionError):
         xml.xpath(path)[0].text != 'Hello World'
+
+
+@suite.test
+def passed_to():
+    """Assert.passed_to"""
+
+    Assert([1, 2, 3]).passed_to(len) == 3
+    Assert(1).passed_to(str) == '1'
+    Assert('a').passed_to(int, 16) == 10
+    Assert('a').passed_to(int, base=16) == 10
+
+    with Assert.raises(AssertionError):
+        Assert([1, 2, 3]).passed_to(len) != 3
+
+    with Assert.raises(AssertionError):
+        Assert(1).passed_to(str) != '1'
+
+    with Assert.raises(AssertionError):
+        Assert('a').passed_to(int, 16) != 10
+
+    with Assert.raises(AssertionError):
+        Assert('a').passed_to(int, base=16) != 10

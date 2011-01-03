@@ -904,6 +904,21 @@ class Assert(object):
         from lxml import etree
         return Assert(etree.fromstring(self.obj).xpath(path))
 
+    def passed_to(self, func, *args, **kwargs):
+        """Pass the unwrapped object to a function and return its result
+        wrapped.
+
+        These are identical::
+
+            Assert(len([1, 2, 3])) == 3
+            Assert([1, 2, 3]).passed_to(len) == 3
+
+        Mainly useful with Assert objects that comes from the outside, e.g.
+        yielded from a context, from methods like :meth:`css` etc.
+
+        """
+        return Assert(func(self.obj, *args, **kwargs))
+
     def __repr__(self):
         """Not proxied to the wrapped object. To test that do something
         like::
