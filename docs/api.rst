@@ -39,24 +39,72 @@ Asserting conditions
 --------------------
 
 .. autoclass:: Assert
-   :members:
-       isinstance, not_isinstance, issubclass, not_issubclass, json, css,
-       xpath, passed_to, attr, __str__, __getattr__, __call__, __getitem__,
-       __eq__, __ne__, is_, is_not, __contains__, in_, not_in, __lt__,
-       __le__, __gt__, __ge__, __nonzero__, __repr__
 
    .. autoattribute:: obj
 
-   .. attribute:: __class__
 
-        The class of the wrapped object, also wrapped in
-        :class:`Assert`. Can be used for type testing::
+   .. rubric:: Conditional tests
 
-            Assert('Hello World').__class__.is_(str)
+   The normal conditional operators are supported:
+
+   * Equality: ``==`` and ``!=``
+   * Comparison: ``<``, ``<=``, ``>``, ``>=``
+
+   Some keywords are also supported:
+
+   * Containment: ``in``, but beware that it is the container that should
+     be wrapped and that the negated form, ``not in``, will *not* work.
+
+   These operators and keywords are **not** natively supported:
+
+   * Identity: ``is``, ``is not``
+   * Negative containment: ``not in``
+
+   They are instead supported via the following methods.
+
+   .. automethod:: is_
+
+   .. automethod:: is_not
+
+   .. automethod:: in_
+
+   .. automethod:: not_in
+
+
+   .. rubric:: Convinient helpers
+
+   .. autoattribute:: json
+
+   .. automethod:: css
+
+   .. automethod:: xpath
+
+
+   .. rubric:: Static methods
 
    .. automethod:: raises(exceptions)
 
    .. automethod:: not_raising(exception)
+
+   .. automethod:: isinstance
+
+   .. automethod:: not_isinstance
+
+   .. automethod:: issubclass
+
+   .. automethod:: not_issubclass
+
+
+   .. rubric:: Proxying
+
+   Item and attribute access is proxied to the wrapped object, however in
+   the latter case this can be unpredictable due to the wrapper class
+   having its own attributes. Therefore there is a method for this, too.
+
+   .. automethod:: attr
+
+   .. automethod:: passed_to
+
 
 .. autofunction:: assert_
 
