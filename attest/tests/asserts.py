@@ -150,12 +150,16 @@ def proxy():
     hello = Assert('hello')
     hello == 'hello'
     hello.upper() == 'HELLO'
+    hello.attr('upper').attr('__name__') == 'upper'
 
     with Assert.raises(AssertionError):
         hello.upper() == 'hello'
 
     with Assert.raises(AssertionError):
         Assert(3).__str__() == '4'
+
+    with Assert.raises(AssertionError):
+        hello.attr('upper').attr('__name__') == 'lower'
 
 
 @suite.test

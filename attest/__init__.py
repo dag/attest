@@ -919,6 +919,10 @@ class Assert(object):
         """
         return Assert(func(self.obj, *args, **kwargs))
 
+    def attr(self, name):
+        """Safely get an attribute from the wrapped object."""
+        return Assert(getattr(self.obj, name))
+
     def __repr__(self):
         """Not proxied to the wrapped object. To test that do something
         like::
