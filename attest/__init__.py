@@ -127,6 +127,8 @@ class FancyReporter(AbstractReporter):
 
     def __init__(self, style='bw'):
         self.style = style
+        import progressbar
+        import pygments
 
     def begin(self, tests):
         from progressbar import ProgressBar, Percentage, \
@@ -179,20 +181,25 @@ class FancyReporter(AbstractReporter):
 
 
 def auto_reporter(style=None):
-    """Select a reporter based on the target output.
+    """Select a reporter based on the target output and installed
+    dependencies.
 
     This is the default reporter.
 
     :param style: Passed to :class:`FancyReporter` if it is used.
     :rtype:
-        :class:`FancyReporter` if output is a terminal otherwise a
+        :class:`FancyReporter` if output is a terminal and the progressbar
+        and pygments packages are installed, otherwise a
         :class:`PlainReporter`.
 
     """
     if sys.stdout.isatty():
-        if style is None:
-            return FancyReporter()
-        return FancyReporter(style)
+        try:
+            if style is None:
+                return FancyReporter()
+            return FancyReporter(style)
+        except ImportError:
+            pass
     return PlainReporter()
 
 
