@@ -169,7 +169,7 @@ def run():
 
 @suite.test
 def conditional():
-    """@Tests().test(condition)"""
+    """@Tests().test_if(condition)"""
 
     col = Tests()
 

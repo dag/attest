@@ -89,7 +89,7 @@ def decorative():
 
 @suite.test
 def decorative_conditional():
-    """@Tests().register(condition)(TestBase)"""
+    """@Tests().register_if(condition)(TestBase)"""
 
     col = Tests()
 
@@ -123,7 +123,7 @@ def decorative_conditional():
 
 @suite.test
 def conditional():
-    """@test(condition)"""
+    """@test_if(condition)"""
 
     col = Tests()
 
