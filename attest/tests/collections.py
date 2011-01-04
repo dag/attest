@@ -119,6 +119,20 @@ def context():
 
     test4()
 
+    from contextlib import contextmanager
+
+    @contextmanager
+    def context5():
+        yield 1
+
+    col5 = Tests(contexts=[context5])
+
+    @col5.test
+    def test5(one):
+        Assert(one) == 1
+
+    test5()
+
 
 @suite.test
 def capture():

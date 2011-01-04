@@ -291,14 +291,19 @@ class Tests(object):
 
     :param tests:
         Iterable of other test collections to register with this one.
+    :param contexts:
+        Iterable of callables that take no arguments and return a context
+        manager.
 
     """
 
-    def __init__(self, tests=()):
+    def __init__(self, tests=(), contexts=None):
         self._tests = []
         for collection in tests:
             self.register(collection)
         self._contexts = []
+        if contexts is not None:
+            self._contexts.extend(contexts)
 
     def __iter__(self):
         return iter(self._tests)
