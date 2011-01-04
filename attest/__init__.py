@@ -25,45 +25,98 @@ statistics = threading.local()
 statistics.assertions = 0
 
 
+class TestResult(object):
+    """Container for result data from running a test.
+
+    .. versionadded:: 0.4
+
+    """
+
+    #: The test callable.
+    test = None
+
+    #: The exception instance, if the test failed.
+    error = None
+
+    #: The ``sys.exc_info()`` of the exception, if the test failed.
+    exc_info = None
+
+    #: A list of lines the test printed on the standard output.
+    stdout = None
+
+    #: A list of lines the test printed on the standard error.
+    stderr = None
+
+    @property
+    def test_name(self):
+        """A representative name for the test, similar to its import path.
+
+        """
+        parts = []
+        if self.test.__module__ != '__main__':
+            parts.append(self.test.__module__)
+        if hasattr(self.test, 'im_class'):
+            parts.append(self.test.im_class.__name__)
+        parts.append(self.test.__name__)
+        return '.'.join(parts)
+
+    @property
+    def traceback(self):
+        """The traceback for the exception, if the test failed, cleaned up.
+
+        """
+        lines = traceback.format_exception(*self.exc_info)
+        lines = ''.join(lines).splitlines()
+        clean = lines[:1]
+        stack = iter(lines[1:-1])  # stack traces are in the middle
+        # loop two lines at a time
+        for first, second in zip(stack, stack):
+            # only keep if this file is not the source of the trace
+            if __file__[:-1] not in first:
+                clean.extend((first, second))
+        clean.append(lines[-1])
+        return '\n'.join(clean)
+
+
 class AbstractReporter(object):
     """Optional base for reporters, serves as documentation and improves
     errors for incomplete reporters.
-
-    :param tests: The list of test functions we will be running.
 
     """
 
     __metaclass__ = ABCMeta
 
-    def get_test_name(self, test, force_module=False):
-        parts = []
-        if force_module or test.__module__ != '__main__':
-            parts.append(test.__module__)
-        if hasattr(test, 'im_class'):
-            parts.append(test.im_class.__name__)
-        parts.append(test.__name__)
-        return '.'.join(parts)
-
     @abstractmethod
     def begin(self, tests):
-        """Called with the list of tests when a test run has begun."""
-        raise NotImplementedError
+        """Called when a test run has begun.
 
-    @abstractmethod
-    def success(self, test, stdout, stderr):
-        """When a test succeeds, this method is called with the test
-        function and the captured stdout and stderr output as lists of
-        lines.
+        :param tests: The list of test functions we will be running.
 
         """
         raise NotImplementedError
 
     @abstractmethod
-    def failure(self, test, error, traceback, stdout, stderr):
-        """When a test fails, this method is called with the test
-        function, the exception instance that was raised, a cleaned up
-        traceback string and the captured stdout and stderr output as lists
-        of lines.
+    def success(self, result):
+        """Called when a test succeeds.
+
+        :param result: Result data for the succeeding test.
+        :type result: :class:`TestResult`
+
+        .. versionchanged:: 0.4
+            Parameters changed to `result`.
+
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def failure(self, result):
+        """Called when a test fails.
+
+        :param result: Result data for the failing test.
+        :type result: :class:`TestResult`
+
+        .. versionchanged:: 0.4
+            Parameters changed to `result`.
 
         """
         raise NotImplementedError
@@ -81,27 +134,27 @@ class PlainReporter(AbstractReporter):
         self.total = len(tests)
         self.failures = []
 
-    def success(self, test, stdout, stderr):
+    def success(self, result):
         sys.stdout.write('.')
         sys.stdout.flush()
 
-    def failure(self, test, error, traceback, stdout, stderr):
-        if isinstance(error, AssertionError):
+    def failure(self, result):
+        if isinstance(result.error, AssertionError):
             sys.stdout.write('F')
         else:
             sys.stdout.write('E')
         sys.stdout.flush()
-        self.failures.append((test, traceback))
+        self.failures.append(result)
 
     def finished(self):
         print
         print
-        for test, trace in self.failures:
-            print self.get_test_name(test)
-            if test.__doc__:
-                print inspect.getdoc(test)
+        for result in self.failures:
+            print result.test_name
+            if result.test.__doc__:
+                print inspect.getdoc(result.test)
             print '-' * 80
-            print trace
+            print result.traceback
             print
 
         print 'Failures: %s/%s (%s assertions)' % (len(self.failures),
@@ -139,14 +192,14 @@ class FancyReporter(AbstractReporter):
         self.progress.start()
         self.failures = []
 
-    def success(self, test, stdout, stderr):
+    def success(self, result):
         self.counter += 1
         self.progress.update(self.counter)
 
-    def failure(self, test, error, traceback, stdout, stderr):
+    def failure(self, result):
         self.counter += 1
         self.progress.update(self.counter)
-        self.failures.append((test, traceback, stdout, stderr))
+        self.failures.append(result)
 
     def finished(self):
         from pygments.console import colorize
@@ -156,17 +209,16 @@ class FancyReporter(AbstractReporter):
 
         self.progress.finish()
         print
-        for test, trace, out, err in self.failures:
-            name = self.get_test_name(test)
-            print colorize('bold', name)
-            if test.__doc__:
-                print inspect.getdoc(test)
+        for result in self.failures:
+            print colorize('bold', result.test_name)
+            if result.test.__doc__:
+                print inspect.getdoc(result.test)
             print '─' * 80
-            if out:
-                print colorize('faint', '\n'.join(out))
-            if err:
-                print colorize('darkred', '\n'.join(err))
-            print highlight(trace, PythonTracebackLexer(),
+            if result.stdout:
+                print colorize('faint', '\n'.join(result.stdout))
+            if result.stderr:
+                print colorize('darkred', '\n'.join(result.stderr))
+            print highlight(result.traceback, PythonTracebackLexer(),
                             Terminal256Formatter(style=self.style))
 
         if self.failures:
@@ -216,21 +268,20 @@ class XmlReporter(AbstractReporter):
         print '<?xml version="1.0" encoding="UTF-8"?>'
         print '<testreport tests="%d">' % len(tests)
 
-    def success(self, test, stdout, stderr):
-        name = self.get_test_name(test, force_module=True)
-        print '  <pass name="%s"/>' % name
+    def success(self, result):
+        print '  <pass name="%s"/>' % result.test_name
 
-    def failure(self, test, error, traceback, stdout, stderr):
-        name = self.get_test_name(test, force_module=True)
-        if isinstance(error, AssertionError):
+    def failure(self, result):
+        if isinstance(result.error, AssertionError):
             tag = 'fail'
         else:
             tag = 'error'
-        print '  <%s name="%s" type="%s">' % (tag, name,
-                                              error.__class__.__name__)
+        print '  <%s name="%s" type="%s">' % (tag, result.test_name,
+                                              result.exc_info[0].__name__)
         print self.escape('\n'.join(' ' * 4 + line
                                     for line in
-                                    traceback.splitlines()), quote=True)
+                                    result.traceback.splitlines()),
+                          quote=True)
         print '  </%s>' % tag
 
     def finished(self):
@@ -475,24 +526,21 @@ class Tests(object):
             reporter = reporter()
         reporter.begin(self._tests)
         for test in self:
+            result = TestResult()
+            result.test = test
             try:
                 with capture_output() as (out, err):
                     assert test() is not False, 'test returned False'
             except BaseException, e:
                 if isinstance(e, KeyboardInterrupt):
                     break
-                lines = traceback.format_exc().splitlines()
-                clean = lines[0:1]
-                stack = iter(lines[1:-1])  # stack traces are in the middle
-                # loop two lines at a time
-                for first, second in zip(stack, stack):
-                    # only keep if this file is not the source of the trace
-                    if __file__[0:-1] not in first:
-                        clean.extend((first, second))
-                clean.append(lines[-1])
-                reporter.failure(test, e, '\n'.join(clean), out, err)
+                result.error = e
+                result.stdout, result.stderr = out, err
+                result.exc_info = sys.exc_info()
+                reporter.failure(result)
             else:
-                reporter.success(test, out, err)
+                result.stdout, result.stderr = out, err
+                reporter.success(result)
         reporter.finished()
 
     def main(self, argv=sys.argv):

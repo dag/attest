@@ -45,8 +45,8 @@ def classbased_test_runs():
     Assert(len(result.succeeded)) == 1
     Assert(len(result.failed)) == 1
 
-    result.failed[0].test == instance.fail
-    result.failed[0].error.__class__.is_(AssertionError)
+    Assert(result.failed[0].test) == instance.fail
+    Assert(result.failed[0].exc_info[0]).is_(AssertionError)
 
 
 @suite.test

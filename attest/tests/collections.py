@@ -5,27 +5,17 @@ import sys
 from attest import AbstractReporter, Tests, Assert, capture_output
 
 
-class Failure(object):
-
-    def __init__(self, test, error, traceback, stdout, stderr):
-        self.test = Assert(test)
-        self.error = Assert(error)
-        self.traceback = Assert(traceback)
-        self.stdout = Assert(stdout)
-        self.stderr = Assert(stderr)
-
-
 class TestReporter(AbstractReporter):
 
     def begin(self, tests):
         self.succeeded = []
         self.failed = []
 
-    def success(self, test, stdout, stderr):
-        self.succeeded.append(Assert(test))
+    def success(self, result):
+        self.succeeded.append(result)
 
-    def failure(self, test, error, traceback, stdout, stderr):
-        self.failed.append(Failure(test, error, traceback, stdout, stderr))
+    def failure(self, result):
+        self.failed.append(result)
 
     def finished(self):
         pass
@@ -176,9 +166,9 @@ def run():
     Assert(len(result.failed)) == 2
     Assert(len(result.succeeded)) == 1
 
-    result.failed[0].test.is_(fail)
-    result.failed[0].error.__class__.is_(AssertionError)
-    result.succeeded[0].is_(succeed)
+    Assert(result.failed[0].test).is_(fail)
+    Assert(result.failed[0].exc_info[0]).is_(AssertionError)
+    Assert(result.succeeded[0].test).is_(succeed)
 
 
 @suite.test
