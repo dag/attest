@@ -93,14 +93,16 @@ div.related, div.footer
 }
 
 
-dl.dictionary-entry
+div.dictionary-entry dl
 { text-align: center;
+  font-family: 'Old Standard TT', 'serif';
 }
 
-dl.dictionary-entry
-{ font-family: 'Old Standard TT', 'serif';
-}
-
-dl.dictionary-entry dd
+div.dictionary-entry dd
 { font-style: italic;
+}
+
+
+div.small-caps
+{ font-variant: small-caps;
 }
