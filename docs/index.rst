@@ -84,7 +84,7 @@ The Rest
 
    guide
    api
-   Source code and issue tracking at GitHub <http://github.com/dag/attest/>
+   Source code and issue tracking at GitHub <https://github.com/dag/attest/>
 
 
 The Terms
