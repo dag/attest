@@ -20,8 +20,6 @@ except ImportError:
     from StringIO import StringIO
 
 
-REPORTERS = {}
-
 
 statistics = threading.local()
 statistics.assertions = 0
@@ -113,8 +111,6 @@ class PlainReporter(AbstractReporter):
         if self.failures:
             raise SystemExit(1)
 
-REPORTERS['plain'] = PlainReporter
-
 
 class FancyReporter(AbstractReporter):
     """Heavily uses ANSI escape codes for fancy output to 256-color
@@ -181,8 +177,6 @@ class FancyReporter(AbstractReporter):
         if self.failures:
             raise SystemExit(1)
 
-REPORTERS['fancy'] = FancyReporter
-
 
 def auto_reporter(style=None):
     """Select a reporter based on the target output.
@@ -200,8 +194,6 @@ def auto_reporter(style=None):
             return FancyReporter()
         return FancyReporter(style)
     return PlainReporter()
-
-REPORTERS['auto'] = auto_reporter
 
 
 class XmlReporter(AbstractReporter):
@@ -237,13 +229,23 @@ class XmlReporter(AbstractReporter):
     def finished(self):
         print '</testreport>'
 
-REPORTERS['xml'] = XmlReporter
-
 
 def get_reporter_by_name(name, default='auto'):
     """Get an :class:`AbstractReporter` by name, falling back on a default.
 
-    Available reporters:
+    Reporters are registered via setuptools entry points, in the
+    ``'attest.reporters'`` group. A third-party reporter can thus register
+    itself using this in its :file:`setup.py`::
+
+        setup(
+            entry_points = {
+                'attest.reporters': [
+                    'name = import.path.to:callable'
+                ]
+            }
+        )
+
+    Names for the built in reporters:
 
     * ``'fancy'`` — :class:`FancyReporter`
     * ``'plain'`` — :class:`PlainReporter`
@@ -258,8 +260,19 @@ def get_reporter_by_name(name, default='auto'):
         If neither the name or the default is a valid name of a reporter.
     :rtype: Callable returning an instance of an :class:`AbstractReporter`.
 
+    .. versionchanged:: 0.4
+        Reporters are registered via setuptools entry points.
+
     """
-    return REPORTERS.get(name, REPORTERS[default])
+    from pkg_resources import iter_entry_points
+    reporter = None
+    if name is not None:
+        reporter = list(iter_entry_points('attest.reporters', name))
+    if not reporter:
+        reporter = list(iter_entry_points('attest.reporters', default))
+    if not reporter:
+        raise KeyError
+    return reporter[0].load()
 
 
 @contextmanager

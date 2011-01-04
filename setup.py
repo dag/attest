@@ -47,6 +47,15 @@ setup(
         'pygments',
     ],
 
+    entry_points = {
+        'attest.reporters': [
+            'xml = attest:XmlReporter',
+            'plain = attest:PlainReporter',
+            'fancy = attest:FancyReporter',
+            'auto = attest:auto_reporter',
+        ],
+    },
+
     test_loader='attest:Loader',
     test_suite='attest.tests.all',
     use_2to3=True,
