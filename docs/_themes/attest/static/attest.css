@@ -71,13 +71,15 @@ div.body ul
 
 div.sphinxsidebar
 { position: absolute;
-  top: 1em;
   right: 0;
 }
 
 div.sphinxsidebarwrapper
 { position: fixed;
   width: 250px;
+  top: 2em;
+  bottom: 0;
+  overflow: auto;
 }
 
 div.sphinxsidebar a, a.headerlink, div.toctree-wrapper a
