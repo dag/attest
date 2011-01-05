@@ -7,13 +7,15 @@ API Reference
 Collecting tests
 ----------------
 
-To run tests, they must be collected in a :class:`Tests` instance. There
-are many ways this can be achieved, allowing flexibility and separation.
+To run :term:`tests <test>`, they must be collected in a :class:`Tests`
+instance. There are many ways this can be achieved, allowing flexibility
+and separation.
 
 * Register individual functions with the :meth:`Tests.test` decorator.
-* Register other collections with :meth:`Tests.register` or as arguments to
-  the constructor. A collection according to Attest is an iterable yielding
-  test callables, this includes:
+* Register other :term:`collections <collection>` with
+  :meth:`Tests.register` or as arguments to the constructor. A collection
+  according to Attest is an iterable yielding :term:`test callables
+  <test>`, this includes:
 
   * Lists of lambdas and function references.
   * :class:`Tests` instances.
@@ -82,9 +84,9 @@ Asserting conditions
 
    .. rubric:: Static methods
 
-   .. automethod:: raises(exceptions)
+   .. automethod:: raises(\*exceptions)
 
-   .. automethod:: not_raising(exception)
+   .. automethod:: not_raising(\*exception)
 
    .. automethod:: isinstance
 

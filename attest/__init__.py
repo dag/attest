@@ -832,8 +832,11 @@ class Assert(object):
     @staticmethod
     @contextmanager
     def raises(*exceptions):
-        """Context manager that fails if a particular exception is not
-        raised. Yields the caught exception wrapped in :class:`Assert`::
+        """Context manager that fails if *none* of the `exceptions` are
+        raised. Yields the captured exception as an :term:`assertive
+        object`.
+
+        ::
 
             with Assert.raises(IOError) as error:
                 open('/etc/passwd', 'w')
@@ -942,11 +945,10 @@ class Assert(object):
         return Assert(json.loads(self.obj))
 
     def css(self, selector):
-        """Parse the wrapped object as
-        :abbr:`HTML (HyperText Markup Language)` and return a list (wrapped
-        in :class:`Assert`) of elements matching the
-        :abbr:`CSS (Cascading Style Sheets)` *selector*.  Requires lxml 2.0
-        or newer.
+        """Parse the wrapped object as :abbr:`HTML
+        (HyperText Markup Language)` and return an :term:`assertive
+        <assertive object>` list of elements matching the :abbr:`CSS
+        (Cascading Style Sheets)` `selector`.  Requires lxml 2.0 or newer.
 
         .. note::
 
@@ -960,11 +962,10 @@ class Assert(object):
         return Assert(html.fromstring(self.obj).cssselect(selector))
 
     def xpath(self, path):
-        """Parse the wrapped object as
-        :abbr:`XML (eXtensible Markup Language)` and return a list (wrapped
-        in :class:`Assert`) of elements matching the
-        :abbr:`XPath (XML Path Language)` *path*.  Requires lxml 2.0
-        or newer.
+        """Parse the wrapped object as :abbr:`XML
+        (eXtensible Markup Language)` and return an :term:`assertive
+        <assertive object>` list of elements matching the :abbr:`XPath
+        (XML Path Language)` *path*.  Requires lxml 2.0 or newer.
 
         .. note::
 
@@ -979,7 +980,7 @@ class Assert(object):
 
     def passed_to(self, func, *args, **kwargs):
         """Pass the unwrapped object to a function and return its result
-        wrapped.
+        as an :term:`assertive object`.
 
         These are identical::
 
