@@ -82,6 +82,7 @@ The Rest
 .. toctree::
    :maxdepth: 2
 
+   install
    guide
    api
    meta
