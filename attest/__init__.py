@@ -880,7 +880,7 @@ class Assert(object):
     @staticmethod
     def isinstance(obj, classinfo):
         """Test that an object is an instance of a class or a :func:`tuple`
-        of classes. Corresponds to :func:`~.isinstance`.
+        of classes. Corresponds to :func:`.isinstance`.
 
         .. versionadded:: 0.4
 
@@ -905,7 +905,7 @@ class Assert(object):
     @staticmethod
     def issubclass(obj, cls):
         """Test that `obj` is a subclass of `cls` or a subclass of a class
-        inside `cls`. Corresponds to :func:`issubclass`.
+        inside `cls`. Corresponds to :func:`.issubclass`.
 
         .. versionadded:: 0.4
 
