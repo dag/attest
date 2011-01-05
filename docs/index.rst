@@ -118,4 +118,9 @@ modification, are permitted provided that the following conditions are met:
     of this software, even if advised of the possibility of such damage.
 
 
+The Authors
+-----------
+
+.. include:: ../AUTHORS
+
 .. _Flask: http://flask.pocoo.org/
