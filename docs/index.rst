@@ -85,6 +85,7 @@ The Rest
    install
    guide
    api
+   glossary
    changes
    meta
 
