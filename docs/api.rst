@@ -124,11 +124,9 @@ Reporters are in charge of handling the state and outcome of test-runs.
 They might output machine- or human-readable reports on the console, or
 display the results in a graphical user interface.
 
-.. autoclass:: TestResult
-   :members:
+.. autofunction:: get_reporter_by_name
 
-.. autoclass:: AbstractReporter
-   :members: begin, success, failure, finished
+.. autofunction:: auto_reporter
 
 .. autoclass:: FancyReporter
 
@@ -136,6 +134,8 @@ display the results in a graphical user interface.
 
 .. autoclass:: XmlReporter
 
-.. autofunction:: auto_reporter
+.. autoclass:: AbstractReporter
+   :members: begin, success, failure, finished
 
-.. autofunction:: get_reporter_by_name
+.. autoclass:: TestResult
+   :members:
