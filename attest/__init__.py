@@ -38,7 +38,7 @@ class TestResult(object):
     #: The exception instance, if the test failed.
     error = None
 
-    #: The ``sys.exc_info()`` of the exception, if the test failed.
+    #: The :func:`~sys.exc_info` of the exception, if the test failed.
     exc_info = None
 
     #: A list of lines the test printed on the standard output.
