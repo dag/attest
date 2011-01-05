@@ -989,11 +989,17 @@ class Assert(object):
         Mainly useful with Assert objects that comes from the outside, e.g.
         yielded from a context, from methods like :meth:`css` etc.
 
+        .. versionadded:: 0.4
+
         """
         return Assert(func(self.obj, *args, **kwargs))
 
     def attr(self, name):
-        """Safely get an attribute from the wrapped object."""
+        """Safely get an attribute from the wrapped object.
+
+        .. versionadded:: 0.4
+
+        """
         return Assert(getattr(self.obj, name))
 
     def __repr__(self):
