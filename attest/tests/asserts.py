@@ -331,7 +331,9 @@ def disable_imports():
         with Assert.raises(ImportError):
             import os
 
-        import datetime
-
     import sys
     import os
+
+    with attest.disable_imports():
+        import datetime
+        Assert(datetime).is_(sys.modules['datetime'])

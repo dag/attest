@@ -390,7 +390,7 @@ def disable_imports(*names):
     def __import__(name, *args, **kwargs):
         if name in names:
             raise ImportError('%r is disabled' % name)
-        import_(name, *args, **kwargs)
+        return import_(name, *args, **kwargs)
     __builtin__.__import__ = __import__
     try:
         yield
