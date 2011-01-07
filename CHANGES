@@ -9,7 +9,9 @@ Changelog
 
 * Support for Python 3.1 and PyPy (besides existing support for 2.5-2.7).
 * Reporters are now loaded via setuptools entry points, allowing
-  third-party packages to register themselves automatically.
+  third-party packages to register themselves automatically. The
+  :func:`get_all_reporters` function was added to complement this
+  extensibility.
 * :class:`TestResult` was introduced and is now passed to reporters instead
   of the more limited set of arguments that were previously passed. This
   change is not backwards-compatible if you have custom reporters.
@@ -21,6 +23,7 @@ Changelog
   * :meth:`~Assert.issubclass` and :meth:`~Assert.not_issubclass`
   * :meth:`~Assert.json`, :meth:`~Assert.css` and :meth:`~Assert.xpath`
   * :meth:`~Assert.attr` and :meth:`~Assert.passed_to`
+* Import fallbacks can be tested using :func:`disable_imports`.
 * The :class:`Tests` constructor now accepts an iterable of contexts.
 * Passing :class:`Assert` objects to the Assert constructor no-longer wraps
   multiple levels.
