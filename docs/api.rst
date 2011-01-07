@@ -112,6 +112,8 @@ Asserting conditions
 
 .. autofunction:: capture_output()
 
+.. autofunction:: disable_imports(\*names)
+
 
 Running tests with distribute
 -----------------------------

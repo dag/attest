@@ -371,6 +371,33 @@ def capture_output():
         sys.stdout, sys.stderr = stdout, stderr
 
 
+@contextmanager
+def disable_imports(*names):
+    """Context in which imports for `names` raises an :exc:`ImportError`.
+    This is useful for testing import-dependent fallbacks.
+
+    >>> from attest import disable_imports
+    >>> with disable_imports('sys'): import sys
+    ...
+    Traceback (most recent call last):
+    ImportError: 'sys' is disabled
+
+    .. versionadded:: 0.4
+
+    """
+    import __builtin__
+    import_ = __builtin__.__import__
+    def __import__(name, *args, **kwargs):
+        if name in names:
+            raise ImportError('%r is disabled' % name)
+        import_(name, *args, **kwargs)
+    __builtin__.__import__ = __import__
+    try:
+        yield
+    finally:
+        __builtin__.__import__ = import_
+
+
 class Tests(object):
     """Collection of test functions.
 

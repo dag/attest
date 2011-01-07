@@ -1,6 +1,7 @@
 from __future__ import with_statement
 
 from attest import Tests, Assert
+import attest
 
 
 suite = Tests()
@@ -319,3 +320,18 @@ def passed_to():
 
     with Assert.raises(AssertionError):
         Assert('a').passed_to(int, base=16) != 10
+
+
+@suite.test
+def disable_imports():
+    with attest.disable_imports('sys', 'os'):
+        with Assert.raises(ImportError):
+            import sys
+
+        with Assert.raises(ImportError):
+            import os
+
+        import datetime
+
+    import sys
+    import os
