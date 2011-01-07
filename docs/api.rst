@@ -128,6 +128,8 @@ display the results in a graphical user interface.
 
 .. autofunction:: get_reporter_by_name
 
+.. autofunction:: get_all_reporters
+
 .. autofunction:: auto_reporter
 
 .. autoclass:: FancyReporter

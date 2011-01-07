@@ -7,6 +7,7 @@ import traceback
 from functools import wraps
 import inspect
 from contextlib import contextmanager, nested
+from pkg_resources import iter_entry_points
 
 try:
     from abc import ABCMeta, abstractmethod
@@ -322,7 +323,6 @@ def get_reporter_by_name(name, default='auto'):
         Reporters are registered via setuptools entry points.
 
     """
-    from pkg_resources import iter_entry_points
     reporter = None
     if name is not None:
         reporter = list(iter_entry_points('attest.reporters', name))
@@ -331,6 +331,20 @@ def get_reporter_by_name(name, default='auto'):
     if not reporter:
         raise KeyError
     return reporter[0].load()
+
+
+def get_all_reporters():
+    """Iterable yielding the names of all registered reporters.
+
+    >>> from attest import get_all_reporters
+    >>> list(get_all_reporters())
+    ['xml', 'plain', 'fancy', 'auto']
+
+    .. versionadded:: 0.4
+
+    """
+    for ep in iter_entry_points('attest.reporters'):
+        yield ep.name
 
 
 @contextmanager
