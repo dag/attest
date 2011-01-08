@@ -39,3 +39,15 @@ Authors
 -------
 
 .. include:: ../AUTHORS
+
+
+Community
+---------
+
+The Attest IRC channel is `#pocoo on irc.freenode.net
+<http://bit.ly/pocooirc>`_. Attest shares that channel with other Pocoo
+projects, so please let others know that you are talking about Attest
+when asking a question.
+
+If you prefer discussions or support via e-mail you can use the `pocoo-libs
+mailinglist <http://groups.google.com/group/pocoo-libs>`_.
