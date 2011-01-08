@@ -1,0 +1,18 @@
+{% extends "basic/layout.html" %}
+{%- block sidebarlogo %}
+  {{ super() }}
+  <p class="logo">
+    <a href="http://www.pocoo.org/">
+      <img class="logo"
+           src="{{ pathto('_static/pocoo.png', 1) }}"
+           alt="A Pocoo Project" />
+    </a>
+  </p>
+{% endblock %}
+{% block relbar2 %}
+  <a href="https://github.com/dag/attest"> 
+    <img style="position: fixed; top: 0; right: 0; border: 0;"
+         src="http://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png"
+         alt="Fork me on GitHub" /> 
+  </a>
+{% endblock %}
