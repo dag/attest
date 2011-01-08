@@ -4,9 +4,8 @@ About this project
 License
 -------
 
-.. note:: This is the Simplified BSD license.
-
-| Copyright © 2010, `Dag Odenhall <dag.odenhall@gmail.com>`_
+| Copyright © 2010, 2011, `Dag Odenhall <dag.odenhall@gmail.com>`_ and
+  :ref:`contributors <authors>`
 | All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -34,7 +33,9 @@ modification, are permitted provided that the following conditions are met:
     of this software, even if advised of the possibility of such damage.
 
 
-Contributors
-------------
+.. _authors:
+
+Authors
+-------
 
 .. include:: ../AUTHORS

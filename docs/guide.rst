@@ -1,5 +1,5 @@
-How to attest to the correctness of an application
-==================================================
+Math: A case study
+==================
 
 .. currentmodule:: attest
 
