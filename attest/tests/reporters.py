@@ -5,6 +5,8 @@ import sys
 from attest import Tests, Assert
 import attest
 
+from attest.tests._meta import metatests
+
 
 suite = Tests()
 
@@ -38,3 +40,46 @@ def auto_reporter():
             Assert.isinstance(attest.auto_reporter(), attest.PlainReporter)
     finally:
         sys.stdout = orig
+
+
+@suite.test
+def xml_reporter():
+    """XmlReporter"""
+
+    with attest.capture_output() as (out, err):
+        metatests.run(attest.XmlReporter)
+
+    Assert(out[:5] + out[6:]) == [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<testreport tests="2">',
+        '  <pass name="attest.tests._meta.passing"/>',
+        '  <fail name="attest.tests._meta.failing" type="AssertionError">',
+        '    Traceback (most recent call last):',
+        '        assert False',
+        '    AssertionError',
+        '  </fail>',
+        '</testreport>',
+    ]
+
+
+@suite.test
+def plain_reporter():
+    """PlainReporter"""
+
+    with attest.capture_output() as (out, err):
+        with Assert.raises(SystemExit):
+            metatests.run(attest.PlainReporter)
+
+    Assert(out[:5] + out[6:-1]) == [
+        '.F',
+        '',
+        'attest.tests._meta.failing',
+        '-' * 80,
+        'Traceback (most recent call last):',
+        '    assert False',
+        'AssertionError',
+        '',
+    ]
+
+    Assert(out[-1]) == 'Failures: 1/2 (%d assertions)' % \
+        (attest.statistics.assertions - 1)
