@@ -42,7 +42,7 @@ if sys.version_info[0] == 2:
 
 setup(
     name='Attest',
-    version='0.4dev',
+    version='0.4',
     description='Modern, Pythonic unit testing.',
     long_description=__doc__,
 
@@ -73,7 +73,7 @@ setup(
     zip_safe=False,
 
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
         'Programming Language :: Python',
