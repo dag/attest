@@ -14,7 +14,6 @@ h1, h2, h3, h4, h5, h6
   margin-top: 2em;
 }
 
-
 pre, tt, tt.descname
 { font-family: 'Anonymous Pro', 'monospace';
   font-size: 90%;
@@ -48,7 +47,6 @@ div.admonition.warning
 div.admonition.note
 { background: #f2ffc4;
 }
-
 
 div.document
 { margin: 0 auto;
@@ -90,11 +88,6 @@ div.sphinxsidebar ul
 { padding-left: 0;
 }
 
-div.related, div.footer
-{ display: none;
-}
-
-
 div.dictionary-entry dl
 { text-align: center;
   font-family: 'Old Standard TT', 'serif';
@@ -103,7 +96,6 @@ div.dictionary-entry dl
 div.dictionary-entry dd
 { font-style: italic;
 }
-
 
 div.small-caps
 { font-variant: small-caps;
