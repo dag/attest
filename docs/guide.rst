@@ -85,7 +85,7 @@ Optionally, we add this at the end to be able to run this collection
 alone::
 
     if __name__ == '__main__':
-        math.run()
+        math.main()
 
 .. code-block:: text
 
@@ -193,7 +193,7 @@ As you make more collections, just import them here and add to the list.
 ::
 
     from tests import tests
-    tests.run()
+    tests.main()
 
 With this we can run the full suite with ``python runtests.py``.
 
