@@ -593,18 +593,30 @@ class Tests(object):
         ``-r NAME``, ``--reporter NAME``
             Select reporter by name with :func:`get_reporter_by_name`
 
+        ``-l``, ``--list-reporters``
+            List the names of all installed reporters
+
+
         Remaining arguments are passed to the reporter.
 
         .. versionadded:: 0.2
+
+        .. versionchanged:: 0.4 ``--list-reporters`` was added.
 
         """
         from optparse import OptionParser
         parser = OptionParser()
         parser.add_option('-r', '--reporter', metavar='NAME',
                           help='select reporter by name')
+        parser.add_option('-l', '--list-reporters', action='store_true',
+                          help='list available reporters')
         options, args = parser.parse_args()
-        reporter = get_reporter_by_name(options.reporter)(*args)
-        self.run(reporter)
+        if options.list_reporters:
+            for reporter in get_all_reporters():
+                print reporter
+        else:
+            reporter = get_reporter_by_name(options.reporter)(*args)
+            self.run(reporter)
 
 
 def test_if(condition):
