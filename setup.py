@@ -26,7 +26,18 @@ free to write tests however you prefer.
 
 """
 
+import sys
 from setuptools import setup, find_packages
+
+
+extras = {}
+
+if sys.version_info[0] == 2:
+    extras.update(
+        setup_requires=[
+            'setuptools-git',
+        ]
+    )
 
 
 setup(
@@ -71,5 +82,7 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.1',
         'Topic :: Software Development :: Testing',
-    ]
+    ],
+
+    **extras
 )
