@@ -80,8 +80,12 @@ div.sphinxsidebarwrapper
   overflow: auto;
 }
 
-div.sphinxsidebar a, a.headerlink, div.toctree-wrapper a
+div.sphinxsidebar a, a.headerlink, div.toctree-wrapper a, a.viewcode-link
 { text-decoration: none;
+}
+
+a.viewcode-link
+{ color: #bbb;
 }
 
 div.sphinxsidebar ul
