@@ -337,3 +337,10 @@ def disable_imports():
     with attest.disable_imports():
         import datetime
         Assert(datetime).is_(sys.modules['datetime'])
+
+
+@suite.test
+def predicate():
+    with Assert.raises(AssertionError):
+        Assert(bool, 0)
+    Assert(bool, 1)

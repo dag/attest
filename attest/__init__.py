@@ -772,16 +772,33 @@ class Assert(object):
 
         Assert(bool(0)) == True
 
+    If you pass more than one argument, the first is assumed to be a
+    predicate callable to which the rest of the arguments are passed. These
+    are identical::
+
+        Assert.isinstance(0, int)
+        Assert(isinstance, 0, int)
+
     """
 
     #: The wrapped object
     obj = None
 
-    def __init__(self, obj=None):
-        if isinstance(obj, Assert):
-            self.obj = obj.obj
-        else:
-            self.obj = obj
+    def __init__(self, *args):
+        if len(args) == 1:
+            obj = args[0]
+            if isinstance(obj, Assert):
+                self.obj = obj.obj
+            else:
+                self.obj = obj
+        elif len(args) > 1:
+            args = list(args)
+            predicate = args.pop(0)
+            name = predicate.__name__
+            arglist = ', '.join(map(_repr, args))
+            self.obj = assert_(predicate(*args),
+                               'not %s(%s)' % (name, arglist))
+
 
     @property
     def __class__(self):
