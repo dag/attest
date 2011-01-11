@@ -6,6 +6,7 @@ import sys
 import traceback
 from functools import wraps
 import inspect
+import tokenize
 from contextlib import contextmanager, nested
 from pkg_resources import iter_entry_points
 
@@ -100,7 +101,6 @@ class TestResult(object):
         frame = tb.tb_frame
         names = dict(frame.f_globals, **frame.f_locals)
         assertions = StringIO(traceback.extract_tb(tb)[0][3])
-        import tokenize
         tokens = tokenize.generate_tokens(assertions.readline)
         return ' '.join(tok[1] if tok[1] not in names else repr(names[tok[1]])
                         for tok in list(tokens)[:-1])
@@ -798,7 +798,6 @@ class Assert(object):
             arglist = ', '.join(map(_repr, args))
             self.obj = assert_(predicate(*args),
                                'not %s(%s)' % (name, arglist))
-
 
     @property
     def __class__(self):
