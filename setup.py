@@ -42,7 +42,7 @@ if sys.version_info[0] == 2:
 
 setup(
     name='Attest',
-    version='0.4',
+    version='0.5',
     description='Modern, Pythonic unit testing.',
     long_description=__doc__,
 
