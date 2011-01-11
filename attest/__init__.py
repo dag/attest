@@ -925,6 +925,44 @@ class Assert(object):
         """Test for truthiness in boolean context."""
         return bool(assert_(self.obj, 'not %r' % self.obj))
 
+    # Ugly experimental hack, so we don't document it for now
+    @staticmethod
+    def rewrite(func):
+        source = inspect.getsource(func).splitlines()
+
+        # Drop decorators and the function def
+        dropped = 0
+        while not source[0].startswith((' ', '\t')):
+            source.pop(0)
+            dropped += 1
+
+        # Add empty lines up to the function so co_firstlineno is preserved
+        # Beautiful, I know
+        lineno = inspect.getsourcelines(func)[1] - 1 + dropped
+        source = '\n' * lineno + '\n'.join(source)
+
+        # Dedent code because it's nolonger in a function
+        import textwrap
+        source = textwrap.dedent(source)
+
+        tokens = tokenize.generate_tokens(StringIO(source).readline)
+        new = []
+        paren = False
+        for num, val, _, _, _ in tokens:
+            if val == 'assert':
+                new.append((1, 'Assert'))
+                new.append((51, '('))
+                paren = True
+            elif paren and val in ('==', '!=', '<', '<=', '>', '>='):
+                new.append((51, ')'))
+                new.append((num, val))
+                paren = False
+            else:
+                new.append((num, val))
+        func.func_code = compile(tokenize.untokenize(new),
+                                 inspect.getfile(func), 'exec')
+        return func
+
     @staticmethod
     @contextmanager
     def raises(*exceptions):
