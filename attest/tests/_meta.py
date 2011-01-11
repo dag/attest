@@ -15,4 +15,5 @@ def passing():
 
 @metatests.test
 def failing():
-    assert False
+    value = 1 + 1
+    assert value == 3

@@ -66,17 +66,44 @@ class TestResult(object):
         """The traceback for the exception, if the test failed, cleaned up.
 
         """
-        lines = traceback.format_exception(*self.exc_info)
-        lines = ''.join(lines).splitlines()
-        clean = lines[:1]
-        stack = iter(lines[1:-1])  # stack traces are in the middle
-        # loop two lines at a time
-        for first, second in zip(stack, stack):
-            # only keep if this file is not the source of the trace
-            if __file__[:-1] not in first:
-                clean.extend((first, second))
-        clean.append(lines[-1])
-        return '\n'.join(clean)
+        tb = traceback.extract_tb(self.exc_info[2])
+        clean = []
+        for item in tb:
+            if item[0] != __file__.rstrip('c'):
+                clean.append(item)
+        lines = ['Traceback (most recent call last):\n']
+        lines += traceback.format_list(clean)
+        msg = str(self.error)
+        if not msg and isinstance(self.error, AssertionError):
+            msg = self.evaluated_assertion
+        lines += traceback.format_exception_only(self.exc_info[0], msg)
+        return ''.join(lines)[:-1]
+
+    @property
+    def evaluated_assertion(self):
+        """The :keyword:`assert` statement with the values of variables
+        shown.
+
+        Given::
+
+            value = 1 + 1
+            assert value == 3
+
+        This property will then be the string ``assert 2 == 3``.
+
+        .. versionadded:: 0.5
+
+        """
+        tb = self.exc_info[2]
+        while tb.tb_next:
+            tb = tb.tb_next
+        frame = tb.tb_frame
+        names = dict(frame.f_globals, **frame.f_locals)
+        assertions = StringIO(traceback.extract_tb(tb)[0][3])
+        import tokenize
+        tokens = tokenize.generate_tokens(assertions.readline)
+        return ' '.join(tok[1] if tok[1] not in names else repr(names[tok[1]])
+                        for tok in list(tokens)[:-1])
 
 
 class AbstractReporter(object):
