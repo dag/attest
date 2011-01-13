@@ -344,11 +344,3 @@ def predicate():
     with Assert.raises(AssertionError):
         Assert(bool, 0)
     Assert(bool, 1)
-
-
-@suite.test
-@Assert.rewrite
-def rewrite():
-    with Assert.raises(AssertionError) as error:
-        assert 1 + 1 == 3
-    error.passed_to(str) == '2 != 3'
