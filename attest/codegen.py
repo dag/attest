@@ -405,9 +405,9 @@ class SourceGenerator(NodeVisitor):
 
     def visit_Compare(self, node):
         self.write('(')
-        self.write(node.left)
+        self.visit(node.left)
         for op, right in zip(node.ops, node.comparators):
-            self.write(' %s %%' % CMPOP_SYMBOLS[type(op)])
+            self.write(' %s ' % CMPOP_SYMBOLS[type(op)])
             self.visit(right)
         self.write(')')
 
