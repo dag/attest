@@ -7,4 +7,5 @@ all = Tests([suite('asserts'),
              suite('collections'),
              suite('classy'),
              suite('reporters'),
+             suite('eval'),
             ])
