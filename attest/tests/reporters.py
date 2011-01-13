@@ -56,7 +56,7 @@ def xml_reporter():
         '  <fail name="attest.tests._meta.failing" type="AssertionError">',
         '    Traceback (most recent call last):',
         '        assert value == 3',
-        '    AssertionError: assert 2 == 3',
+        '    AssertionError: not (2 == 3)',
         '  </fail>',
         '</testreport>',
     ]
@@ -77,7 +77,7 @@ def plain_reporter():
         '-' * 80,
         'Traceback (most recent call last):',
         '    assert value == 3',
-        'AssertionError: assert 2 == 3',
+        'AssertionError: not (2 == 3)',
         '',
     ]
 

@@ -10,6 +10,8 @@ import tokenize
 from contextlib import contextmanager, nested
 from pkg_resources import iter_entry_points
 
+from attest.eval import evalexpr
+
 try:
     from abc import ABCMeta, abstractmethod
 except ImportError:
@@ -90,7 +92,7 @@ class TestResult(object):
             value = 1 + 1
             assert value == 3
 
-        This property will then be the string ``assert 2 == 3``.
+        This property will then be the string ``not (2 == 3)``.
 
         .. versionadded:: 0.5
 
@@ -99,11 +101,8 @@ class TestResult(object):
         while tb.tb_next:
             tb = tb.tb_next
         frame = tb.tb_frame
-        names = dict(frame.f_globals, **frame.f_locals)
-        assertions = StringIO(traceback.extract_tb(tb)[0][3])
-        tokens = tokenize.generate_tokens(assertions.readline)
-        return ' '.join(tok[1] if tok[1] not in names else repr(names[tok[1]])
-                        for tok in list(tokens)[:-1])
+        expr = traceback.extract_tb(tb)[0][3].partition('assert ')[2]
+        return 'not ' + evalexpr(expr, frame.f_globals, frame.f_locals)
 
 
 class AbstractReporter(object):
