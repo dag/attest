@@ -57,6 +57,7 @@ div.document
 div.body
 { width: 650px;
   margin-right: 250px;
+  margin-bottom: 100px;
 }
 
 div.body p
