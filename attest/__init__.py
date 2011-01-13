@@ -231,7 +231,7 @@ class FancyReporter(AbstractReporter):
     def finished(self):
         from pygments.console import colorize
         from pygments import highlight
-        from pygments.lexers import PythonTracebackLexer
+        from pygments.lexers import PythonTracebackLexer, PythonLexer
         from pygments.formatters import Terminal256Formatter
 
         self.progress.finish()
@@ -245,8 +245,22 @@ class FancyReporter(AbstractReporter):
                 print colorize('faint', '\n'.join(result.stdout))
             if result.stderr:
                 print colorize('darkred', '\n'.join(result.stderr))
-            print highlight(result.traceback, PythonTracebackLexer(),
-                            Terminal256Formatter(style=self.style))
+
+            formatter = Terminal256Formatter(style=self.style)
+
+            if not isinstance(result.error, AssertionError):
+                print highlight(result.traceback,
+                                PythonTracebackLexer(),
+                                formatter)
+
+            else:
+                traceback = result.traceback.splitlines()
+                error, msg = traceback[-1].split(': ', 1)
+                tb = highlight('\n'.join(traceback[:-1] + [error + ':']),
+                               PythonTracebackLexer(), formatter).strip()
+                tb += ' '
+                tb += highlight(msg, PythonLexer(), formatter)
+                print tb
 
         if self.failures:
             failed = colorize('red', str(len(self.failures)))
