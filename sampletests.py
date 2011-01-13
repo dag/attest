@@ -1,41 +1,12 @@
-from __future__ import division
+from attest import Tests
 
-import time
-import random
-import sys
+samples = Tests()
 
-from attest import TestBase, test, Tests, Assert
+@samples.test
+def number_and_sequence():
+    number = 2 + 3
+    sequence = [1, 2, 3]
+    assert number in sequence and isinstance(number, float)
 
-
-class Sample(TestBase):
-
-    @test
-    def stylish_and_classy(self):
-        Assert(True).is_(False)
-
-
-sample = Tests([Sample])
-
-@sample.test
-def compare():
-    Assert(5) < 10
-
-@sample.test
-def contains():
-    print 'Checking membership...'
-    print >>sys.stderr, 'Expecting utter failure.'
-    5 in Assert([1, 2, 3])
-
-for x in xrange(16):
-    @sample.test
-    def passing():
-        time.sleep(random.randint(1, 3) / 10)
-
-@sample.test
-def multi():
-    """Multiple assertions on the same object."""
-    hello = Assert('hello')
-    hello.upper() == 'HELLO'
-    hello.capitalize() == 'hello'
-
-sample.main()
+if __name__ == '__main__':
+    samples.main()
