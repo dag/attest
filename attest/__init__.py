@@ -211,9 +211,8 @@ class FancyReporter(AbstractReporter):
         import pygments
 
     def begin(self, tests):
-        from progressbar import ProgressBar, Percentage, \
-                                Bar, ETA, SimpleProgress
-        widgets = [SimpleProgress(), ' [', ETA(), Bar(), Percentage(), ']']
+        from progressbar import ProgressBar, Percentage, ETA, SimpleProgress
+        widgets = ['[', Percentage(), '] ', SimpleProgress(), ' ', ETA()]
         self.counter = 0
         self.progress = ProgressBar(maxval=len(tests), widgets=widgets)
         self.progress.start()
