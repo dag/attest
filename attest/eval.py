@@ -138,7 +138,6 @@ def eval_asserts(func):
     lineno = inspect.getsourcelines(func)[1]
     node = ast.parse(source, filename)
     node = AssertionRewriter().visit(node)
-    node.body[0].decorator_list.pop()
     ast.fix_missing_locations(node)
     ast.increment_lineno(node, lineno - 1)
     func.func_globals['_assert_expr'] = assert_expr
