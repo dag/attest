@@ -1,6 +1,7 @@
 from attest import ast
 from attest.codegen import to_source
 import inspect
+from textwrap import dedent
 
 try:
     import __builtin__ as builtins
@@ -71,6 +72,11 @@ class ExpressionEvaluator(ast.NodeVisitor):
             self.visit(node.kwargs)
         self.write(')')
 
+    def visit_Attribute(self, node):
+        self.write(node.value.id)
+        self.write('.')
+        self.write(node.attr)
+
     def visit_Name(self, node):
         value = self.names[node.id]
         if hasattr(value, '__name__'):
@@ -96,3 +102,46 @@ def evalexpr(expr, globals=None, locals=None):
     if locals is None:
         locals = inspect.stack()[1][0].f_locals
     return ExpressionEvaluator(expr, globals, locals).result
+
+
+class AssertionRewriter(ast.NodeTransformer):
+
+    def visit_Assert(self, node):
+        return ast.copy_location(
+            ast.Expr(
+                value=ast.Call(
+                    func=ast.Name(id='_assert_expr', ctx=ast.Load()),
+                    args=[ast.Str(s=to_source(node.test))],
+                    keywords=[],
+                    starargs=None,
+                    kwargs=None)),
+                node)
+
+
+def assert_expr(expr, globals=None, locals=None):
+    from attest import statistics
+    statistics.assertions += 1
+    if globals is None:
+        globals = inspect.stack()[1][0].f_globals
+    if locals is None:
+        locals = inspect.stack()[1][0].f_locals
+    evaluated = evalexpr(expr, globals, locals)
+    result = eval(evaluated, globals, locals)
+    if not result:
+        raise AssertionError('not ' + evaluated)
+    return result
+
+
+def eval_asserts(func):
+    filename = inspect.getfile(func)
+    source = dedent(inspect.getsource(func))
+    lineno = inspect.getsourcelines(func)[1]
+    node = ast.parse(source, filename)
+    node = AssertionRewriter().visit(node)
+    node.body[0].decorator_list.pop()
+    ast.fix_missing_locations(node)
+    ast.increment_lineno(node, lineno - 1)
+    func.func_globals['_assert_expr'] = assert_expr
+    code = compile(node, filename, 'exec')
+    func.func_code = code.co_consts[0]
+    return func
