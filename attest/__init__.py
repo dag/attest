@@ -6,7 +6,6 @@ import sys
 import traceback
 from functools import wraps
 import inspect
-import tokenize
 from contextlib import contextmanager, nested
 from pkg_resources import iter_entry_points
 
