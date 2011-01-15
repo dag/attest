@@ -1,5 +1,5 @@
-from attest import ast
-from attest.codegen import to_source
+from . import ast
+from .codegen import to_source
 import inspect
 
 try:

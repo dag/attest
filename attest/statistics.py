@@ -1,0 +1,1 @@
+assertions = 0
