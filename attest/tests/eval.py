@@ -1,5 +1,5 @@
 from attest import Tests, Assert
-from attest.eval import evalexpr, eval_asserts
+from attest.eval import evalexpr
 
 
 suite = Tests()
@@ -17,16 +17,3 @@ def eval():
 
     for expr, result in samples.iteritems():
         Assert(evalexpr(expr)) == result
-
-
-@suite.test
-def rewrite():
-
-    @eval_asserts
-    def test():
-        value = 1 + 1
-        assert value > 3
-
-    with Assert.raises(AssertionError) as error:
-        test()
-    error.passed_to(str) == 'not (2 > 3)'
