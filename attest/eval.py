@@ -65,7 +65,7 @@ def assert_hook(expr, globals=None, locals=None):
         locals = inspect.stack()[1][0].f_locals
     evaluated = evalexpr(expr, globals, locals)
     if not evaluated:
-        raise AssertionError(evaluated)
+        raise AssertionError('not %r' % evaluated)
 
 
 def build(node, **kwargs):
