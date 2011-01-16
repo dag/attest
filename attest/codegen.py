@@ -253,7 +253,7 @@ class SourceGenerator(NodeVisitor):
     def visit_Delete(self, node):
         self.newline(node)
         self.write('del ')
-        for idx, target in enumerate(node):
+        for idx, target in enumerate(node.targets):
             if idx:
                 self.write(', ')
             self.visit(target)
