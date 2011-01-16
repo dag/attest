@@ -16,4 +16,4 @@ def eval():
     }
 
     for expr, result in samples.iteritems():
-        Assert(evalexpr(expr)) == result
+        Assert(repr(evalexpr(expr))) == result

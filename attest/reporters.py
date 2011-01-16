@@ -88,7 +88,7 @@ class TestResult(object):
             tb = tb.tb_next
         frame = tb.tb_frame
         expr = traceback.extract_tb(tb)[0][3].partition('assert ')[2]
-        return 'not ' + evalexpr(expr, frame.f_globals, frame.f_locals)
+        return 'not %r' % evalexpr(expr, frame.f_globals, frame.f_locals)
 
 
 class AbstractReporter(object):
