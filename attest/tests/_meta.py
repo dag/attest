@@ -4,7 +4,7 @@
 
 """
 
-from attest import Tests
+from attest import Tests, assert_
 
 
 metatests = Tests()
@@ -16,4 +16,4 @@ def passing():
 @metatests.test
 def failing():
     value = 1 + 1
-    assert value == 3
+    assert_(value == 3, 'not (2 == 3)')

@@ -37,7 +37,10 @@ class Loader(object):
 def assert_(expr, msg=None):
     """Like :keyword:`assert`, but counts the assertion."""
     statistics.assertions += 1
-    assert expr, msg
+    if not expr:
+        if msg is None:
+            raise AssertionError
+        raise AssertionError(msg)
     return expr
 
 

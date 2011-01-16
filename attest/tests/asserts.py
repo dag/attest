@@ -168,13 +168,9 @@ def boolean():
     """Assert() in boolean context"""
 
     bool(Assert(1))
-    assert Assert(1)
 
     with Assert.raises(AssertionError):
         bool(Assert(0))
-
-    with Assert.raises(AssertionError):
-        assert Assert(0)
 
 
 @suite.test

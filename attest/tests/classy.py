@@ -1,4 +1,4 @@
-from attest import TestBase, test, Assert, Tests, test_if
+from attest import TestBase, test, Assert, Tests, test_if, assert_
 
 from .collectors import TestReporter
 
@@ -138,7 +138,7 @@ def conditional():
 
         @test_if(False)
         def baz(self):
-            assert False
+            assert_(False)
 
     col.register(TestClass)
 

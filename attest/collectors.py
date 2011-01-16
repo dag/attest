@@ -184,7 +184,8 @@ class Tests(object):
             result.test = test
             try:
                 with capture_output() as (out, err):
-                    assert test() is not False, 'test returned False'
+                    if test() is False:
+                        raise AssertionError('test() is False')
             except BaseException, e:
                 if isinstance(e, KeyboardInterrupt):
                     break
