@@ -1,6 +1,6 @@
 from attest import TestBase, test, Assert, Tests, test_if
 
-from .collections import TestReporter
+from .collectors import TestReporter
 
 
 class Classy(TestBase):
