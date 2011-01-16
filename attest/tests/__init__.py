@@ -1,11 +1,8 @@
 from attest import Tests
 
-
-suite = lambda mod: 'attest.tests.' + mod + '.suite'
-
-all = Tests([suite('asserts'),
-             suite('collections'),
-             suite('classy'),
-             suite('reporters'),
-             suite('eval'),
-            ])
+all = Tests('.'.join((__name__, mod, 'suite'))
+            for mod in ('asserts',
+                        'collections',
+                        'classy',
+                        'reporters',
+                        'eval'))
