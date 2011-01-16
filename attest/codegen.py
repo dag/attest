@@ -67,6 +67,7 @@ class SourceGenerator(NodeVisitor):
         for stmt in statements:
             self.visit(stmt)
         self.indentation -= 1
+        self.write('\n')
 
     def body_or_else(self, node):
         self.body(node.body)
@@ -126,7 +127,7 @@ class SourceGenerator(NodeVisitor):
         for idx, item in enumerate(node.names):
             if idx:
                 self.write(', ')
-            self.write(item)
+            self.visit(item)
 
     def visit_Import(self, node):
         self.newline(node)
@@ -187,7 +188,7 @@ class SourceGenerator(NodeVisitor):
         self.visit(node.test)
         self.write(':')
         self.body(node.body)
-        while True:
+        while node.orelse:
             else_ = node.orelse
             if len(else_) == 1 and isinstance(else_[0], If):
                 node = else_[0]
