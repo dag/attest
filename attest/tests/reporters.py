@@ -84,5 +84,4 @@ def plain_reporter():
     ]):
         assert line == expected
 
-    assert out[-1] == 'Failures: 1/2 (%d assertions)' % \
-        (attest.statistics.assertions - 9)
+    assert out[-1].split(' ')[:2] == ['Failures:', '1/2']

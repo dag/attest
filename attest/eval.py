@@ -1,3 +1,4 @@
+from __future__ import with_statement
 from . import ast
 from .codegen import to_source, SourceGenerator
 from . import statistics
@@ -119,7 +120,8 @@ class AssertImportHook(object):
             return imp.load_module(name, fd, fn, info)
 
         if 'from attest import assert_hook' not in source.splitlines():
-            return imp.load_module(name, open(filename), fn, info)
+            fd, fn, info = imp.find_module(name.rsplit('.', 1)[-1], path)
+            return imp.load_module(name, fd, fn, info)
 
         try:
             module = imp.new_module(name)
