@@ -16,7 +16,7 @@ class ExpressionEvaluator(SourceGenerator):
         return ''.join(self.result)
 
     def __nonzero__(self):
-        return eval(self.expr, self.globals, self.locals)
+        return bool(eval(self.expr, self.globals, self.locals))
 
     def eval(self, node):
         return eval(to_source(node), self.globals, self.locals)
