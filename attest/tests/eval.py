@@ -1,3 +1,4 @@
+from attest import assert_hook
 from attest import Tests, Assert
 from attest.eval import evalexpr
 
@@ -16,4 +17,4 @@ def eval():
     }
 
     for expr, result in samples.iteritems():
-        Assert(repr(evalexpr(expr))) == result
+        assert repr(evalexpr(expr)) == result

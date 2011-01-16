@@ -1,4 +1,5 @@
 from __future__ import with_statement
+from attest import assert_hook
 
 import sys
 
@@ -14,7 +15,7 @@ suite = Tests()
 @suite.test
 def get_all_reporters():
     reporters = set(['auto', 'fancy', 'plain', 'xml'])
-    Assert(set(attest.get_all_reporters())) == reporters
+    assert set(attest.get_all_reporters()) == reporters
 
 
 @suite.test
@@ -25,19 +26,19 @@ def get_reporter_by_name():
                      xml=attest.XmlReporter,
                     )
     for name, reporter in reporters.iteritems():
-        Assert(attest.get_reporter_by_name(name)) == reporter
+        assert attest.get_reporter_by_name(name) == reporter
 
 
 @suite.test
 def auto_reporter():
     # Inside tests, sys.stdout is not a tty
-    Assert.isinstance(attest.auto_reporter(), attest.PlainReporter)
+    assert isinstance(attest.auto_reporter(), attest.PlainReporter)
 
     sys.stdout, orig = sys.__stdout__, sys.stdout
     try:
-        Assert.isinstance(attest.auto_reporter(), attest.FancyReporter)
+        assert isinstance(attest.auto_reporter(), attest.FancyReporter)
         with attest.disable_imports('progressbar', 'pygments'):
-            Assert.isinstance(attest.auto_reporter(), attest.PlainReporter)
+            assert isinstance(attest.auto_reporter(), attest.PlainReporter)
     finally:
         sys.stdout = orig
 
@@ -55,12 +56,12 @@ def xml_reporter():
         '  <pass name="attest.tests._meta.passing"/>',
         '  <fail name="attest.tests._meta.failing" type="AssertionError">',
         '    Traceback (most recent call last):',
-        "        assert_(value == 3, 'not (2 == 3)')",
+        '        assert value == 3',
         '    AssertionError: not (2 == 3)',
         '  </fail>',
         '</testreport>',
     ]):
-        Assert(line) == expected
+        assert line == expected
 
 
 @suite.test
@@ -77,11 +78,11 @@ def plain_reporter():
         'attest.tests._meta.failing',
         '-' * 80,
         'Traceback (most recent call last):',
-        "    assert_(value == 3, 'not (2 == 3)')",
+        '    assert value == 3',
         'AssertionError: not (2 == 3)',
         '',
     ]):
-        Assert(line) == expected
+        assert line == expected
 
-    Assert(out[-1]) == 'Failures: 1/2 (%d assertions)' % \
-        (attest.statistics.assertions - 8)
+    assert out[-1] == 'Failures: 1/2 (%d assertions)' % \
+        (attest.statistics.assertions - 9)

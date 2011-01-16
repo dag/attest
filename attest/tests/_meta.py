@@ -3,8 +3,8 @@
     Test tests for testing testing.
 
 """
-
-from attest import Tests, assert_
+from attest import assert_hook
+from attest import Tests
 
 
 metatests = Tests()
@@ -16,4 +16,4 @@ def passing():
 @metatests.test
 def failing():
     value = 1 + 1
-    assert_(value == 3, 'not (2 == 3)')
+    assert value == 3

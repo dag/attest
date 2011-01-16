@@ -1,4 +1,5 @@
-from attest import TestBase, test, Assert, Tests, test_if, assert_
+from attest import assert_hook
+from attest import TestBase, test, Tests, test_if
 
 from .collectors import TestReporter
 
@@ -7,11 +8,11 @@ class Classy(TestBase):
 
     @test
     def fail(self):
-        Assert(1) == 2
+        assert 1 == 2
 
     @test
     def succeed(self):
-        Assert(1) == 1
+        assert 1 == 1
 
 
 class Contextual(TestBase):
@@ -23,7 +24,7 @@ class Contextual(TestBase):
 
     @test
     def succeed(self):
-        Assert(self.two) == 2
+        assert self.two == 2
 
 
 suite = Tests()
@@ -36,17 +37,17 @@ def classbased_test_runs():
     instance = Classy()
     col = Tests([instance])
 
-    Assert(len(col)) == 2
-    Assert(list(col)[0]) == instance.fail
+    assert len(col) == 2
+    assert list(col)[0] == instance.fail
 
     result = TestReporter()
     col.run(result)
 
-    Assert(len(result.succeeded)) == 1
-    Assert(len(result.failed)) == 1
+    assert len(result.succeeded) == 1
+    assert len(result.failed) == 1
 
-    Assert(result.failed[0].test) == instance.fail
-    Assert(result.failed[0].exc_info[0]).is_(AssertionError)
+    assert result.failed[0].test == instance.fail
+    assert result.failed[0].exc_info[0] is AssertionError
 
 
 @suite.test
@@ -59,9 +60,9 @@ def class_context():
     result = TestReporter()
     col.run(result)
 
-    Assert(hasattr(instance, 'two')) == False
-    Assert(len(result.failed)) == 0
-    Assert(len(result.succeeded)) == 1
+    assert hasattr(instance, 'two') == False
+    assert len(result.failed) == 0
+    assert len(result.succeeded) == 1
 
 
 @suite.test
@@ -69,7 +70,7 @@ def decorative():
     """@Tests().register(TestBase)"""
 
     col = Tests()
-    Assert(len(col)) == 0
+    assert len(col) == 0
 
     class DecoratedTest(TestBase):
 
@@ -83,8 +84,8 @@ def decorative():
 
     DecoratedTest = col.register(DecoratedTest)
 
-    Assert(issubclass(DecoratedTest, TestBase)) == True
-    Assert(len(col)) == 2
+    assert issubclass(DecoratedTest, TestBase) == True
+    assert len(col) == 2
 
 
 @suite.test
@@ -117,8 +118,8 @@ def decorative_conditional():
     col.register_if(True)(IncludedTest)
     col.register_if(False)(ExcludedTest)
 
-    Assert(len(col)) == 2
-    Assert(sorted(test.__name__ for test in col)) == ['bar', 'foo']
+    assert len(col) == 2
+    assert sorted(test.__name__ for test in col) == ['bar', 'foo']
 
 
 @suite.test
@@ -138,11 +139,11 @@ def conditional():
 
         @test_if(False)
         def baz(self):
-            assert_(False)
+            assert False
 
     col.register(TestClass)
 
     result = TestReporter()
     col.run(result)
-    Assert(len(result.failed)) == 0
-    Assert(len(result.succeeded)) == 2
+    assert len(result.failed) == 0
+    assert len(result.succeeded) == 2

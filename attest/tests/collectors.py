@@ -1,4 +1,5 @@
 from __future__ import with_statement
+from attest import assert_hook
 
 import sys
 
@@ -36,8 +37,8 @@ def decorator():
     @col.test
     def two(): pass
 
-    Assert(len(col)) == 2
-    Assert(list(col)) == [one, two]
+    assert len(col) == 2
+    assert list(col) == [one, two]
 
 
 @suite.test
@@ -48,7 +49,7 @@ def context():
 
     @col.test
     def test(calculated):
-        Assert(calculated) == 2
+        assert calculated == 2
 
     @col.context
     def context():
@@ -82,9 +83,9 @@ def context():
 
     @col3.test
     def test3(one, two, three):
-        Assert(one) == 1
-        Assert(two) == 2
-        Assert(three) == 3
+        assert one == 1
+        assert two == 2
+        assert three == 3
 
     test3()
 
@@ -104,8 +105,8 @@ def context():
 
     @col4.test
     def test4(one, two):
-        Assert(one) == 1
-        Assert(two) == 2
+        assert one == 1
+        assert two == 2
 
     test4()
 
@@ -119,7 +120,7 @@ def context():
 
     @col5.test
     def test5(one):
-        Assert(one) == 1
+        assert one == 1
 
     test5()
 
@@ -134,11 +135,11 @@ def capture():
         print 'Capture the flag!'
         print >>sys.stderr, 'Rapture the flag?'
 
-    Assert(out) == ['Capture the flag!']
-    Assert(err) == ['Rapture the flag?']
+    assert out == ['Capture the flag!']
+    assert err == ['Rapture the flag?']
 
-    Assert(sys.stdout).is_(stdout)
-    Assert(sys.stderr).is_(stderr)
+    assert sys.stdout is stdout
+    assert sys.stderr is stderr
 
 
 @suite.test
@@ -149,11 +150,11 @@ def run():
 
     @col.test
     def fail():
-        Assert(1) == 2
+        assert 1 == 2
 
     @col.test
     def succeed():
-        Assert(1) == 1
+        assert 1 == 1
 
     @col.test
     def exit():
@@ -163,12 +164,12 @@ def run():
     with Assert.not_raising(SystemExit):
         col.run(result)
 
-    Assert(len(result.failed)) == 2
-    Assert(len(result.succeeded)) == 1
+    assert len(result.failed) == 2
+    assert len(result.succeeded) == 1
 
-    Assert(result.failed[0].test).is_(fail)
-    Assert(result.failed[0].exc_info[0]).is_(AssertionError)
-    Assert(result.succeeded[0].test).is_(succeed)
+    assert result.failed[0].test is fail
+    assert result.failed[0].exc_info[0] is AssertionError
+    assert result.succeeded[0].test is succeed
 
 
 @suite.test
@@ -185,5 +186,5 @@ def conditional():
     def exclude():
         pass
 
-    Assert(include).in_(col)
-    Assert(exclude).not_in(col)
+    assert include in col
+    assert exclude not in col
