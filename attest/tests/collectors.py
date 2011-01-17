@@ -1,9 +1,9 @@
 from __future__ import with_statement
-from attest import assert_hook
 
 import sys
 
-from attest import AbstractReporter, Tests, Assert, capture_output
+from attest import (AbstractReporter, Tests, Assert,
+                    capture_output, assert_hook)
 
 
 class TestReporter(AbstractReporter):

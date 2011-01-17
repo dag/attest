@@ -119,7 +119,14 @@ class AssertImportHook(object):
         if source is None:
             return imp.load_module(name, fd, fn, info)
 
-        if 'from attest import assert_hook' not in source.splitlines():
+        # Only rewrite if assert_hook is imported from attest.
+        rewrite = ('assert_hook' in source and
+                   any(s.module == 'attest' and
+                       any(n.name == 'assert_hook' for n in s.names)
+                       for s in ast.parse(source).body
+                       if isinstance(s, ast.ImportFrom)))
+
+        if not rewrite:
             fd, fn, info = imp.find_module(name.rsplit('.', 1)[-1], path)
             return imp.load_module(name, fd, fn, info)
 

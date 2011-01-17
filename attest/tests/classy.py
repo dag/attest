@@ -1,5 +1,4 @@
-from attest import assert_hook
-from attest import TestBase, test, Tests, test_if
+from attest import TestBase, test, Tests, test_if, assert_hook
 
 from .collectors import TestReporter
 

@@ -1,5 +1,4 @@
-from attest import assert_hook
-from attest import Tests, Assert
+from attest import Tests, assert_hook
 from attest.eval import evalexpr
 
 

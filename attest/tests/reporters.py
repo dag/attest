@@ -1,9 +1,8 @@
 from __future__ import with_statement
-from attest import assert_hook
 
 import sys
 
-from attest import Tests, Assert
+from attest import Tests, Assert, assert_hook
 import attest
 
 from attest.tests._meta import metatests
