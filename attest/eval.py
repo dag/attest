@@ -86,7 +86,10 @@ class AssertTransformer(ast.NodeTransformer):
 
     @property
     def code(self):
-        return compile(self.node, self.filename, 'exec')
+        try:
+            return compile(self.node, self.filename, 'exec')
+        except TypeError:
+            return compile(to_source(self.node), self.filename, 'exec')
 
     def visit_Assert(self, node):
         return ast.copy_location(
@@ -141,6 +144,7 @@ class AssertImportHook(object):
             return module
 
         except Exception, err:
+            raise
             raise ImportError('cannot import %s: %s' % (name, err))
 
     def get_source(self, name):

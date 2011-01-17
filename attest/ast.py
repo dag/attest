@@ -141,8 +141,10 @@ def copy_location(new_node, old_node):
     """Copy the source location hint (`lineno` and `col_offset`) from the
     old to the new node if possible and return the new one.
     """
+    new_attributes = getattr(new_node, '_attributes', ()) or ()
+    old_attributes = getattr(old_node, '_attributes', ()) or ()
     for attr in 'lineno', 'col_offset':
-        if attr in old_node._attributes and attr in new_node._attributes \
+        if attr in old_attributes and attr in new_attributes \
            and hasattr(old_node, attr):
             setattr(new_node, attr, getattr(old_node, attr))
     return new_node
@@ -160,12 +162,13 @@ def fix_missing_locations(node):
     already have a location information.
     """
     def _fix(node, lineno, col_offset):
-        if 'lineno' in node._attributes:
+        attrs = getattr(node, '_attributes', ()) or ()
+        if 'lineno' in attrs:
             if not hasattr(node, 'lineno'):
                 node.lineno = lineno
             else:
                 lineno = node.lineno
-        if 'col_offset' in node._attributes:
+        if 'col_offset' in attrs:
             if not hasattr(node, 'col_offset'):
                 node.col_offset = col_offset
             else:
@@ -181,17 +184,18 @@ def increment_lineno(node, n=1):
     attributes.  This is useful to "move code" to a different location in a
     file.
     """
-    if 'lineno' in node._attributes:
+    if 'lineno' in getattr(node, '_attributes', ()) or ():
         node.lineno = getattr(node, 'lineno', 0) + n
     for child in walk(node):
-        if 'lineno' in child._attributes:
+        child._attributes = getattr(child, '_attributes', ()) or ()
+        if 'lineno' in getattr(child, '_attributes', ()) or ():
             child.lineno = getattr(child, 'lineno', 0) + n
     return node
 
 
 def iter_fields(node):
     """Iterate over all fields of a node, only yielding existing fields."""
-    for field in node._fields:
+    for field in getattr(node, '_fields', ()) or ():
         try:
             yield field, getattr(node, field)
         except AttributeError:

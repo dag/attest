@@ -3,7 +3,7 @@
     Test tests for testing testing.
 
 """
-from attest import Tests, assert_hook
+from attest import Tests
 
 
 metatests = Tests()

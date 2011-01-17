@@ -99,7 +99,9 @@ class SourceGenerator(NodeVisitor):
             self.write('**' + node.kwarg)
 
     def decorators(self, node):
-        for decorator in node.decorator_list:
+        decor = getattr(node, 'decorator_list',
+                getattr(node, 'decorators', ()))
+        for decorator in decor:
             self.newline(decorator)
             self.write('@')
             self.visit(decorator)
@@ -447,8 +449,10 @@ class SourceGenerator(NodeVisitor):
             self.visit(item)
 
     def visit_Yield(self, node):
-        self.write('yield ')
-        self.visit(node.value)
+        self.write('yield')
+        if node.value is not None:
+            self.write(' ')
+            self.visit(node.value)
 
     def visit_Lambda(self, node):
         self.write('lambda ')
