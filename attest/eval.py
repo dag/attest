@@ -48,9 +48,9 @@ def assert_hook(expr, globals=None, locals=None):
         globals = inspect.stack()[1][0].f_globals
     if locals is None:
         locals = inspect.stack()[1][0].f_locals
-    evaluated = ExpressionEvaluator(expr, globals, locals)
-    if not evaluated:
-        raise AssertionError('not %r' % evaluated)
+    value = ExpressionEvaluator(expr, globals, locals)
+    if not value:
+        raise AssertionError('not %r' % value)
 
 
 def build(node, **kwargs):
