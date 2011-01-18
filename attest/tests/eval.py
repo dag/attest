@@ -1,5 +1,5 @@
 from attest import Tests, assert_hook
-from attest.eval import evalexpr
+from attest.eval import ExpressionEvaluator
 
 
 suite = Tests()
@@ -16,4 +16,4 @@ def eval():
     }
 
     for expr, result in samples.iteritems():
-        assert repr(evalexpr(expr)) == result
+        assert repr(ExpressionEvaluator(expr, globals(), locals())) == result

@@ -42,29 +42,13 @@ class ExpressionEvaluator(SourceGenerator):
     visit_BinOp = visit_Subscript = generic_visit
 
 
-def evalexpr(expr, globals=None, locals=None):
-    """Expands names and computations in an expression string, but retains
-    function calls, type literals and comparative/boolean operations.
-
-    >>> value = 1 + 1
-    >>> evalexpr('value == int("2") and value < 5 - 2')
-    ((2 == int('2')) and (2 < 3))
-
-    """
-    if globals is None:
-        globals = inspect.stack()[1][0].f_globals
-    if locals is None:
-        locals = inspect.stack()[1][0].f_locals
-    return ExpressionEvaluator(expr, globals, locals)
-
-
 def assert_hook(expr, globals=None, locals=None):
     statistics.assertions += 1
     if globals is None:
         globals = inspect.stack()[1][0].f_globals
     if locals is None:
         locals = inspect.stack()[1][0].f_locals
-    evaluated = evalexpr(expr, globals, locals)
+    evaluated = ExpressionEvaluator(expr, globals, locals)
     if not evaluated:
         raise AssertionError('not %r' % evaluated)
 

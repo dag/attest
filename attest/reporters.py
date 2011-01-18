@@ -12,7 +12,7 @@ except ImportError:
     abstractmethod = lambda x: x
 
 from . import statistics
-from .eval import evalexpr
+from .eval import ExpressionEvaluator
 
 
 class TestResult(object):
@@ -88,7 +88,8 @@ class TestResult(object):
             tb = tb.tb_next
         frame = tb.tb_frame
         expr = traceback.extract_tb(tb)[0][3].partition('assert ')[2]
-        return 'not %r' % evalexpr(expr, frame.f_globals, frame.f_locals)
+        return 'not %r' % ExpressionEvaluator(expr, frame.f_globals,
+                                              frame.f_locals)
 
 
 class AbstractReporter(object):
