@@ -79,10 +79,32 @@ def build(node, **kwargs):
 class AssertTransformer(ast.NodeTransformer):
 
     def __init__(self, source, filename=''):
+        self.source = source
         self.filename = filename
-        node = ast.parse(source, filename)
-        self.node = self.visit(node)
-        ast.fix_missing_locations(self.node)
+
+    @property
+    def should_rewrite(self):
+        return ('assert_hook' in self.source and
+                any(s.module == 'attest' and
+                    any(n.name == 'assert_hook' for n in s.names)
+                    for s in ast.parse(self.source).body
+                    if isinstance(s, ast.ImportFrom)))
+
+    def make_module(self, name, newpath=None):
+        module = imp.new_module(name)
+        module.__file__ = self.filename
+        if newpath:
+            module.__path__ = newpath
+        exec self.code in vars(module)
+        sys.modules[name] = module
+        return module
+
+    @property
+    def node(self):
+        node = ast.parse(self.source, self.filename)
+        node = self.visit(node)
+        ast.fix_missing_locations(node)
+        return node
 
     @property
     def code(self):
@@ -122,29 +144,15 @@ class AssertImportHook(object):
         if source is None:
             return imp.load_module(name, fd, fn, info)
 
-        # Only rewrite if assert_hook is imported from attest.
-        rewrite = ('assert_hook' in source and
-                   any(s.module == 'attest' and
-                       any(n.name == 'assert_hook' for n in s.names)
-                       for s in ast.parse(source).body
-                       if isinstance(s, ast.ImportFrom)))
+        transformer = AssertTransformer(source, filename)
 
-        if not rewrite:
+        if not transformer.should_rewrite:
             fd, fn, info = imp.find_module(name.rsplit('.', 1)[-1], path)
             return imp.load_module(name, fd, fn, info)
 
         try:
-            module = imp.new_module(name)
-            module.__file__ = filename
-            if newpath:
-                module.__path__ = newpath
-            code = AssertTransformer(source, filename).code
-            sys.modules[name] = module
-            exec code in vars(module)
-            return module
-
+            return transformer.make_module(name, newpath)
         except Exception, err:
-            raise
             raise ImportError('cannot import %s: %s' % (name, err))
 
     def get_source(self, name):
