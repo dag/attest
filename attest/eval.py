@@ -9,6 +9,20 @@ import sys
 
 
 class ExpressionEvaluator(SourceGenerator):
+    """Evaluates `expr` in the context of `globals` and `locals`, expanding
+    the values of variables and the results of binary operations, but
+    keeping comparison and boolean operators.
+
+    >>> var = 1 + 2
+    >>> value = ExpressionEvaluator('var == 5 - 3', globals(), locals())
+    >>> repr(value)
+    '(3 == 2)'
+    >>> bool(value)
+    False
+
+    .. versionadded:: 0.5
+
+    """
 
     def __init__(self, expr, globals, locals):
         self.expr = expr
@@ -43,6 +57,18 @@ class ExpressionEvaluator(SourceGenerator):
 
 
 def assert_hook(expr, globals=None, locals=None):
+    """Like :keyword:`assert`, but using :class:`ExpressionEvaluator`. If
+    you import this in test modules and the :class:`AssertImportHook` is
+    installed (which it is automatically the first time you import from
+    attest), :keyword:`assert` statements are rewritten as a call to this.
+
+    The import must be a top-level *from* import, example::
+
+        from attest import Tests, assert_hook
+
+    ..versionadded:: 0.5
+
+    """
     statistics.assertions += 1
     if globals is None:
         globals = inspect.stack()[1][0].f_globals
@@ -61,6 +87,29 @@ def build(node, **kwargs):
 
 
 class AssertTransformer(ast.NodeTransformer):
+    """Parses `source` with :mod:`_ast` and transforms :keyword:`assert`
+    statements into calls to :func:`assert_hook`.
+
+    .. warning::
+
+        CPython 2.5 doesn't compile AST nodes and when that fails this
+        transformer will generate source code from the AST instead. While
+        Attest's own tests passes on CPython 2.5, there might be code that
+        it currently would render back incorrectly, most likely resulting
+        in a failure. Because Python's syntax is simple, this isn't very
+        likely, but you might want to disable the import hook if you test
+        regularly on CPython 2.5.
+
+        It also messes up the line numbers so they don't match the original
+        source code, meaning tracebacks will point to the line numbers in
+        the *generated* source and preview the code on that line in the
+        *original* source. The improved error message with the import hook
+        is often worth it however, and failures will still point to the
+        right file and function.
+
+    .. versionadded:: 0.5
+
+    """
 
     def __init__(self, source, filename=''):
         self.source = source
@@ -68,6 +117,7 @@ class AssertTransformer(ast.NodeTransformer):
 
     @property
     def should_rewrite(self):
+        """:const:`True` if the source imports :func:`assert_hook`."""
         return ('assert_hook' in self.source and
                 any(s.module == 'attest' and
                     any(n.name == 'assert_hook' for n in s.names)
@@ -75,6 +125,12 @@ class AssertTransformer(ast.NodeTransformer):
                     if isinstance(s, ast.ImportFrom)))
 
     def make_module(self, name, newpath=None):
+        """Compiles the transformed code into a module object which it also
+        inserts in :data:`sys.modules`.
+
+        :returns: The module object.
+
+        """
         module = imp.new_module(name)
         module.__file__ = self.filename
         if newpath:
@@ -85,6 +141,7 @@ class AssertTransformer(ast.NodeTransformer):
 
     @property
     def node(self):
+        """The transformed AST node."""
         node = ast.parse(self.source, self.filename)
         node = self.visit(node)
         ast.fix_missing_locations(node)
@@ -92,6 +149,7 @@ class AssertTransformer(ast.NodeTransformer):
 
     @property
     def code(self):
+        """The :attr:`node` compiled into a code object."""
         try:
             return compile(self.node, self.filename, 'exec')
         except TypeError:
@@ -106,6 +164,12 @@ class AssertTransformer(ast.NodeTransformer):
 
 
 class AssertImportHook(object):
+    """A :term:`finder` and :term:`loader` that transforms imported modules
+    with :class:`AssertTransformer`.
+
+    .. versionadded:: 0.5
+
+    """
 
     def __init__(self):
         self._cache = {}
