@@ -171,6 +171,18 @@ class AssertImportHook(object):
 
     """
 
+    @classmethod
+    def enable(cls):
+        """Enable the import hook."""
+        cls.disable()
+        sys.meta_path.insert(0, cls())
+
+    @classmethod
+    def disable(cls):
+        """Disable the import hook."""
+        sys.meta_path[:] = [ih for ih in sys.meta_path
+                               if not isinstance(ih, cls)]
+
     def __init__(self):
         self._cache = {}
 
