@@ -60,13 +60,14 @@ def assert_hook(expr, globals=None, locals=None):
     """Like :keyword:`assert`, but using :class:`ExpressionEvaluator`. If
     you import this in test modules and the :class:`AssertImportHook` is
     installed (which it is automatically the first time you import from
-    attest), :keyword:`assert` statements are rewritten as a call to this.
+    :mod:`attest`), :keyword:`assert` statements are rewritten as a call to
+    this.
 
     The import must be a top-level *from* import, example::
 
         from attest import Tests, assert_hook
 
-    ..versionadded:: 0.5
+    .. versionadded:: 0.5
 
     """
     statistics.assertions += 1
@@ -97,8 +98,8 @@ class AssertTransformer(ast.NodeTransformer):
         Attest's own tests passes on CPython 2.5, there might be code that
         it currently would render back incorrectly, most likely resulting
         in a failure. Because Python's syntax is simple, this isn't very
-        likely, but you might want to disable the import hook if you test
-        regularly on CPython 2.5.
+        likely, but you might want to :meth:`~AssertImportHook.disable` the
+        import hook if you test regularly on CPython 2.5.
 
         It also messes up the line numbers so they don't match the original
         source code, meaning tracebacks will point to the line numbers in

@@ -61,6 +61,7 @@ Attest…
 
    install
    guide
+   import-hook
    api
    glossary
    changes
