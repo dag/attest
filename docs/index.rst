@@ -61,8 +61,11 @@ Attest…
 
    install
    guide
+   collectors
+   reporters
    import-hook
-   api
+   contexts
+   deprecated
    glossary
    changes
    meta

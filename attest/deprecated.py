@@ -35,7 +35,11 @@ class Loader(object):
 
 
 def assert_(expr, msg=None):
-    """Like :keyword:`assert`, but counts the assertion."""
+    """Like :keyword:`assert`, but counts the assertion.
+
+    .. deprecated:: 0.5 :func:`~attest.eval.assert_hook` is preferred.
+
+    """
     statistics.assertions += 1
     if not expr:
         if msg is None:
@@ -81,6 +85,8 @@ class Assert(object):
 
         Assert.isinstance(0, int)
         Assert(isinstance, 0, int)
+
+    .. deprecated:: 0.5 :func:`~attest.eval.assert_hook` is preferred.
 
     """
 
