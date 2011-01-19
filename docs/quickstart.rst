@@ -1,10 +1,10 @@
-Math: A case study
-==================
+Quickstart
+==========
 
 .. currentmodule:: attest
 
 Because mathematics never lie, except when it claims ``0.9… = 1``, we'll be
-testing math in this guide.
+testing math in this quickstart.
 
 *Attest* is quite agnostic and doesn't enforce any particular setup, but for
 sake of simplicity and because I'm only making Attest flexible in a

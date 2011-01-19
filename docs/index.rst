@@ -60,7 +60,7 @@ Attest…
    :hidden:
 
    install
-   guide
+   quickstart 
    collectors
    reporters
    import-hook
