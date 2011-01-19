@@ -20,7 +20,7 @@ display the results in a graphical user interface.
 .. autoclass:: XmlReporter
 
 .. autoclass:: AbstractReporter
-   :members: begin, success, failure, finished
+   :members: test_loader, begin, success, failure, finished
 
 .. autoclass:: TestResult
    :members:

@@ -5,24 +5,10 @@ from . import statistics
 
 
 class Loader(object):
-    """Run tests with Attest via distribute::
+    """Run tests with Attest via distribute.
 
-        setup(
-            test_loader='attest:Loader',
-            test_suite='tests.collection',
-        )
-
-    Now, ``python setup.py -q test`` is equivalent to::
-
-        from tests import collection
-        collection.run()
-
-    If you want to run the tests as a normal unittest suite,
-    try :meth:`Tests.test_suite` instead::
-
-        setup(
-            test_suite='tests.collection.test_suite'
-        )
+    .. deprecated:: 0.5
+        :meth:`~attest.reporters.AbstractReporter.test_loader` is preferred.
 
     """
 

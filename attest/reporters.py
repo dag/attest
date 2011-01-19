@@ -92,6 +92,15 @@ class TestResult(object):
                                               frame.f_locals)
 
 
+def _test_loader_factory(reporter):
+    class Loader(object):
+        def loadTestsFromNames(self, names, module=None):
+            from .collectors import Tests
+            Tests(names).run(reporter)
+            raise SystemExit
+    return Loader()
+
+
 class AbstractReporter(object):
     """Optional base for reporters, serves as documentation and improves
     errors for incomplete reporters.
@@ -99,6 +108,34 @@ class AbstractReporter(object):
     """
 
     __metaclass__ = ABCMeta
+
+    @classmethod
+    def test_loader(cls):
+        """Creates a basic unittest test loader using this reporter. This
+        can be used to run tests via distribute, for example::
+
+            setup(
+                test_loader='attest:FancyReporter.test_loader',
+                test_suite='tests.collection',
+            )
+
+        Now, ``python setup.py -q test`` is equivalent to::
+
+            from attest import FancyReporter
+            from tests import collection
+            collection.run(FancyReporter)
+
+        If you want to run the tests as a normal unittest suite,
+        try :meth:`~attest.collectors.Tests.test_suite` instead::
+
+            setup(
+                test_suite='tests.collection.test_suite'
+            )
+
+        .. versionadded:: 0.5
+
+        """
+        return _test_loader_factory(cls)
 
     @abstractmethod
     def begin(self, tests):
@@ -271,6 +308,10 @@ def auto_reporter(style=None):
         and pygments packages are installed, otherwise a
         :class:`PlainReporter`.
 
+    .. versionchanged:: 0.5
+        A `test_loader` function attribute similar to
+        :meth:`AbstractReporter.test_loader`.
+
     """
     if sys.stdout.isatty():
         try:
@@ -280,6 +321,8 @@ def auto_reporter(style=None):
         except ImportError:
             pass
     return PlainReporter()
+
+auto_reporter.test_loader = lambda: _test_loader_factory(auto_reporter)
 
 
 class XmlReporter(AbstractReporter):

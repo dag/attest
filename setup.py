@@ -67,7 +67,7 @@ setup(
         ],
     },
 
-    test_loader='attest:Loader',
+    test_loader='attest:auto_reporter.test_loader',
     test_suite='attest.tests.all',
     use_2to3=True,
     zip_safe=False,
