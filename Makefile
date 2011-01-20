@@ -1,2 +1,2 @@
 test:
-	python runtests.py -rquickfix
+	@python runtests.py -rquickfix

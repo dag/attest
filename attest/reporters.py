@@ -383,7 +383,7 @@ class QuickFixReporter(AbstractReporter):
     Example Makefile (remember to indent with tabs not spaces)::
 
         test:
-            python runtests.py -rquickfix
+            @python runtests.py -rquickfix
 
     .. versionadded:: 0.5
 
