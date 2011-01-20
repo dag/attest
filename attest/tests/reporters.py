@@ -33,7 +33,12 @@ def auto_reporter():
     # Inside tests, sys.stdout is not a tty
     assert isinstance(attest.auto_reporter(), attest.PlainReporter)
 
-    sys.stdout, orig = sys.__stdout__, sys.stdout
+    class FakeTTY(object):
+
+        def isatty(self):
+            return True
+
+    sys.stdout, orig = FakeTTY(), sys.stdout
     try:
         assert isinstance(attest.auto_reporter(), attest.FancyReporter)
         with attest.disable_imports('progressbar', 'pygments'):
