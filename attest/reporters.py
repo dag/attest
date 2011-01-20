@@ -51,8 +51,11 @@ class TestResult(object):
         return '.'.join(parts)
 
     @property
-    def traceback(self):
-        """The traceback for the exception, if the test failed, cleaned up.
+    def raw_traceback(self):
+        """Like :func:`traceback.extract_tb` with uninteresting entries
+        removed.
+
+        .. versionadded:: 0.5
 
         """
         tb = traceback.extract_tb(self.exc_info[2])
@@ -60,6 +63,14 @@ class TestResult(object):
         for item in tb:
             if path.dirname(item[0]) != path.dirname(__file__):
                 clean.append(item)
+        return clean
+
+    @property
+    def traceback(self):
+        """The traceback for the exception, if the test failed, cleaned up.
+
+        """
+        clean = self.raw_traceback
         lines = ['Traceback (most recent call last):\n']
         lines += traceback.format_list(clean)
         msg = str(self.error)
@@ -358,6 +369,45 @@ class XmlReporter(AbstractReporter):
         print '</testreport>'
 
 
+class QuickFixReporter(AbstractReporter):
+    """Report failures in a format that's understood by Vim's quickfix
+    feature.
+
+    Write a Makefile that runs your tests with this reporter and
+    then from Vim you can do ``:mak``. If there's failures, Vim will jump
+    to the first one by opening the offending file and positioning the
+    cursor at the relevant line; you can jump between failures with ``:cn``
+    and ``:cp``. For more information try `:help quickfix
+    <http://vimdoc.sourceforge.net/htmldoc/quickfix.html>`_.
+
+    Example Makefile (remember to indent with tabs not spaces)::
+
+        test:
+            python runtests.py -rquickfix
+
+    .. versionadded:: 0.5
+
+    """
+
+    failed = False
+
+    def begin(self, tests):
+        pass
+
+    def success(self, result):
+        pass
+
+    def failure(self, result):
+        self.failed = True
+        fn, lineno = result.raw_traceback[0][:2]
+        type, msg = result.exc_info[0].__name__, result.exc_info[1]
+        print "%s:%s:%s: %s" % (fn, lineno, type, msg)
+
+    def finished(self):
+        if self.failed:
+            raise SystemExit(1)
+
+
 def get_reporter_by_name(name, default='auto'):
     """Get an :class:`AbstractReporter` by name, falling back on a default.
 
@@ -377,6 +427,7 @@ def get_reporter_by_name(name, default='auto'):
 
     * ``'fancy'`` — :class:`FancyReporter`
     * ``'plain'`` — :class:`PlainReporter`
+    * ``'quickfix'`` — :class:`QuickFixReporter`
     * ``'xml'`` — :class:`XmlReporter`
     * ``'auto'`` — :func:`auto_reporter`
 
@@ -407,7 +458,7 @@ def get_all_reporters():
 
     >>> from attest import get_all_reporters
     >>> list(get_all_reporters())
-    ['xml', 'plain', 'fancy', 'auto']
+    ['xml', 'plain', 'quickfix', 'fancy', 'auto']
 
     .. versionadded:: 0.4
 

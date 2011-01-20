@@ -61,6 +61,7 @@ setup(
     entry_points = {
         'attest.reporters': [
             'xml = attest:XmlReporter',
+            'quickfix = attest:QuickFixReporter',
             'plain = attest:PlainReporter',
             'fancy = attest:FancyReporter',
             'auto = attest:auto_reporter',

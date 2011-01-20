@@ -13,7 +13,7 @@ suite = Tests()
 
 @suite.test
 def get_all_reporters():
-    reporters = set(['auto', 'fancy', 'plain', 'xml'])
+    reporters = set(['auto', 'fancy', 'plain', 'xml', 'quickfix'])
     assert set(attest.get_all_reporters()) == reporters
 
 

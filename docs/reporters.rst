@@ -17,6 +17,8 @@ display the results in a graphical user interface.
 
 .. autoclass:: PlainReporter
 
+.. autoclass:: QuickFixReporter
+
 .. autoclass:: XmlReporter
 
 .. autoclass:: AbstractReporter
