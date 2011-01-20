@@ -399,7 +399,7 @@ class QuickFixReporter(AbstractReporter):
 
     def failure(self, result):
         self.failed = True
-        fn, lineno = result.raw_traceback[0][:2]
+        fn, lineno = result.raw_traceback[-1][:2]
         type, msg = result.exc_info[0].__name__, result.exc_info[1]
         print "%s:%s:%s: %s" % (fn, lineno, type, msg)
 
