@@ -1,6 +1,7 @@
 # coding:utf-8
 import traceback
 import sys
+import os
 from os import path
 import inspect
 from pkg_resources import iter_entry_points
@@ -233,15 +234,19 @@ class FancyReporter(AbstractReporter):
     and failures are shown with syntax highlighted tracebacks.
 
     :param style:
-        `Pygments`_ style for tracebacks, defaults to ``'bw'`` because it
+        `Pygments`_ style for tracebacks. If :const:`None`, uses
+        :envvar:`ATTEST_PYGMENTS_STYLE` falling back on ``'bw'`` because it
         looks good on most terminals.
 
     .. _Pygments: http://pygments.org/
 
     """
 
-    def __init__(self, style='bw'):
-        self.style = style
+    def __init__(self, style=None):
+        if style is None:
+            self.style = os.environ.get('ATTEST_PYGMENTS_STYLE', 'bw')
+        else:
+            self.style = style
         import progressbar
         import pygments
 
