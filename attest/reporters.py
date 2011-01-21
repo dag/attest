@@ -400,8 +400,10 @@ class QuickFixReporter(AbstractReporter):
     def failure(self, result):
         self.failed = True
         fn, lineno = result.raw_traceback[-1][:2]
-        type, msg = result.exc_info[0].__name__, result.exc_info[1]
-        print "%s:%s:%s: %s" % (fn, lineno, type, msg)
+        type, msg = result.exc_info[0].__name__, str(result.exc_info[1])
+        if msg:
+            msg = ': ' + msg
+        print "%s:%s: %s%s" % (fn, lineno, type, msg)
 
     def finished(self):
         if self.failed:
