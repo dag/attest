@@ -1,11 +1,12 @@
 from __future__ import with_statement
 
 import sys
+import inspect
 
 from attest import Tests, Assert, assert_hook
 import attest
 
-from attest.tests._meta import metatests
+from . import _meta
 
 
 suite = Tests()
@@ -52,7 +53,7 @@ def xml_reporter():
     """XmlReporter"""
 
     with attest.capture_output() as (out, err):
-        metatests.run(attest.XmlReporter)
+        _meta.suite.run(attest.XmlReporter)
 
     for line, expected in zip(out[:5] + out[6:], [
         '<?xml version="1.0" encoding="UTF-8"?>',
@@ -74,7 +75,7 @@ def plain_reporter():
 
     with attest.capture_output() as (out, err):
         with Assert.raises(SystemExit):
-            metatests.run(attest.PlainReporter)
+            _meta.suite.run(attest.PlainReporter)
 
     for line, expected in zip(out[:5] + out[6:-1], [
         '.F',
@@ -89,3 +90,14 @@ def plain_reporter():
         assert line == expected
 
     assert out[-1].split(' ')[:2] == ['Failures:', '1/2']
+
+
+@suite.test
+def quickfix_reporter():
+    """QuickFixReporter"""
+
+    with attest.capture_output() as (out, err):
+        with Assert.raises(SystemExit):
+            _meta.suite.run(attest.QuickFixReporter)
+
+    assert out == [inspect.getsourcefile(_meta) + ':18: AssertionError']

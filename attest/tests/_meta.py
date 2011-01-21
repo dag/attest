@@ -6,13 +6,13 @@
 from attest import Tests
 
 
-metatests = Tests()
+suite = Tests()
 
-@metatests.test
+@suite.test
 def passing():
     pass
 
-@metatests.test
+@suite.test
 def failing():
     value = 1 + 1
     assert value == 3
