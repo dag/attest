@@ -19,12 +19,20 @@ and separation.
   * Classes are instantiated and returned, allowing :meth:`Tests.register`
     to be used as a class decorator in Python 2.6 or later.
 
+
+Functional
+----------
+
 .. autoclass:: Tests
    :members: test, test_if, context, register, register_if, test_suite
 
    .. automethod:: run(reporter=auto_reporter)
 
    .. automethod:: main(argv=sys.argv)
+
+
+Class-based
+-----------
 
 .. autoclass:: TestBase
 
