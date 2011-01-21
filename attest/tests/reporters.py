@@ -9,6 +9,9 @@ import attest
 from . import _meta
 
 
+SOURCEFILE = inspect.getsourcefile(_meta)
+
+
 suite = Tests()
 
 
@@ -55,12 +58,13 @@ def xml_reporter():
     with attest.capture_output() as (out, err):
         _meta.suite.run(attest.XmlReporter)
 
-    for line, expected in zip(out[:5] + out[6:], [
+    for line, expected in zip(out, [
         '<?xml version="1.0" encoding="UTF-8"?>',
         '<testreport tests="2">',
         '  <pass name="attest.tests._meta.passing"/>',
         '  <fail name="attest.tests._meta.failing" type="AssertionError">',
         '    Traceback (most recent call last):',
+        '      File &quot;%s&quot;, line 18, in failing' % SOURCEFILE,
         '        assert value == 3',
         '    AssertionError: not (2 == 3)',
         '  </fail>',
@@ -77,12 +81,13 @@ def plain_reporter():
         with Assert.raises(SystemExit):
             _meta.suite.run(attest.PlainReporter)
 
-    for line, expected in zip(out[:5] + out[6:-1], [
+    for line, expected in zip(out, [
         '.F',
         '',
         'attest.tests._meta.failing',
         '-' * 80,
         'Traceback (most recent call last):',
+        '  File "%s", line 18, in failing' % SOURCEFILE,
         '    assert value == 3',
         'AssertionError: not (2 == 3)',
         '',
@@ -100,4 +105,4 @@ def quickfix_reporter():
         with Assert.raises(SystemExit):
             _meta.suite.run(attest.QuickFixReporter)
 
-    assert out == [inspect.getsourcefile(_meta) + ':18: AssertionError']
+    assert out == [SOURCEFILE + ':18: AssertionError']
