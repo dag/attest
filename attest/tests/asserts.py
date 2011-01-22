@@ -319,23 +319,6 @@ def passed_to():
 
 
 @suite.test
-def disable_imports():
-    with attest.disable_imports('sys', 'os'):
-        with Assert.raises(ImportError):
-            import sys
-
-        with Assert.raises(ImportError):
-            import os
-
-    import sys
-    import os
-
-    with attest.disable_imports():
-        import datetime
-        Assert(datetime).is_(sys.modules['datetime'])
-
-
-@suite.test
 def predicate():
     with Assert.raises(AssertionError):
         Assert(bool, 0)

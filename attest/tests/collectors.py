@@ -1,9 +1,6 @@
 from __future__ import with_statement
 
-import sys
-
-from attest import (AbstractReporter, Tests, Assert,
-                    capture_output, assert_hook)
+from attest import AbstractReporter, Tests, Assert, assert_hook
 
 
 class TestReporter(AbstractReporter):
@@ -123,23 +120,6 @@ def context():
         assert one == 1
 
     test5()
-
-
-@suite.test
-def capture():
-    """capture_output()"""
-
-    stdout, stderr = sys.stdout, sys.stderr
-
-    with capture_output() as (out, err):
-        print 'Capture the flag!'
-        print >>sys.stderr, 'Rapture the flag?'
-
-    assert out == ['Capture the flag!']
-    assert err == ['Rapture the flag?']
-
-    assert sys.stdout is stdout
-    assert sys.stderr is stderr
 
 
 @suite.test

@@ -5,4 +5,5 @@ all = Tests('.'.join((__name__, mod, 'suite'))
                         'collectors',
                         'classy',
                         'reporters',
+                        'contexts',
                         'eval'))
