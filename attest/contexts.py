@@ -6,6 +6,9 @@ try:
 except ImportError:
     from StringIO import StringIO
 
+from . import statistics
+from .deprecated import _repr
+
 
 @contextmanager
 def capture_output():
@@ -56,3 +59,31 @@ def disable_imports(*names):
         yield
     finally:
         __builtin__.__import__ = import_
+
+
+class Error(object):
+
+    exc = None
+
+    def __getattr__(self, name):
+        return getattr(self.exc, name)
+
+    def __str__(self):
+        return str(self.exc)
+
+    def __repr__(self):
+        return '<Error %s>' % repr(self.exc)
+
+
+@contextmanager
+def raises(*exceptions):
+    statistics.assertions += 1
+    error = Error()
+    try:
+        yield error
+    except exceptions, e:
+        error.exc = e
+    else:
+        if len(exceptions) == 1:
+            exceptions = exceptions[0]
+        raise AssertionError('except %s' % _repr(exceptions))

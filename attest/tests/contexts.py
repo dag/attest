@@ -41,3 +41,34 @@ def disable_imports():
     with attest.disable_imports():
         import datetime
         assert datetime is sys.modules['datetime']
+
+
+@suite.test
+def raises():
+    try:
+        with attest.raises(RuntimeError):
+            pass
+    except AssertionError, e:
+        assert str(e) == 'except RuntimeError'
+    else:
+        raise AssertionError('except AssertionError')
+
+    # Groups of allowed exceptions
+    try:
+        with attest.raises(RuntimeError, ValueError):
+            pass
+    except AssertionError, e:
+        assert str(e) == 'except (RuntimeError, ValueError)'
+    else:
+        raise AssertionError('except AssertionError')
+
+    with attest.raises(RuntimeError, ValueError) as error:
+        raise RuntimeError
+    assert isinstance(error.exc, RuntimeError)
+
+    with attest.raises(RuntimeError, ValueError) as error:
+        raise ValueError('invaluable')
+    assert isinstance(error.exc, ValueError) and str(error) == 'invaluable'
+
+    with attest.raises(AssertionError):
+        assert error.args == ('valuable',)
