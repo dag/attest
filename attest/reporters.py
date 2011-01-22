@@ -62,7 +62,7 @@ class TestResult(object):
         tb = traceback.extract_tb(self.exc_info[2])
         clean = []
         for item in tb:
-            if path.dirname(item[0]) != path.dirname(__file__):
+            if path.abspath(path.dirname(item[0])) != path.dirname(__file__):
                 clean.append(item)
         return clean
 

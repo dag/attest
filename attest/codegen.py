@@ -69,8 +69,9 @@ class SourceGenerator(NodeVisitor):
         self.indentation -= 1
         self.write('\n')
 
-    def body_or_else(self, node):
-        self.body(node.body)
+    def body_or_else(self, node, body=True):
+        if body:
+            self.body(node.body)
         if node.orelse:
             self.newline()
             self.write('else:')
@@ -266,6 +267,7 @@ class SourceGenerator(NodeVisitor):
         self.body(node.body)
         for handler in node.handlers:
             self.visit(handler)
+        self.body_or_else(node, body=False)
 
     def visit_TryFinally(self, node):
         self.newline(node)
@@ -300,8 +302,8 @@ class SourceGenerator(NodeVisitor):
         # XXX: Python 2.6 / 3.0 compatibility
         self.newline(node)
         self.write('raise')
+        self.write(' ')
         if hasattr(node, 'exc') and node.exc is not None:
-            self.write(' ')
             self.visit(node.exc)
             if node.cause is not None:
                 self.write(' from ')
@@ -524,10 +526,26 @@ class SourceGenerator(NodeVisitor):
         self.newline(node)
         self.write('except')
         if node.type is not None:
-            self.write(' ')
+            self.write(' (')
             self.visit(node.type)
+            self.write(',)')
             if node.name is not None:
-                self.write(' as ')
+                self.write(', ')
                 self.visit(node.name)
         self.write(':')
         self.body(node.body)
+
+    visit_ExceptHandler = visit_excepthandler
+
+    def visit_Assert(self, node):
+        self.newline(node)
+        self.write('assert ')
+        self.visit(node.test)
+        if node.msg is not None:
+            self.write(', ')
+            self.visit(node.msg)
+
+
+if __name__ == '__main__':
+    import sys
+    print to_source(parse(open(sys.argv[1]).read()))

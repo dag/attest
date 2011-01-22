@@ -1,5 +1,5 @@
 import sys
-from .collectors import Tests
+from attest.collectors import Tests
 
 if __name__ == '__main__':
     try:
