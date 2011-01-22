@@ -49,18 +49,18 @@ def raises():
         with attest.raises(RuntimeError):
             pass
     except AssertionError, e:
-        assert str(e) == 'except RuntimeError'
+        assert str(e) == 'not raises(RuntimeError)'
     else:
-        raise AssertionError('except AssertionError')
+        raise AssertionError('not raises(AssertionError)')
 
     # Groups of allowed exceptions
     try:
         with attest.raises(RuntimeError, ValueError):
             pass
     except AssertionError, e:
-        assert str(e) == 'except (RuntimeError, ValueError)'
+        assert str(e) == 'not raises(RuntimeError, ValueError)'
     else:
-        raise AssertionError('except AssertionError')
+        raise AssertionError('not raises(AssertionError)')
 
     with attest.raises(RuntimeError, ValueError) as error:
         raise RuntimeError

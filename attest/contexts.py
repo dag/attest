@@ -84,6 +84,4 @@ def raises(*exceptions):
     except exceptions, e:
         error.exc = e
     else:
-        if len(exceptions) == 1:
-            exceptions = exceptions[0]
-        raise AssertionError('except %s' % _repr(exceptions))
+        raise AssertionError('not raises%s' % _repr(exceptions))
