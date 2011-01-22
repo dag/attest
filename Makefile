@@ -6,4 +6,4 @@ test:
 	@python runtests.py -rquickfix
 
 tags:
-	ctags **/*.py
+	ctags -R attest
