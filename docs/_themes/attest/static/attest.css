@@ -113,3 +113,11 @@ div.dictionary-entry dd
 div.small-caps
 { font-variant: small-caps;
 }
+
+div.section > dl
+{ padding-top: 2em;
+}
+
+div.section h2 + dl
+{ padding-top: inherit;
+}
