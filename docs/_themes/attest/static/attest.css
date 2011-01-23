@@ -85,6 +85,14 @@ div.sphinxsidebar a, a.headerlink, div.toctree-wrapper a, a.viewcode-link
 { text-decoration: none;
 }
 
+div.sphinxsidebar li.current
+{ font-weight: bold;
+}
+
+div.sphinxsidebar li.current li
+{ font-weight: normal;
+}
+
 a.viewcode-link
 { color: #bbb;
 }
