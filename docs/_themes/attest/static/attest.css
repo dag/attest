@@ -121,3 +121,14 @@ div.section > dl
 div.section h2 + dl
 { padding-top: inherit;
 }
+
+dt:target, .highlighted
+{ background: #f2ffc4;
+}
+
+dt:target
+{ margin-left: -10px;
+  margin-right: -40px;
+  padding-left: 10px;
+  padding-right: 40px;
+}
