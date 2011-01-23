@@ -12,7 +12,7 @@ conventions.
     @math.test
     def arithmetics():
         """Ensure that the laws of physics are in check."""
-        Assert(1 + 1) == 2
+        assert 1 + 1 == 2
 
     if __name__ == '__main__':
         math.run()
