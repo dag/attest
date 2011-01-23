@@ -12,15 +12,16 @@ from .deprecated import _repr
 
 @contextmanager
 def capture_output():
-    """Context manager capturing standard output and error. Yields a tuple
-    of the two streams as lists of lines.
+    """Captures standard output and error during the context. Returns a
+    tuple of the two streams as lists of lines, added after the context has
+    executed.
 
     ::
 
         with capture_output() as (out, err):
             print 'Captured'
 
-        Assert(out) == ['Captured']
+        assert out == ['Captured']
 
     """
     stdout, stderr = sys.stdout, sys.stderr
@@ -36,11 +37,11 @@ def capture_output():
 
 @contextmanager
 def disable_imports(*names):
-    """Context in which imports for `names` raises an :exc:`ImportError`.
+    """Blocks the given `names` from being imported inside the context.
     This is useful for testing import-dependent fallbacks.
 
-    >>> from attest import disable_imports
-    >>> with disable_imports('sys'): import sys
+    >>> with disable_imports('sys'):
+    ...     import sys
     ...
     Traceback (most recent call last):
     ImportError: 'sys' is disabled
