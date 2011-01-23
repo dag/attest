@@ -84,7 +84,7 @@ class Tests(object):
 
             @db.test
             def using_connection(con):
-                Assert(con).is_not(None)
+                assert con is not None
 
         The above corresponds to::
 
@@ -101,7 +101,7 @@ class Tests(object):
             @db.test
             def using_connection():
                 with connect() as con:
-                    Assert(con).is_not(None)
+                    assert con is not None
 
         The difference is that this decorator applies the context to all
         tests defined in its collection, so it's less repetitive.
@@ -172,8 +172,9 @@ class Tests(object):
         """Run all tests in this collection.
 
         :param reporter:
-            An instance of :class:`AbstractReporter` or a callable
-            returning something implementing that API (not enforced).
+            An instance of :class:`~attest.reporters.AbstractReporter` or a
+            callable returning something implementing that API (not
+            enforced).
 
         """
         if not isinstance(reporter, AbstractReporter):
@@ -205,7 +206,8 @@ class Tests(object):
             Show a help message
 
         ``-r NAME``, ``--reporter NAME``
-            Select reporter by name with :func:`get_reporter_by_name`
+            Select reporter by name with
+            :func:`~attest.reporters.get_reporter_by_name`
 
         ``-l``, ``--list-reporters``
             List the names of all installed reporters
@@ -274,7 +276,7 @@ class TestBase(object):
 
             @test
             def arithmetics(self):
-                Assert(self.two) == 2
+                assert self.two == 2
 
         suite = Tests([Math()])
         suite.run()
