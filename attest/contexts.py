@@ -62,7 +62,17 @@ def disable_imports(*names):
 
 
 class Error(object):
+    """Container of metadata for an exception caught by :func:`raises`.
 
+    Attribute access and string adaption is forwarded to the exception
+    object. To test the type however you need to use the :attr:`exc`
+    attribute directly.
+
+    .. versionadded:: 0.5
+
+    """
+
+    #: The actual exception instance.
     exc = None
 
     def __getattr__(self, name):
@@ -77,6 +87,26 @@ class Error(object):
 
 @contextmanager
 def raises(*exceptions):
+    """Fails if none of the `exceptions` are raised inside the context.
+    This reverses failure semantics and is useful for testing code that
+    uses exceptions as part of its API.
+
+    ::
+
+        with raises(IOError) as error:
+            open('/etc/passwd', 'w')
+
+        assert error.errno == 13
+
+    :param exceptions: Expected exception classes.
+    :returns: An :class:`Error` on which the caught exception is set after
+        the context has executed, if one was raised.
+
+    .. versionadded:: 0.5
+
+    .. autoclass:: Error
+
+    """
     statistics.assertions += 1
     error = Error()
     try:
