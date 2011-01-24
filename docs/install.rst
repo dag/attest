@@ -15,7 +15,7 @@ optional, and if you prefer you can install Attest without them::
 
     easy_install -N Attest
 
-If you want to use the convinience methods for testing HTML and XML, you
+If you want to use the convenience methods for testing HTML and XML, you
 also need to have lxml installed which by default is not pulled as a
 dependency. It's usually easiest to install it with your package manager,
 if you're on Linux or similar; example for Ubuntu::

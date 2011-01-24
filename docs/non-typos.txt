@@ -27,6 +27,7 @@ natively
 overridable
 progressbar
 proxied
+py
 pygments
 quickfix
 quickstart
