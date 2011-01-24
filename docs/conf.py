@@ -29,6 +29,7 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.intersphinx',
               'sphinx.ext.viewcode',
               'sphinx.ext.doctest',
+              'sphinxcontrib.spelling',
              ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -222,3 +223,7 @@ man_pages = [
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'http://docs.python.org/dev/': None}
+
+
+spelling_lang = 'en_UK'
+spelling_word_list_filename = os.path.abspath('non-typos.txt')
