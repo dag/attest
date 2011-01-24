@@ -40,6 +40,7 @@ def disable_imports(*names):
     """Blocks the given `names` from being imported inside the context.
     This is useful for testing import-dependent fallbacks.
 
+    >>> from attest import disable_imports
     >>> with disable_imports('sys'):
     ...     import sys
     ...

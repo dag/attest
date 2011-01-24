@@ -13,6 +13,7 @@ class ExpressionEvaluator(SourceGenerator):
     the values of variables and the results of binary operations, but
     keeping comparison and boolean operators.
 
+    >>> from attest import ExpressionEvaluator
     >>> var = 1 + 2
     >>> value = ExpressionEvaluator('var == 5 - 3', globals(), locals())
     >>> repr(value)
