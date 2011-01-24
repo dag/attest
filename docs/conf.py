@@ -29,8 +29,14 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.intersphinx',
               'sphinx.ext.viewcode',
               'sphinx.ext.doctest',
-              'sphinxcontrib.spelling',
              ]
+
+try:
+    import sphinxcontrib.spelling
+except ImportError:
+    pass
+else:
+    extensions.append('sphinxcontrib.spelling')
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
