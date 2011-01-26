@@ -463,7 +463,7 @@ def get_reporter_by_name(name, default='auto'):
         reporter = list(iter_entry_points('attest.reporters', default))
     if not reporter:
         raise KeyError
-    return reporter[0].load()
+    return reporter[0].load(require=False)
 
 
 def get_all_reporters():
