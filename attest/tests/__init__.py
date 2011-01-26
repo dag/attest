@@ -6,4 +6,4 @@ all = Tests('.'.join((__name__, mod, 'suite'))
                         'classy',
                         'reporters',
                         'contexts',
-                        'eval'))
+                        'hook'))

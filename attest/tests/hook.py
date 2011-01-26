@@ -1,5 +1,5 @@
 from attest import Tests, assert_hook
-from attest.eval import ExpressionEvaluator
+from attest.hook import ExpressionEvaluator
 
 
 suite = Tests()

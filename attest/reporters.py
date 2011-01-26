@@ -13,7 +13,7 @@ except ImportError:
     abstractmethod = lambda x: x
 
 from . import statistics
-from .eval import ExpressionEvaluator
+from .hook import ExpressionEvaluator
 
 
 class TestResult(object):
