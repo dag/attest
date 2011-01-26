@@ -219,6 +219,10 @@ class PlainReporter(AbstractReporter):
             if result.test.__doc__:
                 print inspect.getdoc(result.test)
             print '-' * 80
+            if result.stdout:
+                print '->', '\n'.join(result.stdout)
+            if result.stderr:
+                print 'E:', '\n'.join(result.stderr)
             print result.traceback
             print
 

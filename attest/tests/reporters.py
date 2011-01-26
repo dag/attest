@@ -10,6 +10,7 @@ from . import _meta
 
 
 SOURCEFILE = inspect.getsourcefile(_meta)
+LINENO = 21
 
 
 suite = Tests()
@@ -64,7 +65,7 @@ def xml_reporter():
         '  <pass name="attest.tests._meta.passing"/>',
         '  <fail name="attest.tests._meta.failing" type="AssertionError">',
         '    Traceback (most recent call last):',
-        '      File &quot;%s&quot;, line 18, in failing' % SOURCEFILE,
+        '      File &quot;%s&quot;, line %d, in failing' % (SOURCEFILE, LINENO),
         '        assert value == 3',
         '    AssertionError: not (2 == 3)',
         '  </fail>',
@@ -86,8 +87,10 @@ def plain_reporter():
         '',
         'attest.tests._meta.failing',
         '-' * 80,
+        '-> stdout',
+        'E: stderr',
         'Traceback (most recent call last):',
-        '  File "%s", line 18, in failing' % SOURCEFILE,
+        '  File "%s", line %d, in failing' % (SOURCEFILE, LINENO),
         '    assert value == 3',
         'AssertionError: not (2 == 3)',
         '',
@@ -105,4 +108,4 @@ def quickfix_reporter():
         with Assert.raises(SystemExit):
             _meta.suite.run(attest.QuickFixReporter)
 
-    assert out == [SOURCEFILE + ':18: AssertionError']
+    assert out == ['%s:%d: AssertionError' % (SOURCEFILE, LINENO)]

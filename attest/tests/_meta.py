@@ -3,6 +3,7 @@
     Test tests for testing testing.
 
 """
+import sys
 from attest import Tests
 
 
@@ -14,5 +15,7 @@ def passing():
 
 @suite.test
 def failing():
+    print 'stdout'
+    print >>sys.stderr, 'stderr'
     value = 1 + 1
     assert value == 3
