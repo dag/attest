@@ -1,6 +1,7 @@
 from __future__ import with_statement
 
-from attest import AbstractReporter, Tests, Assert, assert_hook
+from attest import (AbstractReporter, Tests, Assert, assert_hook,
+                    TestFailure)
 
 
 class TestReporter(AbstractReporter):
@@ -148,7 +149,7 @@ def run():
     assert len(result.succeeded) == 1
 
     assert result.failed[0].test is fail
-    assert result.failed[0].exc_info[0] is AssertionError
+    assert result.failed[0].exc_info[0] is TestFailure
     assert result.succeeded[0].test is succeed
 
 

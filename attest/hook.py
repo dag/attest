@@ -57,6 +57,14 @@ class ExpressionEvaluator(SourceGenerator):
     visit_BinOp = visit_Subscript = generic_visit
 
 
+class TestFailure(AssertionError):
+    """Extended :exc:`AssertionError` used by the assert hook.
+
+    .. versionadded:: 0.5
+
+    """
+
+
 def assert_hook(expr, globals=None, locals=None):
     """Like :keyword:`assert`, but using :class:`ExpressionEvaluator`. If
     you import this in test modules and the :class:`AssertImportHook` is
@@ -78,7 +86,7 @@ def assert_hook(expr, globals=None, locals=None):
         locals = inspect.stack()[1][0].f_locals
     value = ExpressionEvaluator(expr, globals, locals)
     if not value:
-        raise AssertionError('not %r' % value)
+        raise TestFailure('not %r' % value)
 
 
 # Build AST nodes on 2.5 more easily

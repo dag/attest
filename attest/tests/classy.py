@@ -1,4 +1,4 @@
-from attest import TestBase, test, Tests, test_if, assert_hook
+from attest import TestBase, test, Tests, test_if, assert_hook, TestFailure
 
 from .collectors import TestReporter
 
@@ -46,7 +46,7 @@ def classbased_test_runs():
     assert len(result.failed) == 1
 
     assert result.failed[0].test == instance.fail
-    assert result.failed[0].exc_info[0] is AssertionError
+    assert result.failed[0].exc_info[0] is TestFailure
 
 
 @suite.test
