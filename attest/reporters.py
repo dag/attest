@@ -13,7 +13,7 @@ except ImportError:
     abstractmethod = lambda x: x
 
 from . import statistics
-from .hook import ExpressionEvaluator
+from .hook import ExpressionEvaluator, TestFailure
 
 
 class TestResult(object):
@@ -77,10 +77,15 @@ class TestResult(object):
         lines = ['Traceback (most recent call last):\n']
         lines += traceback.format_list(clean)
         msg = str(self.error)
-        if not msg and isinstance(self.error, AssertionError):
-            msg = self.evaluated_assertion
         lines += traceback.format_exception_only(self.exc_info[0], msg)
         return ''.join(lines)[:-1]
+
+    @property
+    def assertion(self):
+        if isinstance(self.error, TestFailure):
+            steps = ['assert %s' % self.error.value.expr,
+                     'assert %r' % self.error.value]
+            return '\n'.join(steps)
 
     @property
     def evaluated_assertion(self):
@@ -292,20 +297,12 @@ class FancyReporter(AbstractReporter):
                 print colorize('darkred', '\n'.join(result.stderr))
 
             formatter = Terminal256Formatter(style=self.style)
+            print highlight(result.traceback,
+                            PythonTracebackLexer(),
+                            formatter)
 
-            if not isinstance(result.error, AssertionError):
-                print highlight(result.traceback,
-                                PythonTracebackLexer(),
-                                formatter)
-
-            else:
-                traceback = result.traceback.splitlines()
-                error, msg = traceback[-1].split(': ', 1)
-                tb = highlight('\n'.join(traceback[:-1] + [error + ':']),
-                               PythonTracebackLexer(), formatter).strip()
-                tb += ' '
-                tb += highlight(msg, PythonLexer(), formatter)
-                print tb
+            if result.assertion is not None:
+                print highlight(result.assertion, PythonLexer(), formatter)
 
         if self.failures:
             failed = colorize('red', str(len(self.failures)))

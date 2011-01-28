@@ -63,11 +63,11 @@ def xml_reporter():
         '<?xml version="1.0" encoding="UTF-8"?>',
         '<testreport tests="2">',
         '  <pass name="attest.tests._meta.passing"/>',
-        '  <fail name="attest.tests._meta.failing" type="AssertionError">',
+        '  <fail name="attest.tests._meta.failing" type="TestFailure">',
         '    Traceback (most recent call last):',
         '      File &quot;%s&quot;, line %d, in failing' % (SOURCEFILE, LINENO),
         '        assert value == 3',
-        '    AssertionError: not (2 == 3)',
+        '    TestFailure',
         '  </fail>',
         '</testreport>',
     ]):
@@ -92,7 +92,7 @@ def plain_reporter():
         'Traceback (most recent call last):',
         '  File "%s", line %d, in failing' % (SOURCEFILE, LINENO),
         '    assert value == 3',
-        'AssertionError: not (2 == 3)',
+        'TestFailure',
         '',
     ]):
         assert line == expected
@@ -108,4 +108,4 @@ def quickfix_reporter():
         with Assert.raises(SystemExit):
             _meta.suite.run(attest.QuickFixReporter)
 
-    assert out == ['%s:%d: AssertionError' % (SOURCEFILE, LINENO)]
+    assert out == ['%s:%d: TestFailure' % (SOURCEFILE, LINENO)]

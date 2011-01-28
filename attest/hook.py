@@ -60,12 +60,20 @@ class ExpressionEvaluator(SourceGenerator):
 class TestFailure(AssertionError):
     """Extended :exc:`AssertionError` used by the assert hook.
 
+    :param value: The asserted expression evaluated with
+        :class:`ExpressionEvaluator`.
+    :param msg: Optional message passed to the assertion.
+
     .. versionadded:: 0.5
 
     """
 
+    def __init__(self, value, msg=''):
+        self.value = value
+        AssertionError.__init__(self, msg)
 
-def assert_hook(expr, globals=None, locals=None):
+
+def assert_hook(expr, msg='', globals=None, locals=None):
     """Like :keyword:`assert`, but using :class:`ExpressionEvaluator`. If
     you import this in test modules and the :class:`AssertImportHook` is
     installed (which it is automatically the first time you import from
@@ -86,7 +94,7 @@ def assert_hook(expr, globals=None, locals=None):
         locals = inspect.stack()[1][0].f_locals
     value = ExpressionEvaluator(expr, globals, locals)
     if not value:
-        raise TestFailure('not %r' % value)
+        raise TestFailure(value, msg)
 
 
 # Build AST nodes on 2.5 more easily
@@ -167,11 +175,13 @@ class AssertTransformer(ast.NodeTransformer):
             return compile(to_source(self.node), self.filename, 'exec')
 
     def visit_Assert(self, node):
+        args=[_build(ast.Str, s=to_source(node.test))]
+        if node.msg is not None:
+            args.append(node.msg)
         return ast.copy_location(
             _build(ast.Expr, value=_build(ast.Call,
                    func=_build(ast.Name, id='assert_hook', ctx=ast.Load()),
-                   args=[_build(ast.Str, s=to_source(node.test))],
-                   keywords=[], starargs=None, kwargs=None)), node)
+                   args=args, keywords=[], starargs=None, kwargs=None)), node)
 
 
 class AssertImportHook(object):

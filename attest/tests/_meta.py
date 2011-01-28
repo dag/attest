@@ -4,7 +4,7 @@
 
 """
 import sys
-from attest import Tests
+from attest import Tests, assert_hook
 
 
 suite = Tests()
