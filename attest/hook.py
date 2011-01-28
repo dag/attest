@@ -81,7 +81,8 @@ def assert_hook(expr, globals=None, locals=None):
         raise AssertionError('not %r' % value)
 
 
-def build(node, **kwargs):
+# Build AST nodes on 2.5 more easily
+def _build(node, **kwargs):
     node = node()
     for key, value in kwargs.iteritems():
         setattr(node, key, value)
@@ -159,10 +160,10 @@ class AssertTransformer(ast.NodeTransformer):
 
     def visit_Assert(self, node):
         return ast.copy_location(
-            build(ast.Expr, value=build(ast.Call,
-                  func=build(ast.Name, id='assert_hook', ctx=ast.Load()),
-                  args=[build(ast.Str, s=to_source(node.test))],
-                  keywords=[], starargs=None, kwargs=None)), node)
+            _build(ast.Expr, value=_build(ast.Call,
+                   func=_build(ast.Name, id='assert_hook', ctx=ast.Load()),
+                   args=[_build(ast.Str, s=to_source(node.test))],
+                   keywords=[], starargs=None, kwargs=None)), node)
 
 
 class AssertImportHook(object):
