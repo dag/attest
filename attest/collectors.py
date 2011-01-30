@@ -52,16 +52,14 @@ class Tests(object):
         def wrapper():
             with nested(*[ctx() for ctx in self._contexts]) as context:
                 context = [c for c in context if c is not None]
-                if len(inspect.getargspec(func)[0]) != 0:
-                    args = []
-                    for arg in context:
-                        if type(arg) is tuple:  # type() is intentional
-                            args.extend(arg)
-                        else:
-                            args.append(arg)
-                    func(*args)
-                else:
-                    func()
+                argc = len(inspect.getargspec(func)[0])
+                args = []
+                for arg in context:
+                    if type(arg) is tuple:  # type() is intentional
+                        args.extend(arg)
+                    else:
+                        args.append(arg)
+                func(*args[:argc])
         self._tests.append(wrapper)
         return wrapper
 
@@ -118,6 +116,9 @@ class Tests(object):
         order to the test functions.
 
         .. versionadded:: 0.2 Nested contexts.
+
+        .. versionchanged:: 0.5
+            Tests will gets as many arguments as they ask for.
 
         """
         func = contextmanager(func)

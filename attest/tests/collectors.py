@@ -85,7 +85,13 @@ def context():
         assert two == 2
         assert three == 3
 
+    @col3.test
+    def test3_2(one, two):
+        assert one == 1
+        assert two == 2
+
     test3()
+    test3_2()
 
     col4 = Tests()
 
