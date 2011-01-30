@@ -36,7 +36,7 @@ class ExpressionEvaluator(SourceGenerator):
         return ''.join(self.result)
 
     def __str__(self):
-        return self.expr
+        return '\n'.join((self.expr, repr(self)))
 
     def __nonzero__(self):
         return bool(eval(self.expr, self.globals, self.locals))

@@ -83,10 +83,9 @@ class TestResult(object):
     @property
     def assertion(self):
         if isinstance(self.error, TestFailure):
-            e = self.error
-            steps = ['%s %s' % (e.statement, e.value.expr),
-                     '%s %r' % (e.statement, e.value)]
-            return '\n'.join(steps)
+            expressions = str(self.error.value)
+            return '\n'.join('%s %s' % (self.error.statement, expr)
+                             for expr in expressions.splitlines())
 
     @property
     def evaluated_assertion(self):
