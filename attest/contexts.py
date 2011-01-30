@@ -117,4 +117,4 @@ def raises(*exceptions):
     except exceptions, e:
         error.exc = e
     else:
-        raise TestFailure('not raises%s' % _repr(exceptions))
+        raise TestFailure('raises%s' % _repr(exceptions), statement='with')

@@ -49,18 +49,20 @@ def raises():
         with attest.raises(RuntimeError):
             pass
     except TestFailure, e:
-        assert str(e.value) == 'not raises(RuntimeError)'
+        assert e.statement == 'with'
+        assert str(e.value) == 'raises(RuntimeError)'
     else:
-        raise TestFailure('not raises(TestFailure)')
+        raise AssertionError
 
     # Groups of allowed exceptions
     try:
         with attest.raises(RuntimeError, ValueError):
             pass
     except TestFailure, e:
-        assert str(e.value) == 'not raises(RuntimeError, ValueError)'
+        assert e.statement == 'with'
+        assert str(e.value) == 'raises(RuntimeError, ValueError)'
     else:
-        raise TestFailure('not raises(AssertionError)')
+        raise AssertionError
 
     with attest.raises(RuntimeError, ValueError) as error:
         raise RuntimeError
