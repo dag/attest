@@ -7,6 +7,7 @@ except ImportError:
     from StringIO import StringIO
 
 from . import statistics
+from .hook import TestFailure
 from .deprecated import _repr
 
 
@@ -116,4 +117,4 @@ def raises(*exceptions):
     except exceptions, e:
         error.exc = e
     else:
-        raise AssertionError('not raises%s' % _repr(exceptions))
+        raise TestFailure('not raises%s' % _repr(exceptions))

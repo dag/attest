@@ -35,6 +35,9 @@ class ExpressionEvaluator(SourceGenerator):
     def __repr__(self):
         return ''.join(self.result)
 
+    def __str__(self):
+        return self.expr
+
     def __nonzero__(self):
         return bool(eval(self.expr, self.globals, self.locals))
 

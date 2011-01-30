@@ -2,7 +2,7 @@ from __future__ import with_statement
 
 import sys
 
-from attest import Tests, assert_hook, Assert
+from attest import Tests, assert_hook, Assert, TestFailure
 import attest
 
 
@@ -48,19 +48,19 @@ def raises():
     try:
         with attest.raises(RuntimeError):
             pass
-    except AssertionError, e:
-        assert str(e) == 'not raises(RuntimeError)'
+    except TestFailure, e:
+        assert str(e.value) == 'not raises(RuntimeError)'
     else:
-        raise AssertionError('not raises(AssertionError)')
+        raise TestFailure('not raises(TestFailure)')
 
     # Groups of allowed exceptions
     try:
         with attest.raises(RuntimeError, ValueError):
             pass
-    except AssertionError, e:
-        assert str(e) == 'not raises(RuntimeError, ValueError)'
+    except TestFailure, e:
+        assert str(e.value) == 'not raises(RuntimeError, ValueError)'
     else:
-        raise AssertionError('not raises(AssertionError)')
+        raise TestFailure('not raises(AssertionError)')
 
     with attest.raises(RuntimeError, ValueError) as error:
         raise RuntimeError
