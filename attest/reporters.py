@@ -290,11 +290,13 @@ class FancyReporter(AbstractReporter):
             print colorize('bold', result.test_name)
             if result.test.__doc__:
                 print inspect.getdoc(result.test)
-            print '─' * 80
-            if result.stdout:
-                print colorize('faint', '\n'.join(result.stdout))
-            if result.stderr:
-                print colorize('darkred', '\n'.join(result.stderr))
+            print colorize('faint', '─' * 80)
+            for line in result.stdout:
+                print colorize('bold', '→'),
+                print line
+            for line in result.stderr:
+                print colorize('red', '→'),
+                print line
 
             formatter = Terminal256Formatter(style=self.style)
             print highlight(result.traceback,
