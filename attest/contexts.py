@@ -108,6 +108,7 @@ def raises(*exceptions):
     .. versionadded:: 0.5
 
     .. autoclass:: Error
+        :members:
 
     """
     statistics.assertions += 1
