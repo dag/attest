@@ -61,11 +61,7 @@ Attest…
 
    install
    quickstart 
-   collectors
-   reporters
-   import-hook
-   contexts
-   deprecated
+   api/index
    glossary
    changes
    meta
