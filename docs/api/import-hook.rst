@@ -1,7 +1,7 @@
 The Import Hook
 ===============
 
-.. module:: attest.eval
+.. module:: attest.hook
 
 .. autofunction:: assert_hook
 
