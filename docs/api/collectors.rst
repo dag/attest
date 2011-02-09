@@ -1,5 +1,5 @@
-Test Collectors
-===============
+Collecting tests
+================
 
 .. module:: attest.collectors
 

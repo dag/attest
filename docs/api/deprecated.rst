@@ -1,5 +1,5 @@
-Deprecated APIs
-===============
+Deprecated utilities
+====================
 
 .. module:: attest.deprecated
 

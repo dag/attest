@@ -1,4 +1,4 @@
-Reporters
+Reporting results
 =========
 
 .. module:: attest.reporters

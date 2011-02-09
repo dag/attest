@@ -5,6 +5,6 @@ API Reference
 
    collectors
    reporters
-   import-hook
+   hook
    contexts
    deprecated

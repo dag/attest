@@ -1,5 +1,5 @@
-The Import Hook
-===============
+Hooking the assert statement
+============================
 
 .. module:: attest.hook
 
