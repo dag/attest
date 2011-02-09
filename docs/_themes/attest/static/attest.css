@@ -48,6 +48,10 @@ div.admonition.note
 { background: #f2ffc4;
 }
 
+div.admonition p.admonition-title
+{ display: none;
+}
+
 div.document
 { margin: 0 auto;
   width: 950px;
