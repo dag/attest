@@ -2,8 +2,9 @@ from __future__ import with_statement
 
 import sys
 import inspect
+from traceback import format_exception_only
 
-from attest import Tests, Assert, assert_hook
+from attest import Tests, Assert, assert_hook, TestFailure
 import attest
 
 from . import _meta
@@ -11,6 +12,15 @@ from . import _meta
 
 SOURCEFILE = inspect.getsourcefile(_meta)
 LINENO = 21
+EXCEPTION = format_exception_only(TestFailure, '')[0].rstrip()
+
+try:
+    from .. import ast
+    compile(ast.parse('pass'), '<string>', 'exec')
+except TypeError:
+    COMPILES_AST = False
+else:
+    COMPILES_AST = True
 
 
 suite = Tests()
@@ -52,7 +62,7 @@ def auto_reporter():
         sys.stdout = orig
 
 
-@suite.test
+@suite.test_if(COMPILES_AST)
 def xml_reporter():
     """XmlReporter"""
 
@@ -67,14 +77,14 @@ def xml_reporter():
         '    Traceback (most recent call last):',
         '      File &quot;%s&quot;, line %d, in failing' % (SOURCEFILE, LINENO),
         '        assert value == 3',
-        '    TestFailure',
+        '    %s' % EXCEPTION,
         '  </fail>',
         '</testreport>',
     ]):
         assert line == expected
 
 
-@suite.test
+@suite.test_if(COMPILES_AST)
 def plain_reporter():
     """PlainReporter"""
 
@@ -92,7 +102,7 @@ def plain_reporter():
         'Traceback (most recent call last):',
         '  File "%s", line %d, in failing' % (SOURCEFILE, LINENO),
         '    assert value == 3',
-        'TestFailure',
+        '%s' % EXCEPTION,
         '',
     ]):
         assert line == expected
@@ -100,7 +110,7 @@ def plain_reporter():
     assert out[-1].split(' ')[:2] == ['Failures:', '1/2']
 
 
-@suite.test
+@suite.test_if(COMPILES_AST)
 def quickfix_reporter():
     """QuickFixReporter"""
 
