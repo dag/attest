@@ -87,29 +87,6 @@ class TestResult(object):
             return '\n'.join('%s %s' % (self.error.statement, expr)
                              for expr in expressions.splitlines())
 
-    @property
-    def evaluated_assertion(self):
-        """The :keyword:`assert` statement with the values of variables
-        shown.
-
-        Given::
-
-            value = 1 + 1
-            assert value == 3
-
-        This property will then be the string ``not (2 == 3)``.
-
-        .. versionadded:: 0.5
-
-        """
-        tb = self.exc_info[2]
-        while tb.tb_next:
-            tb = tb.tb_next
-        frame = tb.tb_frame
-        expr = traceback.extract_tb(tb)[0][3].partition('assert ')[2]
-        return 'not %r' % ExpressionEvaluator(expr, frame.f_globals,
-                                              frame.f_locals)
-
 
 def _test_loader_factory(reporter):
     class Loader(object):
