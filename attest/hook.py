@@ -189,6 +189,12 @@ class AssertTransformer(ast.NodeTransformer):
                    args=args, keywords=[], starargs=None, kwargs=None)), node)
 
 
+class AssertImportHookEnabledDescriptor(object):
+
+    def __get__(self, instance, owner):
+        return any(isinstance(ih, owner) for ih in sys.meta_path)
+
+
 class AssertImportHook(object):
     """A :term:`finder` and :term:`loader` that transforms imported modules
     with :class:`AssertTransformer`.
@@ -196,6 +202,9 @@ class AssertImportHook(object):
     .. versionadded:: 0.5
 
     """
+
+    #: Class property, :const:`True` if the hook is enabled.
+    enabled = AssertImportHookEnabledDescriptor()
 
     @classmethod
     def enable(cls):
