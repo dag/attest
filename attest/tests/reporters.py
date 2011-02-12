@@ -4,7 +4,7 @@ import sys
 import inspect
 from traceback import format_exception_only
 
-from attest import Tests, Assert, assert_hook, TestFailure
+from attest import Tests, Assert, assert_hook, TestFailure, COMPILES_AST
 import attest
 
 from . import _meta
@@ -13,14 +13,6 @@ from . import _meta
 SOURCEFILE = inspect.getsourcefile(_meta)
 LINENO = 21
 EXCEPTION = format_exception_only(TestFailure, '')[0].rstrip()
-
-try:
-    from .. import ast
-    compile(ast.parse('pass'), '<string>', 'exec')
-except TypeError:
-    COMPILES_AST = False
-else:
-    COMPILES_AST = True
 
 
 suite = Tests()

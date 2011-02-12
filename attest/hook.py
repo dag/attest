@@ -8,6 +8,14 @@ import os
 import sys
 
 
+try:
+    compile(ast.parse('pass'), '<string>', 'exec')
+except TypeError:
+    COMPILES_AST = False
+else:
+    COMPILES_AST = True
+
+
 class ExpressionEvaluator(SourceGenerator):
     """Evaluates `expr` in the context of `globals` and `locals`, expanding
     the values of variables and the results of binary operations, but
@@ -174,10 +182,9 @@ class AssertTransformer(ast.NodeTransformer):
     @property
     def code(self):
         """The :attr:`node` compiled into a code object."""
-        try:
+        if COMPILES_AST:
             return compile(self.node, self.filename, 'exec')
-        except TypeError:
-            return compile(to_source(self.node), self.filename, 'exec')
+        return compile(to_source(self.node), self.filename, 'exec')
 
     def visit_Assert(self, node):
         args=[_build(ast.Str, s=to_source(node.test))]
