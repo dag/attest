@@ -13,7 +13,8 @@ except ImportError:
     abstractmethod = lambda x: x
 
 from . import statistics
-from .hook import ExpressionEvaluator, TestFailure
+from .hook import (ExpressionEvaluator, TestFailure, COMPILES_AST,
+                   AssertImportHook)
 
 
 class TestResult(object):
@@ -60,6 +61,11 @@ class TestResult(object):
 
         """
         tb = traceback.extract_tb(self.exc_info[2])
+        if not COMPILES_AST and AssertImportHook.enabled:
+            newtb = []
+            for filename, lineno, funcname, text in tb:
+                newtb.append((filename, 0, funcname, None))
+            tb = newtb
         clean = []
         thisfile = path.abspath(path.dirname(__file__))
         for item in tb:
