@@ -1,5 +1,5 @@
 Reporting results
-=========
+=================
 
 .. module:: attest.reporters
 
