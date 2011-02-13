@@ -4,6 +4,27 @@ Changelog
 =========
 
 
+0.5
+---
+:Code name: *Ghost Writer*
+
+* Support for evaluated testing with the :keyword:`assert` statement by
+  means of an import hook using the :mod:`_ast` module.
+* Deprecated the :class:`~attest.deprecated.Assert` class in favor of the
+  import hook.
+
+  * Added the :func:`~attest.contexts.raises` context manager independent
+    of the :class:`~attest.deprecated.Assert` class.
+* Deprecated :class:`~attest.deprecated.Loader` in favor of a
+  :attr:`test_loader` attribute on reporters.
+* Added the :class:`~attest.reporters.QuickFixReporter` for testing from
+  Vim and other editors.
+* Test functions now get as many context arguments as their signature asks
+  for.
+* Organized the code into modules in a package, but everything can still be
+  imported directly from the ``attest`` package.
+
+
 0.4
 ---
 :Release date: 2011-01-08
