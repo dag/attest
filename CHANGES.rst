@@ -10,6 +10,7 @@ Changelog
 
 * Support for evaluated testing with the :keyword:`assert` statement by
   means of an import hook using the :mod:`_ast` module.
+* Assertions of all kinds now run with ``python -O``.
 * Deprecated the :class:`~attest.deprecated.Assert` class in favor of the
   import hook.
 
@@ -23,6 +24,9 @@ Changelog
   for.
 * Organized the code into modules in a package, but everything can still be
   imported directly from the ``attest`` package.
+* Added runnable modules for running test suites by dotted name, ``python
+  -mattest`` on Python 2.7 or newer, ``python -mattest.run`` on older
+  versions.
 
 
 0.4
