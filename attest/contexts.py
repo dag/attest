@@ -7,7 +7,6 @@ except ImportError:
     from StringIO import StringIO
 
 from . import statistics
-from .hook import TestFailure
 from .deprecated import _repr
 
 
@@ -104,6 +103,8 @@ def raises(*exceptions):
     :param exceptions: Expected exception classes.
     :returns: An :class:`Error` on which the caught exception is set after
         the context has executed, if one was raised.
+    :raises AssertionError: If none of the expected exceptions are raised
+        in the context.
 
     .. versionadded:: 0.5
 
@@ -118,4 +119,5 @@ def raises(*exceptions):
     except exceptions, e:
         error.exc = e
     else:
-        raise TestFailure('raises%s' % _repr(exceptions), statement='with')
+        exceptions = exceptions[0] if len(exceptions) == 1 else exceptions
+        raise AssertionError("didn't raise %s when expected" % _repr(exceptions))

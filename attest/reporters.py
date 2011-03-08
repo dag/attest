@@ -90,7 +90,7 @@ class TestResult(object):
     def assertion(self):
         if isinstance(self.error, TestFailure):
             expressions = str(self.error.value)
-            return '\n'.join('%s %s' % (self.error.statement, expr)
+            return '\n'.join('assert %s' % expr
                              for expr in expressions.splitlines())
 
 

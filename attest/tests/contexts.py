@@ -48,9 +48,9 @@ def raises():
     try:
         with attest.raises(RuntimeError):
             pass
-    except TestFailure, e:
-        assert e.statement == 'with'
-        assert str(e.value) == 'raises(RuntimeError)'
+    except AssertionError, e:
+        assert type(e) is AssertionError
+        assert str(e) == "didn't raise RuntimeError when expected"
     else:
         raise AssertionError
 
@@ -58,9 +58,9 @@ def raises():
     try:
         with attest.raises(RuntimeError, ValueError):
             pass
-    except TestFailure, e:
-        assert e.statement == 'with'
-        assert str(e.value) == 'raises(RuntimeError, ValueError)'
+    except AssertionError, e:
+        assert type(e) is AssertionError
+        assert str(e) == "didn't raise (RuntimeError, ValueError) when expected"
     else:
         raise AssertionError
 

@@ -74,15 +74,13 @@ class TestFailure(AssertionError):
     :param value: The asserted expression evaluated with
         :class:`ExpressionEvaluator`.
     :param msg: Optional message passed to the assertion.
-    :param statement: Statement resulting in the failure, e.g. ``'with'``.
 
     .. versionadded:: 0.5
 
     """
 
-    def __init__(self, value, msg='', statement='assert'):
+    def __init__(self, value, msg=''):
         self.value = value
-        self.statement = statement
         AssertionError.__init__(self, msg)
 
 
