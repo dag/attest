@@ -51,3 +51,6 @@ when asking a question.
 
 If you prefer discussions or support via e-mail you can use the `pocoo-libs
 mailinglist <http://groups.google.com/group/pocoo-libs>`_.
+
+If neither IRC or e-mail is for you, as an experiment we're trying out
+Convore `for a web-based support forum <https://convore.com/attest/>`_.
