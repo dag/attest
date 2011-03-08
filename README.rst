@@ -23,16 +23,16 @@ Overview
 
 Why another testing framework and what sets it apart?
 
-* The standard unittest library is overly complicated and its API makes
-  more sense in Java than in Python. Attest has a simple API that makes it
-  powerful and easy to use and feels just right for Python programmers.
+* *unittest* is overly complicated and its API makes more sense in Java
+  than in Python. Attest has a simple API that makes it powerful and easy
+  to use and feels just right for Python programmers.
 
-* Nose is on the right track but it still relies on naming conventions and
+* *nose* is on the right track but it still relies on naming conventions and
   implicit test discovery, and building on unittest means it retains its
   complexity. Attest takes *The Zen of Python* seriously and is completely
   explicit with no unpredictable magic.
 
-* Pytest is powerful but also the most magic of all options. This is not a
+* *py.test* is powerful but also the most magic of all options. This is not a
   concern for everyone, but if you prefer to be in control of your tools
   then Attest might be for you.
 
