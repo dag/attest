@@ -1,6 +1,12 @@
 Quickstart
 ==========
 
+.. warning::
+
+    This document is outdated, incomplete and generally needs love. It
+    might serve to give you an idea of how to use Attest but you're better
+    of reading the API reference for most purposes.
+
 .. currentmodule:: attest
 
 Because mathematics never lie, except when it claims ``0.9… = 1``, we'll be
