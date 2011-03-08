@@ -6,9 +6,11 @@ Glossary
 .. glossary::
 
     assertive object
-        An object that is wrapped in :class:`Assert` and which will raise
-        :exc:`AssertionError` for comparative operations that are
-        :const:`False`.
+        An object that is wrapped in :class:`~attest.deprecated.Assert` and
+        which will raise :exc:`AssertionError` for comparative operations
+        that are :const:`False`.
+
+        .. deprecated:: 0.5
 
     reporter
         Event handler for test-runs, notified of the outcome of each test.
