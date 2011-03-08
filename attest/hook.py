@@ -201,8 +201,8 @@ class AssertImportHookEnabledDescriptor(object):
 
 
 class AssertImportHook(object):
-    """A :term:`finder` and :term:`loader` that transforms imported modules
-    with :class:`AssertTransformer`.
+    """An :term:`importer` that transforms imported modules with
+    :class:`AssertTransformer`.
 
     .. versionadded:: 0.5
 
