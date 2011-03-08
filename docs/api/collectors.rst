@@ -20,8 +20,8 @@ and separation.
     to be used as a class decorator in Python 2.6 or later.
 
 
-Functional testing
-------------------
+Using functions
+---------------
 
 .. autoclass:: Tests
    :members: test, test_if, context, register, register_if, test_suite
@@ -31,8 +31,8 @@ Functional testing
    .. automethod:: main(argv=sys.argv)
 
 
-Testing with classes
---------------------
+Using classes
+-------------
 
 .. autoclass:: TestBase
 
