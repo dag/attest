@@ -7,6 +7,7 @@ Changelog
 0.5
 ---
 :Code name: *Ghost Writer*
+:Release date: 2011-03-08
 
 * Support for evaluated testing with the :keyword:`assert` statement by
   means of an import hook using the :mod:`_ast` module.
