@@ -14,12 +14,12 @@ free to write tests however you prefer.
 
 ::
 
-    from attest import Tests, Assert
+    from attest import Tests
     math = Tests()
 
     @math.test
     def arithmetics():
-        Assert(1 + 1) == 2
+        assert 1 + 1 == 2
 
     if __name__ == '__main__':
         math.run()

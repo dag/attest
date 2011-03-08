@@ -6,7 +6,7 @@ conventions.
 
 ::
 
-    from attest import Tests, Assert
+    from attest import Tests
     math = Tests()
 
     @math.test
