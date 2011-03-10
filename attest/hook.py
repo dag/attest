@@ -66,6 +66,8 @@ class ExpressionEvaluator(SourceGenerator):
         self.write(repr(self.eval(node)))
 
     visit_BinOp = visit_Subscript = generic_visit
+    visit_ListComp = visit_GeneratorExp = generic_visit
+    visit_SetComp = visit_DictComp = generic_visit
 
 
 class TestFailure(AssertionError):
