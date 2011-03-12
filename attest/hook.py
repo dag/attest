@@ -53,11 +53,11 @@ class ExpressionEvaluator(SourceGenerator):
         return eval(to_source(node), self.globals, self.locals)
 
     def write(self, s):
-        self.result.append(s)
+        self.result.append(str(s))
 
     def visit_Name(self, node):
         value = self.eval(node)
-        if hasattr(value, '__name__'):
+        if getattr(value, '__name__', None):
             self.write(value.__name__)
         else:
             self.write(repr(value))
