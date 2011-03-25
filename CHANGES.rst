@@ -4,6 +4,21 @@ Changelog
 =========
 
 
+0.5.1
+-----
+
+:Release date: 2011-03-25
+
+Bugs fixed:
+
+* The assert hook failed to evaluate list comprehensions and similar
+  constructs because the loop variable was treated as a variable to be
+  looked up in the symbol table.
+* Variables referencing objects implementing ``__name__`` not returning a
+  string caused an exception to exit early, if used with the assert hook in
+  a failing condition.
+
+
 0.5
 ---
 :Code name: *Ghost Writer*
