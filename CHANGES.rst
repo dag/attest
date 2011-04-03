@@ -10,6 +10,9 @@ Changelog
 Bugs fixed:
 
 * 0.5 requires progressbar 2.3; version requirement for dependency added.
+* The setuptools-git plugin wasn't working well with Attest as a test
+  dependency with ``setup.py test``, so it has been dropped in favour of a
+  :file:`MANIFEST.in` file.
 
 
 0.5.1
