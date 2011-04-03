@@ -4,6 +4,14 @@ Changelog
 =========
 
 
+0.5.2
+-----
+
+Bugs fixed:
+
+* 0.5 requires progressbar 2.3; version requirement for dependency added.
+
+
 0.5.1
 -----
 

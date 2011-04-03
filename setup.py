@@ -42,7 +42,7 @@ if sys.version_info[0] == 2:
 
 setup(
     name='Attest',
-    version='0.5.1',
+    version='0.5.2',
     description='Modern, Pythonic unit testing.',
     long_description=__doc__,
 
@@ -54,7 +54,7 @@ setup(
     packages=find_packages(),
 
     install_requires=[
-        'progressbar',
+        'progressbar>=2.3-dev',
         'Pygments',
     ],
 
