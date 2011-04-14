@@ -68,6 +68,7 @@ class ExpressionEvaluator(SourceGenerator):
     visit_BinOp = visit_Subscript = generic_visit
     visit_ListComp = visit_GeneratorExp = generic_visit
     visit_SetComp = visit_DictComp = generic_visit
+    visit_Call = visit_Attribute = generic_visit
 
 
 class TestFailure(AssertionError):
