@@ -6,6 +6,7 @@ from contextlib import contextmanager, nested
 import sys
 from functools import wraps
 
+from . import statistics
 from .contexts import capture_output
 from .reporters import (auto_reporter, get_reporter_by_name,
                         get_all_reporters, AbstractReporter, TestResult)
@@ -178,6 +179,7 @@ class Tests(object):
             enforced).
 
         """
+        assertions, statistics.assertions = statistics.assertions, 0
         if not isinstance(reporter, AbstractReporter):
             reporter = reporter()
         reporter.begin(self._tests)
@@ -198,7 +200,10 @@ class Tests(object):
             else:
                 result.stdout, result.stderr = out, err
                 reporter.success(result)
-        reporter.finished()
+        try:
+            reporter.finished()
+        finally:
+            statistics.assertions = assertions
 
     def main(self, argv=sys.argv):
         """Interface to :meth:`run` with command-line options.
