@@ -17,21 +17,6 @@ def eval():
         '[v for v in [value]]': '[2]',
     }
 
-    # FIXME Referencing a local inside a list comprehension fails on Python
-    # 3.1 for some reason, with a NameError saying *global* name not
-    # defined. Passing locals as globals works.
-
-    """
-    >>> eval("[f(v) for f in (str,float)]", globals(), dict(v=2))
-    Traceback (most recent call last):
-    File "<stdin>", line 1, in <module>
-    File "<string>", line 1, in <module>
-    File "<string>", line 1, in <listcomp>
-    NameError: global name 'v' is not defined
-    >>> eval("[f(v) for f in (str,float)]", dict(v=2), globals())
-    ['2', 2.0]
-    """
-
     for expr, result in samples.iteritems():
         ev = repr(ExpressionEvaluator(expr, globals(), locals()))
         assert ev == result
