@@ -228,21 +228,31 @@ class FancyReporter(AbstractReporter):
     and failures are shown with syntax highlighted tracebacks.
 
     :param style:
-        `Pygments`_ style for tracebacks. If :const:`None`, uses
-        :envvar:`ATTEST_PYGMENTS_STYLE` falling back on ``'bw'`` because it
-        looks good on most terminals.
+        `Pygments`_ style for tracebacks.
+
+    .. note::
+
+        .. rubric:: Styles
+
+        Available styles can be listed with ``pygmentize -L styles``. The
+        special values ``'light'`` and ``'dark'`` (referring to the terminal's
+        background) use the 16 system colors rather than assuming a 256-color
+        terminal.
+
+        Defaults to *light* or the environment variable
+        :envvar:`ATTEST_PYGMENTS_STYLE`.
+
+    .. versionchanged:: 0.5.2 Added the 16-color styles *light* and *dark*.
 
     .. _Pygments: http://pygments.org/
 
     """
 
     def __init__(self, style=None):
+        import progressbar, pygments
+        self.style = style
         if style is None:
-            self.style = os.environ.get('ATTEST_PYGMENTS_STYLE', 'bw')
-        else:
-            self.style = style
-        import progressbar
-        import pygments
+            self.style = os.environ.get('ATTEST_PYGMENTS_STYLE', 'light')
 
     def begin(self, tests):
         from progressbar import ProgressBar, Percentage, ETA, SimpleProgress
@@ -265,7 +275,13 @@ class FancyReporter(AbstractReporter):
         from pygments.console import colorize
         from pygments import highlight
         from pygments.lexers import PythonTracebackLexer, PythonLexer
-        from pygments.formatters import Terminal256Formatter
+
+        if self.style in ('light', 'dark'):
+            from pygments.formatters import TerminalFormatter
+            formatter = TerminalFormatter(bg=self.style)
+        else:
+            from pygments.formatters import Terminal256Formatter
+            formatter = Terminal256Formatter(style=self.style)
 
         self.progress.finish()
         print
@@ -281,7 +297,6 @@ class FancyReporter(AbstractReporter):
                 print colorize('red', '→'),
                 print line
 
-            formatter = Terminal256Formatter(style=self.style)
             print highlight(result.traceback,
                             PythonTracebackLexer(),
                             formatter)
