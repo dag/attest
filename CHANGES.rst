@@ -13,6 +13,16 @@ Bugs fixed:
 * The setuptools-git plugin wasn't working well with Attest as a test
   dependency with ``setup.py test``, so it has been dropped in favour of a
   :file:`MANIFEST.in` file.
+* Calls and attributes are now evaluated by the assert hook. The previous
+  behaviour was intentional, but turned out to be less helpful.
+* The assert hook now injects explicit calls to :func:`globals` and
+  :func:`locals` rather than relying on stack frame inspection. This fixes
+  a bug on CPython 2.5 where :func:`inspect.stack` tried to read lines from
+  the source file, based on the line numbers from the generated source,
+  which could end fatally when the line number exceeded the number of lines
+  in the source file.
+* Assertions are now correctly counted when tests are run more than once in
+  the same process.
 
 
 0.5.1
