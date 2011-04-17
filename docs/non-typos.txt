@@ -4,6 +4,7 @@ AST
 Attest's
 CPython
 Changelog
+Convore
 IRC
 Iterable
 JSON
@@ -25,6 +26,7 @@ lxml
 metadata
 natively
 overridable
+plugin
 progressbar
 proxied
 py
