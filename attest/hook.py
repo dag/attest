@@ -188,9 +188,15 @@ class AssertTransformer(ast.NodeTransformer):
         return compile(to_source(self.node), self.filename, 'exec')
 
     def visit_Assert(self, node):
-        args=[_build(ast.Str, s=to_source(node.test))]
-        if node.msg is not None:
-            args.append(node.msg)
+        args = [_build(ast.Str, s=to_source(node.test)),
+                node.msg if node.msg is not None else _build(ast.Str, s=''),
+                _build(ast.Call,
+                    func=_build(ast.Name, id='globals', ctx=ast.Load()),
+                    args=[], keywords=[], starargs=None, kwargs=None),
+                _build(ast.Call,
+                    func=_build(ast.Name, id='locals', ctx=ast.Load()),
+                    args=[], keywords=[], starargs=None, kwargs=None)
+               ]
         return ast.copy_location(
             _build(ast.Expr, value=_build(ast.Call,
                    func=_build(ast.Name, id='assert_hook', ctx=ast.Load()),
