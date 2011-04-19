@@ -7,6 +7,8 @@ Changelog
 0.5.2
 -----
 
+:Release date: 2011-04-19
+
 Bugs fixed:
 
 * 0.5 requires progressbar 2.3; version requirement for dependency added.
