@@ -242,7 +242,7 @@ class FancyReporter(AbstractReporter):
         Defaults to *light* or the environment variable
         :envvar:`ATTEST_PYGMENTS_STYLE`.
 
-    .. versionchanged:: 0.5.2 Added the 16-color styles *light* and *dark*.
+    .. versionchanged:: 0.6 Added the 16-color styles *light* and *dark*.
 
     .. _Pygments: http://pygments.org/
 

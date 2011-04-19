@@ -31,7 +31,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='Attest',
-    version='0.5.2',
+    version='0.6',
     description='Modern, Pythonic unit testing.',
     long_description=__doc__,
 
