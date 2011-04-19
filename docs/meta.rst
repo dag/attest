@@ -4,7 +4,7 @@ About this project
 License
 -------
 
-| Copyright © 2010, 2011, `Dag Odenhall <dag.odenhall@gmail.com>`_ and
+| Copyright © 2010-2011, `Dag Odenhall <dag.odenhall@gmail.com>`_ and
   :ref:`contributors <authors>`
 | All rights reserved.
 
