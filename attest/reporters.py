@@ -29,7 +29,7 @@ class TestResult(object):
         for key, value in kwargs.iteritems():
             setattr(self, key, value)
 
-    full_tracebacks = True
+    full_tracebacks = False
 
     #: The test callable.
     test = None
