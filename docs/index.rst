@@ -1,4 +1,4 @@
-Modern, Pythonic unit testing
+Modern, Pythonic Unit Testing
 =============================
 
 .. container:: dictionary-entry

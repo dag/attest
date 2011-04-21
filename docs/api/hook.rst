@@ -1,4 +1,4 @@
-Hooking the assert statement
+Hooking the Assert Statement
 ============================
 
 The most natural way to write test conditions in Python is the
@@ -40,7 +40,7 @@ numbers metadata in tracebacks.
 .. autoclass:: AssertImportHook
     :members:
 
-Low-level utilities
+Low-Level Utilities
 -------------------
 
 .. autoclass:: ExpressionEvaluator

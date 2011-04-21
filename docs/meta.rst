@@ -1,4 +1,4 @@
-About this project
+About This Project
 ==================
 
 License

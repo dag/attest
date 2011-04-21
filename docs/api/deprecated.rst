@@ -1,4 +1,4 @@
-Deprecated utilities
+Deprecated Utilities
 ====================
 
 .. module:: attest.deprecated

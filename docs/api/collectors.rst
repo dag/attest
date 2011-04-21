@@ -1,4 +1,4 @@
-Collecting tests
+Collecting Tests
 ================
 
 .. module:: attest.collectors
@@ -20,7 +20,7 @@ and separation.
     to be used as a class decorator in Python 2.6 or later.
 
 
-Using functions
+Using Functions
 ---------------
 
 .. autoclass:: Tests
@@ -31,7 +31,7 @@ Using functions
    .. automethod:: main(argv=sys.argv)
 
 
-Using classes
+Using Classes
 -------------
 
 .. autoclass:: TestBase

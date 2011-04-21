@@ -1,4 +1,4 @@
-Modern, Pythonic unit testing
+Modern, Pythonic Unit Testing
 =============================
 
 Attest is a unit testing framework for Python emphasising modern idioms and

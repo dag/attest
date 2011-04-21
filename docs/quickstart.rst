@@ -31,7 +31,7 @@ package. You control what should be included by importing and registering
 collections. When you run tests, just point to them.
 
 
-The most low-level assumptions
+The Most Low-Level Assumptions
 ------------------------------
 
 *Attest* follows a few assumptions meant to make the core flexible.
@@ -44,7 +44,7 @@ Effectively, while perhaps practically not very useful, this implies you can
 write a list of lambda expressions as a test collection.
 
 
-The more high-level toolbox
+The More High-Level Toolbox
 ---------------------------
 
 Attest provides a few tools to aid in the creation of tests and collections,
@@ -69,7 +69,7 @@ a Java package they, too, closely follow conventional Python idioms.
 .. _Flask: http://flask.pocoo.org/
 
 
-Functional style
+Functional Style
 ----------------
 
 In functional style, we make an instance of :class:`Tests` and add
@@ -204,7 +204,7 @@ As you make more collections, just import them here and add to the list.
 With this we can run the full suite with ``python runtests.py``.
 
 
-Object-oriented style
+Object-Oriented Style
 ---------------------
 
 If you prefer to write test collections as classes, there's an API for

@@ -1,4 +1,4 @@
-Reporting results
+Reporting Results
 =================
 
 .. module:: attest.reporters
@@ -12,8 +12,8 @@ display the results in a graphical user interface.
 .. autofunction:: get_all_reporters
 
 
-Testing on the command-line
----------------------------
+Testing from the Command-Line
+-----------------------------
 
 .. autofunction:: auto_reporter
 
@@ -22,19 +22,23 @@ Testing on the command-line
 .. autoclass:: PlainReporter
 
 
-Testing from Vim (and possibly other editors)
----------------------------------------------
+Testing from the Editor
+-----------------------
+
+This is known to work with Vim, but can probably be used with other editors
+as well. The output mimics that used by many compilers for errors and
+warnings.
 
 .. autoclass:: QuickFixReporter
 
 
-Integrating testing with non-Python tools
+Integrating Testing with Non-Python Tools
 -----------------------------------------
 
 .. autoclass:: XmlReporter
 
 
-Writing new reporters
+Writing New Reporters
 ---------------------
 
 .. autoclass:: AbstractReporter
