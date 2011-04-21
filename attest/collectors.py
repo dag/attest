@@ -170,13 +170,17 @@ class Tests(object):
             suite.addTest(FunctionTestCase(test))
         return suite
 
-    def run(self, reporter=auto_reporter):
+    def run(self, reporter=auto_reporter, full_tracebacks=False):
         """Run all tests in this collection.
 
         :param reporter:
             An instance of :class:`~attest.reporters.AbstractReporter` or a
             callable returning something implementing that API (not
             enforced).
+        :param full_tracebacks:
+            Control if the call stack of Attest is hidden in tracebacks.
+
+        .. versionchanged:: 0.6 Added `full_tracebacks`.
 
         """
         assertions, statistics.assertions = statistics.assertions, 0
@@ -184,8 +188,7 @@ class Tests(object):
             reporter = reporter()
         reporter.begin(self._tests)
         for test in self:
-            result = TestResult()
-            result.test = test
+            result = TestResult(test=test, full_tracebacks=full_tracebacks)
             try:
                 with capture_output() as (out, err):
                     if test() is False:
@@ -215,6 +218,9 @@ class Tests(object):
             Select reporter by name with
             :func:`~attest.reporters.get_reporter_by_name`
 
+        ``--full-tracebacks``
+            Show complete tracebacks without hiding Attest's own call stack
+
         ``-l``, ``--list-reporters``
             List the names of all installed reporters
 
@@ -225,11 +231,15 @@ class Tests(object):
 
         .. versionchanged:: 0.4 ``--list-reporters`` was added.
 
+        .. versionchanged:: 0.6 ``--full-tracebacks`` was added.
+
         """
         from optparse import OptionParser
         parser = OptionParser()
         parser.add_option('-r', '--reporter', metavar='NAME',
                           help='select reporter by name')
+        parser.add_option('--full-tracebacks', action='store_true',
+                          help="don't clean tracebacks")
         parser.add_option('-l', '--list-reporters', action='store_true',
                           help='list available reporters')
         options, args = parser.parse_args()
@@ -238,7 +248,7 @@ class Tests(object):
                 print reporter
         else:
             reporter = get_reporter_by_name(options.reporter)(*args)
-            self.run(reporter)
+            self.run(reporter, full_tracebacks=options.full_tracebacks)
 
 
 def test_if(condition):

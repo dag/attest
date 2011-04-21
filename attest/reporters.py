@@ -25,6 +25,12 @@ class TestResult(object):
 
     """
 
+    def __init__(self, **kwargs):
+        for key, value in kwargs.iteritems():
+            setattr(self, key, value)
+
+    full_tracebacks = True
+
     #: The test callable.
     test = None
 
@@ -62,6 +68,8 @@ class TestResult(object):
 
         """
         tb = traceback.extract_tb(self.exc_info[2])
+        if self.full_tracebacks:
+            return tb
         if not COMPILES_AST and AssertImportHook.enabled:
             newtb = []
             for filename, lineno, funcname, text in tb:
