@@ -4,7 +4,8 @@ import sys
 import inspect
 from traceback import format_exception_only
 
-from attest import Tests, Assert, assert_hook, TestFailure, COMPILES_AST
+from attest import (Tests, Assert, assert_hook, TestFailure, COMPILES_AST,
+                    utils)
 import attest
 
 from . import _meta
@@ -84,11 +85,12 @@ def plain_reporter():
         with Assert.raises(SystemExit):
             _meta.suite.run(attest.PlainReporter)
 
+    width, _ = utils.get_terminal_size()
     for line, expected in zip(out, [
         '.F',
         '',
         'attest.tests._meta.failing',
-        '-' * 80,
+        '-' * width,
         '-> stdout',
         'E: stderr',
         'Traceback (most recent call last):',

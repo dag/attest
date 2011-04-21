@@ -13,6 +13,7 @@ except ImportError:
     abstractmethod = lambda x: x
 
 from . import statistics
+from . import utils
 from .hook import (ExpressionEvaluator, TestFailure, COMPILES_AST,
                    AssertImportHook)
 
@@ -202,11 +203,13 @@ class PlainReporter(AbstractReporter):
     def finished(self):
         print
         print
+
+        width, _ = utils.get_terminal_size()
         for result in self.failures:
             print result.test_name
             if result.test.__doc__:
                 print inspect.getdoc(result.test)
-            print '-' * 80
+            print '-' * width
             if result.stdout:
                 print '->', '\n'.join(result.stdout)
             if result.stderr:
@@ -285,11 +288,13 @@ class FancyReporter(AbstractReporter):
 
         self.progress.finish()
         print
+
+        width, _ = utils.get_terminal_size()
         for result in self.failures:
             print colorize('bold', result.test_name)
             if result.test.__doc__:
                 print inspect.getdoc(result.test)
-            print colorize('faint', '─' * 80)
+            print colorize('faint', '─' * width)
             for line in result.stdout:
                 print colorize('bold', '→'),
                 print line
