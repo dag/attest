@@ -242,6 +242,8 @@ class FancyReporter(AbstractReporter):
         `Pygments`_ style for tracebacks.
     :param verbose:
         Report on tests regardless of failure.
+    :param colorscheme:
+        If `style` is *light* or *dark*, maps token names to color names.
 
     .. note::
 
@@ -255,16 +257,18 @@ class FancyReporter(AbstractReporter):
         Defaults to *light* or the environment variable
         :envvar:`ATTEST_PYGMENTS_STYLE`.
 
-    .. versionchanged:: 0.6 Added the 16-color styles *light* and *dark*.
+    .. versionchanged:: 0.6 Added the 16-color styles *light* and *dark*
+        and the complementary `colorscheme` option
 
     .. _Pygments: http://pygments.org/
 
     """
 
-    def __init__(self, style=None, verbose=False):
+    def __init__(self, style=None, verbose=False, colorscheme=None):
         import progressbar, pygments
         self.style = style
         self.verbose = verbose
+        self.colorscheme = colorscheme
         if style is None:
             self.style = os.environ.get('ATTEST_PYGMENTS_STYLE', 'light')
 
@@ -295,6 +299,11 @@ class FancyReporter(AbstractReporter):
         if self.style in ('light', 'dark'):
             from pygments.formatters import TerminalFormatter
             formatter = TerminalFormatter(bg=self.style)
+            if self.colorscheme is not None:
+                from pygments.token import string_to_tokentype
+                for token, value in self.colorscheme.iteritems():
+                    token = string_to_tokentype(token.capitalize())
+                    formatter.colorscheme[token] = (value, value)
         else:
             from pygments.formatters import Terminal256Formatter
             formatter = Terminal256Formatter(style=self.style)
