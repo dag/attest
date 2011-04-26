@@ -9,8 +9,7 @@ from functools import wraps
 from . import statistics
 from .contexts import capture_output
 from .utils import import_dotted_name, deep_get_members
-from .reporters import (auto_reporter, get_reporter_by_name,
-                        get_all_reporters, AbstractReporter, TestResult)
+from .reporters import auto_reporter, AbstractReporter, TestResult
 
 
 class Tests(object):
@@ -232,7 +231,7 @@ class Tests(object):
         finally:
             statistics.assertions = assertions
 
-    def main(self, argv=sys.argv):
+    def main(self):
         """Interface to :meth:`run` with command-line options.
 
         ``-h``, ``--help``
@@ -258,21 +257,8 @@ class Tests(object):
         .. versionchanged:: 0.6 ``--full-tracebacks`` was added.
 
         """
-        from optparse import OptionParser
-        parser = OptionParser()
-        parser.add_option('-r', '--reporter', metavar='NAME',
-                          help='select reporter by name')
-        parser.add_option('--full-tracebacks', action='store_true',
-                          help="don't clean tracebacks")
-        parser.add_option('-l', '--list-reporters', action='store_true',
-                          help='list available reporters')
-        options, args = parser.parse_args()
-        if options.list_reporters:
-            for reporter in get_all_reporters():
-                print reporter
-        else:
-            reporter = get_reporter_by_name(options.reporter)(*args)
-            self.run(reporter, full_tracebacks=options.full_tracebacks)
+        from attest.run import main
+        main(self)
 
 
 def test_if(condition):
