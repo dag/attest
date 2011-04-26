@@ -17,4 +17,5 @@ release:
 	@python setup.py release sdist build_sphinx -Ea
 
 official:
+	@tox -e ALL
 	@echo | xargs -p python setup.py upload_docs release sdist upload
