@@ -240,6 +240,8 @@ class FancyReporter(AbstractReporter):
 
     :param style:
         `Pygments`_ style for tracebacks.
+    :param verbose:
+        Report on tests regardless of failure.
 
     .. note::
 
@@ -259,9 +261,10 @@ class FancyReporter(AbstractReporter):
 
     """
 
-    def __init__(self, style=None):
+    def __init__(self, style=None, verbose=False):
         import progressbar, pygments
         self.style = style
+        self.verbose = verbose
         if style is None:
             self.style = os.environ.get('ATTEST_PYGMENTS_STYLE', 'light')
 
@@ -271,11 +274,13 @@ class FancyReporter(AbstractReporter):
         self.counter = 0
         self.progress = ProgressBar(maxval=len(tests), widgets=widgets)
         self.progress.start()
+        self.passes = []
         self.failures = []
 
     def success(self, result):
         self.counter += 1
         self.progress.update(self.counter)
+        self.passes.append(result)
 
     def failure(self, result):
         self.counter += 1
@@ -298,7 +303,7 @@ class FancyReporter(AbstractReporter):
         print
 
         width, _ = utils.get_terminal_size()
-        for result in self.failures:
+        def show(result):
             print colorize('bold', result.test_name)
             if result.test.__doc__:
                 print inspect.getdoc(result.test)
@@ -309,6 +314,14 @@ class FancyReporter(AbstractReporter):
             for line in result.stderr:
                 print colorize('red', '→'),
                 print line
+
+        if self.verbose:
+            for result in self.passes:
+                show(result)
+                print
+
+        for result in self.failures:
+            show(result)
 
             print highlight(result.traceback,
                             PythonTracebackLexer(),
@@ -328,13 +341,13 @@ class FancyReporter(AbstractReporter):
             raise SystemExit(1)
 
 
-def auto_reporter(style=None):
+def auto_reporter(**opts):
     """Select a reporter based on the target output and installed
     dependencies.
 
     This is the default reporter.
 
-    :param style: Passed to :class:`FancyReporter` if it is used.
+    :param opts: Passed to :class:`FancyReporter` if it is used.
     :rtype:
         :class:`FancyReporter` if output is a terminal and the progressbar
         and pygments packages are installed, otherwise a
@@ -347,9 +360,7 @@ def auto_reporter(style=None):
     """
     if sys.stdout.isatty():
         try:
-            if style is None:
-                return FancyReporter()
-            return FancyReporter(style)
+            return FancyReporter(**opts)
         except ImportError:
             pass
     return PlainReporter()
