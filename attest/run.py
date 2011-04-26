@@ -1,10 +1,17 @@
 import sys
 from attest.collectors import Tests
 
-if __name__ == '__main__':
+def main():
     try:
-        name = sys.argv.pop(1)
+        names = sys.argv.pop(1)
     except IndexError:
-        print 'Usage: python -mattest.run <import path>'
-    else:
-        Tests([name]).main()
+        try:
+            from setuptools import find_packages
+        except ImportError:
+            print 'Usage: python -mattest.run <import path>'
+        else:
+            names = find_packages()
+    Tests(names).main()
+
+if __name__ == '__main__':
+    main()

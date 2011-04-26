@@ -1,10 +1,4 @@
-import sys
-from .collectors import Tests
+from .run import main
 
 if __name__ == '__main__':
-    try:
-        name = sys.argv.pop(1)
-    except IndexError:
-        print 'Usage: python -mattest <import path>'
-    else:
-        Tests([name]).main()
+    main()
