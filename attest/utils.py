@@ -65,7 +65,7 @@ def deep_get_members(name, predicate=None, private=False):
     seen = set()
     for name in deep_iter_modules(name):
         mod = import_dotted_name(name)
-        name = name.rsplit('.', 1)[1]
+        name = name.rsplit('.', 1)[-1]
         if not private and name.startswith('_'):
             continue
         for name, value in getmembers(mod, predicate):

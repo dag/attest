@@ -1,4 +1,5 @@
 from __future__ import with_statement
+import inspect
 from attest import Tests, assert_hook, utils, disable_imports, raises
 import attest
 from attest.utils import import_dotted_name
@@ -75,6 +76,11 @@ def get_members_recursively():
     deepfunc = lambda x: getattr(x, '__name__', '').startswith('deep_')
     found = list(utils.deep_get_members('attest', deepfunc))
     expected = [utils.deep_get_members, utils.deep_iter_modules]
+    assert found == expected
+
+    getters = lambda x: getattr(x, '__name__', '').startswith('get')
+    found = set(utils.deep_get_members('inspect', getters))
+    expected = set(v for (k, v) in inspect.getmembers(inspect, getters))
     assert found == expected
 
 
