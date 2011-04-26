@@ -36,6 +36,7 @@ quickstart
 setuptools
 simplejson
 teardown
+terminal's
 testrun
 traceback
 tracebacks
