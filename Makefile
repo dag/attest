@@ -3,7 +3,7 @@
 all: test
 
 test:
-	@python runtests.py -rquickfix
+	@attest -rquickfix
 
 tags:
 	@ctags -R attest
