@@ -8,6 +8,7 @@ from functools import wraps
 
 from . import statistics
 from .contexts import capture_output
+from .utils import import_dotted_name, deep_get_members
 from .reporters import (auto_reporter, get_reporter_by_name,
                         get_all_reporters, AbstractReporter, TestResult)
 
@@ -16,17 +17,24 @@ class Tests(object):
     """Collection of test functions.
 
     :param tests:
-        Iterable of other test collections to register with this one.
+        String, or iterable of values, suitable as argument(s) to
+        :meth:`register`.
     :param contexts:
         Iterable of callables that take no arguments and return a context
         manager.
+
+    .. versionadded:: 0.6
+        Pass a single string to `tests` without wrapping it in an iterable.
 
     """
 
     def __init__(self, tests=(), contexts=None):
         self._tests = []
-        for collection in tests:
-            self.register(collection)
+        if isinstance(tests, basestring):
+            self.register(tests)
+        else:
+            for collection in tests:
+                self.register(collection)
         self._contexts = []
         if contexts is not None:
             self._contexts.extend(contexts)
@@ -137,30 +145,46 @@ class Tests(object):
         return lambda x: x
 
     def register(self, tests):
-        """Merge in another test collection.
+        """Merge in other tests.
 
         :param tests:
             * A class, which is then instantiated and return allowing it to be
               used as a decorator for :class:`TestBase` classes.
-            * A string, representing the import path to an iterable yielding
-              tests, in the form of ``'package.module.object'``.
+            * A string, representing the dotted name to one of:
+
+              * a module or package, which is recursively scanned for
+                :class:`Tests` instances that are not private
+              * an iterable yielding tests
             * Otherwise any iterable object is assumed to yield tests.
 
         Any of these can be passed in a list to the :class:`Tests`
         constructor.
 
         .. versionadded:: 0.2
-           Refer to collections by import path as a string
+            Refer to collections by import path as a string
+
+        .. versionadded:: 0.6
+            Recursive scanning of modules and packages
+
+        .. versionchanged:: 0.6
+            Tests are only added if not already added
 
         """
         if inspect.isclass(tests):
             self._tests.extend(tests())
             return tests
         elif isinstance(tests, basestring):
-            module, collection = str(tests).rsplit('.', 1)
-            module = __import__(module, fromlist=[collection])
-            tests = getattr(module, collection)
-        self._tests.extend(tests)
+            def istests(obj):
+                return isinstance(obj, Tests)
+            obj = import_dotted_name(tests)
+            if inspect.ismodule(obj):
+                for tests in deep_get_members(tests, istests):
+                    self.register(tests)
+                return
+            tests = obj
+        for test in tests:
+            if not test in self._tests:
+                self._tests.append(test)
 
     def test_suite(self):
         """Create a :class:`unittest.TestSuite` from this collection."""
