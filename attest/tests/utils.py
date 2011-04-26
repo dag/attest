@@ -76,3 +76,39 @@ def get_members_recursively():
     found = list(utils.deep_get_members('attest', deepfunc))
     expected = [utils.deep_get_members, utils.deep_iter_modules]
     assert found == expected
+
+
+@suite.test
+def reporter_options():
+    opts = utils.parse_options([
+        'style = dark',
+        'verbose=yes',
+        'quiet=no',
+        'switch=on',
+        'bigbutton=off',
+        'bool=true',
+        'lie=false',
+        'num=3',
+        'list=1,2,3',
+        'pair=foo:bar',
+        'dict=foo:bar,abc:123',
+        'notopt',
+        'empty=',
+        'hyphens-are-ok=true',
+    ])
+
+    assert opts == dict(
+        style='dark',
+        verbose=True,
+        quiet=False,
+        switch=True,
+        bigbutton=False,
+        bool=True,
+        lie=False,
+        num=3,
+        list=(1, 2, 3),
+        pair=('foo', 'bar'),
+        dict=dict(foo='bar', abc=123),
+        empty=None,
+        hyphens_are_ok=True,
+    )

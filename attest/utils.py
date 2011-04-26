@@ -73,3 +73,43 @@ def deep_get_members(name, predicate=None, private=False):
                 continue
             yield value
             seen.add(id(value))
+
+
+def parse_options(args):
+    types = dict(yes=True, no=False, on=True, off=False,
+                 true=True, false=False)
+
+    def parse_key(key):
+        return key.strip().replace('-', '_')
+
+    def parse_value(value):
+        value = value.strip()
+
+        if not value:
+            return
+
+        if value in types:
+            return types[value]
+
+        if ',' in value:
+            seq = tuple(map(parse_value, value.split(',')))
+            if all(isinstance(v, tuple) for v in seq):
+                return dict(seq)
+            return seq
+
+        if ':' in value:
+            return tuple(map(parse_value, value.split(':', 1)))
+
+        try:
+            return int(value)
+        except ValueError:
+            return value
+
+    def parse_option(option):
+        key, value = option.split('=', 1)
+        key, value = parse_key(key), parse_value(value)
+        return key, value
+
+    args = [arg for arg in args if '=' in arg]
+    opts = dict(map(parse_option, args))
+    return opts
