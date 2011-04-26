@@ -77,7 +77,7 @@ def deep_get_members(name, predicate=None, private=False):
 
 def parse_options(args):
     types = dict(yes=True, no=False, on=True, off=False,
-                 true=True, false=False)
+                 true=True, false=False, none=None)
 
     def parse_key(key):
         return key.strip().replace('-', '_')

@@ -98,8 +98,10 @@ def reporter_options():
         'list=1,2,3',
         'pair=foo:bar',
         'dict=foo:bar,abc:123',
+        'pairdict=foo:bar:baz,abc:one:two,one::two,two:one:none',
         'notopt',
         'empty=',
+        'void=none',
         'hyphens-are-ok=true',
     ])
 
@@ -115,6 +117,9 @@ def reporter_options():
         list=(1, 2, 3),
         pair=('foo', 'bar'),
         dict=dict(foo='bar', abc=123),
+        pairdict=dict(foo=('bar', 'baz'), abc=('one', 'two'),
+                      one=(None, 'two'), two=('one', None)),
         empty=None,
+        void=None,
         hyphens_are_ok=True,
     )
