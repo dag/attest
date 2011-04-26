@@ -93,12 +93,15 @@ def parse_options(args):
 
         if ',' in value:
             seq = tuple(map(parse_value, value.split(',')))
-            if all(isinstance(v, tuple) for v in seq):
-                return dict(seq)
+            if all(isinstance(v, dict) for v in seq):
+                d = {}
+                for v in seq:
+                    d.update(v)
+                return d
             return seq
 
         if ':' in value:
-            return tuple(map(parse_value, value.split(':', 1)))
+            return dict([map(parse_value, value.split(':', 1))])
 
         try:
             return int(value)
