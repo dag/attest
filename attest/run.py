@@ -2,10 +2,11 @@ from pkg_resources import get_distribution
 from optparse import OptionParser
 from attest.collectors import Tests
 from attest.reporters import get_all_reporters, get_reporter_by_name
+from attest.utils import parse_options
 
 
 def main(tests=None):
-    parser = OptionParser(usage='attest [options] [tests...]',
+    parser = OptionParser(usage='attest [options] [tests...] [key=value...]',
                           version=get_distribution('Attest').version,
                           description=
                               'The positional "tests" are dotted '
@@ -13,7 +14,10 @@ def main(tests=None):
                               'recursively for Tests instances, or dotted names '
                               'for any other object that iterates over tests. If '
                               'not provided, packages in the working directory '
-                              'are scanned.')
+                              'are scanned.\n'
+                              'The key/value pairs are passed to the '
+                              'reporter constructor, after some command-line '
+                              'friendly parsing.')
     parser.add_option('-r', '--reporter', metavar='NAME',
                       help='select reporter by name')
     parser.add_option('--full-tracebacks', action='store_true',
@@ -27,9 +31,11 @@ def main(tests=None):
             print reporter
         return
 
-    reporter = get_reporter_by_name(options.reporter)()
+    opts = parse_options(args)
+    reporter = get_reporter_by_name(options.reporter)(**opts)
 
     if not tests:
+        args = [arg for arg in args if '=' not in arg]
         if args:
             tests = Tests(args)
         else:
