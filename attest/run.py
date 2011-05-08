@@ -1,3 +1,7 @@
+import sys
+import os
+from os import path
+
 from pkg_resources import get_distribution
 from optparse import OptionParser, make_option
 from attest.collectors import Tests
@@ -55,16 +59,14 @@ def main(tests=None, **kwargs):
     reporter = get_reporter_by_name(options.reporter)(**opts)
 
     if not tests:
+        sys.path.insert(0, os.getcwd())
         args = [arg for arg in args if '=' not in arg]
         if args:
             tests = Tests(args)
         else:
-            try:
-                from setuptools import find_packages
-            except ImportError:
-                parser.print_help()
-            else:
-                tests = Tests(find_packages())
+            packages = [name for name in os.listdir('.')
+                             if path.isfile('%s/__init__.py' % name)]
+            tests = Tests(packages)
 
     tests.run(reporter, full_tracebacks=options.full_tracebacks)
 

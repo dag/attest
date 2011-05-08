@@ -32,8 +32,8 @@ def import_dotted_name(name):
     elif '.' in name:
         module, obj = name.rsplit('.', 1)
     else:
-        return __import__(name)
-    mod = __import__(module, fromlist=[obj])
+        return __import__(name, level=0)
+    mod = __import__(module, fromlist=[obj], level=0)
     return getattr(mod, obj)
 
 
