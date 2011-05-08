@@ -45,10 +45,10 @@ def string_importing():
 def iter_mods():
     core = ['attest.' + mod for mod in
             '''ast codegen collectors contexts deprecated hook __main__ reporters
-               run statistics utils'''.split()]
+               run statistics utils'''.split()] + ['attest']
     tests = ['attest.tests.' + mod for mod in
               '''asserts classy collectors contexts hook _meta reporters
-                 utils'''.split()]
+                 utils'''.split()] + ['attest.tests']
 
     found = list(utils.deep_iter_modules('attest'))
     expected = core + tests

@@ -46,8 +46,8 @@ def deep_iter_modules(name):
 
     """
     mod = import_dotted_name(name)
+    yield name
     if not hasattr(mod, '__path__'):
-        yield name
         return
     for _, name, _ in iter_modules(mod.__path__, name + '.'):
         for name in deep_iter_modules(name):
