@@ -129,7 +129,7 @@ def raises(*exceptions):
 def tempdir(*args, **kwargs):
     """Creates a temporary directory, removing it and everything in it when
     the context exits. For files you can use
-    :class:`~tempfile.TemporaryFile` as a context manager.
+    :func:`~tempfile.TemporaryFile` as a context manager.
 
     Returns the path to the directory. Arguments are passed to
     :func:`~tempfile.mkdtemp`.
