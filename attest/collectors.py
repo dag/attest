@@ -2,13 +2,13 @@
 from __future__ import with_statement
 
 import inspect
-from contextlib import contextmanager, nested
+from contextlib import contextmanager
 import sys
 from functools import wraps
 
 from . import statistics
 from .contexts import capture_output
-from .utils import import_dotted_name, deep_get_members
+from .utils import import_dotted_name, deep_get_members, nested
 from .reporters import auto_reporter, AbstractReporter, TestResult
 
 
@@ -58,7 +58,7 @@ class Tests(object):
         """Decorate a function as a test belonging to this collection."""
         @wraps(func)
         def wrapper():
-            with nested(*[ctx() for ctx in self._contexts]) as context:
+            with nested(self._contexts) as context:
                 context = [c for c in context if c is not None]
                 argc = len(inspect.getargspec(func)[0])
                 args = []

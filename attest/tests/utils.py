@@ -1,5 +1,6 @@
 from __future__ import with_statement
 import inspect
+from contextlib import contextmanager
 from attest import Tests, assert_hook, utils, disable_imports, raises
 import attest
 from attest.utils import import_dotted_name
@@ -120,3 +121,63 @@ def reporter_options():
         void=None,
         hyphens_are_ok=True,
     )
+
+
+@suite.test
+def nesting_contexts():
+
+    signals = []
+
+    @contextmanager
+    def one():
+        signals.append('inner one')
+        try:
+            yield 'one'
+        finally:
+            signals.append('outer one')
+
+    @contextmanager
+    def two():
+        signals.append('inner two')
+        try:
+            yield 'two'
+        finally:
+            signals.append('outer two')
+
+    ctx = utils.nested([one, two])
+    assert not signals
+
+    with raises(ZeroDivisionError):
+        with ctx as args:
+            assert signals == ['inner one', 'inner two']
+            assert args == ['one', 'two']
+            1/0
+    assert signals == ['inner one', 'inner two', 'outer two', 'outer one']
+
+    signals = []
+
+    @contextmanager
+    def one():
+        signals.append('inner one')
+        1/0
+        try:
+            yield 'one'
+        finally:
+            signals.append('outer one')
+
+    @contextmanager
+    def two():
+        signals.append('inner two')
+        try:
+            yield 'two'
+        finally:
+            signals.append('outer two')
+
+    ctx = utils.nested([one, two])
+    assert not signals
+
+    # TODO is this actually the behavior we want?
+    with ctx as args:
+        assert signals == ['inner one', 'inner two']
+        assert args == ['two']
+    assert signals == ['inner one', 'inner two', 'outer two']

@@ -2,6 +2,7 @@ import sys
 from array import array
 from pkgutil import iter_modules
 from inspect import getmembers
+from contextlib import contextmanager
 
 
 def get_terminal_size(default=(80, 24)):
@@ -116,3 +117,22 @@ def parse_options(args):
     args = [arg for arg in args if '=' in arg]
     opts = dict(map(parse_option, args))
     return opts
+
+
+@contextmanager
+def nested(managers):
+    contexts = []
+    args = []
+    for manager in managers:
+        exc = None, None, None
+        try:
+            context = manager()
+            args.append(context.__enter__())
+        except:
+            exc = sys.exc_info()
+        contexts.append((context, exc))
+    try:
+        yield args
+    finally:
+        for context, exc in reversed(contexts):
+            context.__exit__(*exc)
