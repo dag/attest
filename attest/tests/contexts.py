@@ -1,6 +1,8 @@
 from __future__ import with_statement
 
 import sys
+import os
+from os import path
 
 from attest import Tests, assert_hook, Assert, TestFailure
 import attest
@@ -74,3 +76,13 @@ def raises():
 
     with attest.raises(AssertionError):
         assert error.args == ('valuable',)
+
+
+@suite.test
+def tempdir():
+    with attest.tempdir() as d:
+        assert path.isdir(d)
+        assert os.listdir(d) == []
+        open(path.join(d, 'tempfile'), 'w').close()
+        assert os.listdir(d) == ['tempfile']
+    assert not path.exists(d)

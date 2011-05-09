@@ -1,5 +1,7 @@
 from contextlib import contextmanager
 import sys
+from tempfile import mkdtemp
+from shutil import rmtree
 
 try:
     from cStringIO import StringIO
@@ -121,3 +123,22 @@ def raises(*exceptions):
     else:
         exceptions = exceptions[0] if len(exceptions) == 1 else exceptions
         raise AssertionError("didn't raise %s when expected" % _repr(exceptions))
+
+
+@contextmanager
+def tempdir(*args, **kwargs):
+    """Creates a temporary directory, removing it and everything in it when
+    the context exits. For files you can use
+    :class:`~tempfile.TemporaryFile` as a context manager.
+
+    Returns the path to the directory. Arguments are passed to
+    :func:`~tempfile.mkdtemp`.
+
+    .. versionadded:: 0.6
+
+    """
+    d = mkdtemp(*args, **kwargs)
+    try:
+        yield d
+    finally:
+        rmtree(d)
