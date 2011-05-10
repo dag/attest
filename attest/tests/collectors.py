@@ -36,14 +36,14 @@ def decorator():
     def two(): pass
 
     assert len(col) == 2
-    assert list(col) == [one, two]
+    assert [func.__wrapped__ for func in col] == [one, two]
 
 
 @suite.test
 def context():
     """@Tests().context"""
 
-    col = Tests()
+    col = Tests(replace_tests=True)
 
     @col.test
     def test(calculated):
@@ -73,7 +73,7 @@ def context():
 
     test2()
 
-    col3 = Tests()
+    col3 = Tests(replace_tests=True)
 
     @col3.context
     def multiple():
@@ -93,7 +93,7 @@ def context():
     test3()
     test3_2()
 
-    col4 = Tests()
+    col4 = Tests(replace_tests=True)
 
     @col4.context
     def nested():
@@ -120,7 +120,7 @@ def context():
     def context5():
         yield 1
 
-    col5 = Tests(contexts=[context5])
+    col5 = Tests(contexts=[context5], replace_tests=True)
 
     @col5.test
     def test5(one):
@@ -154,16 +154,16 @@ def run():
     assert len(result.failed) == 2
     assert len(result.succeeded) == 1
 
-    assert result.failed[0].test is fail
+    assert result.failed[0].test.__wrapped__ is fail
     assert result.failed[0].exc_info[0] is TestFailure
-    assert result.succeeded[0].test is succeed
+    assert result.succeeded[0].test.__wrapped__ is succeed
 
 
 @suite.test
 def conditional():
     """@Tests().test_if(condition)"""
 
-    col = Tests()
+    col = Tests(replace_tests=True)
 
     @col.test_if(True)
     def include():

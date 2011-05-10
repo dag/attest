@@ -21,13 +21,27 @@ class Tests(object):
     :param contexts:
         Iterable of callables that take no arguments and return a context
         manager.
+    :param replace_tests:
+        If true, :meth:`test` returns the wrapper function rather than the
+        original. This option is available for backwards-compatibility.
+    :param replace_contexts:
+        If true, :meth:`context` returns the context manager rather than
+        the original generator function. Provided for
+        backwards-compatibility.
 
     .. versionadded:: 0.6
         Pass a single string to `tests` without wrapping it in an iterable.
 
+    .. versionadded:: 0.6
+        The `replace_tests` and `replace_contexts` parameters. The
+        decorator methods now default to simply registering functions and
+        leaving the original in place. This allows functions to be
+        decorated and registered with multiple collections easily.
+
     """
 
-    def __init__(self, tests=(), contexts=None):
+    def __init__(self, tests=(), contexts=None,
+                 replace_tests=False, replace_contexts=False):
         self._tests = []
         if isinstance(tests, basestring):
             self.register(tests)
@@ -37,6 +51,8 @@ class Tests(object):
         self._contexts = []
         if contexts is not None:
             self._contexts.extend(contexts)
+        self.replace_tests = replace_tests
+        self.replace_contexts = replace_contexts
 
     def __iter__(self):
         return iter(self._tests)
@@ -68,8 +84,11 @@ class Tests(object):
                     else:
                         args.append(arg)
                 func(*args[:argc])
+        wrapper.__wrapped__ = func
         self._tests.append(wrapper)
-        return wrapper
+        if self.replace_tests:
+            return wrapper
+        return func
 
     def context(self, func):
         """Decorate a function as a :func:`~contextlib.contextmanager`
@@ -129,8 +148,11 @@ class Tests(object):
             Tests will gets as many arguments as they ask for.
 
         """
-        func = contextmanager(func)
-        self._contexts.append(func)
+        context = contextmanager(func)
+        context.__wrapped__ = func
+        self._contexts.append(context)
+        if self.replace_contexts:
+            return context
         return func
 
     def register_if(self, condition):
