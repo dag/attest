@@ -1,5 +1,6 @@
 from __future__ import with_statement
 import inspect
+import sys
 from contextlib import contextmanager
 from attest import Tests, assert_hook, utils, disable_imports, raises
 import attest
@@ -154,12 +155,12 @@ def nesting_contexts():
             1/0
     assert signals == ['inner one', 'inner two', 'outer two', 'outer one']
 
+    args = None
     signals = []
 
     @contextmanager
     def one():
         signals.append('inner one')
-        1/0
         try:
             yield 'one'
         finally:
@@ -168,6 +169,7 @@ def nesting_contexts():
     @contextmanager
     def two():
         signals.append('inner two')
+        1/0
         try:
             yield 'two'
         finally:
@@ -176,8 +178,9 @@ def nesting_contexts():
     ctx = utils.nested([one, two])
     assert not signals
 
-    # TODO is this actually the behavior we want?
-    with ctx as args:
-        assert signals == ['inner one', 'inner two']
-        assert args == ['two']
-    assert signals == ['inner one', 'inner two', 'outer two']
+    with raises(ZeroDivisionError):
+        with ctx as args:
+            pass
+
+    assert signals == ['inner one', 'inner two', 'outer one']
+    assert args is None

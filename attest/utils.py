@@ -120,19 +120,24 @@ def parse_options(args):
 
 
 @contextmanager
-def nested(managers):
-    contexts = []
+def nested(constructors):
+    exc = None, None, None
     args = []
-    for manager in managers:
-        exc = None, None, None
-        try:
-            context = manager()
-            args.append(context.__enter__())
-        except:
-            exc = sys.exc_info()
-        contexts.append((context, exc))
+    exits = []
     try:
+        for constructor in constructors:
+            manager = constructor()
+            args.append(manager.__enter__())
+            exits.append(manager.__exit__)
         yield args
+    except:
+        exc = sys.exc_info()
     finally:
-        for context, exc in reversed(contexts):
-            context.__exit__(*exc)
+        for exit in reversed(exits):
+            try:
+                if exit(*exc):
+                    exc = None, None, None
+            except:
+                exc = sys.exc_info()
+        if exc != (None, None, None):
+            raise exc[0], exc[1], exc[2]
