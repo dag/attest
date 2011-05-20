@@ -55,6 +55,9 @@ setup(
             'fancy = attest:FancyReporter',
             'auto = attest:auto_reporter',
         ],
+        'pygments.styles': [
+            'attest = attest.pygments:Attest',
+        ],
         'console_scripts': [
             'attest = attest.run:main',
         ],
