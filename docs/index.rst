@@ -1,5 +1,5 @@
-Modern, Pythonic Unit Testing
-=============================
+Modern Test Automation for Python
+=================================
 
 .. container:: dictionary-entry
 
@@ -7,8 +7,8 @@ Modern, Pythonic Unit Testing
         To affirm to be correct, true, or genuine.
 
 
-Attest is a unit testing framework for Python emphasising modern idioms and
-conventions.
+Attest is a test automation framework for Python emphasising modern idioms
+and conventions.
 
 ::
 
@@ -24,36 +24,15 @@ conventions.
         math.run()
 
 
-Overview
+Features
 --------
 
-Why another testing framework and what sets it apart?
-
-* *unittest* is overly complicated and its API makes more sense in Java
-  than in Python. Attest has a simple API that makes it powerful and easy
-  to use and feels just right for Python programmers.
-
-* *nose* is on the right track but it still relies on naming conventions and
-  implicit test discovery, and building on unittest means it retains its
-  complexity. Attest takes *The Zen of Python* seriously and is completely
-  explicit with no unpredictable magic.
-
-* *py.test* is powerful but also the most magic of all options. This is not a
-  concern for everyone, but if you prefer to be in control of your tools
-  then Attest might be for you.
-
-Attest…
-
-* is not built on top of unittest or any other framework (but it is
-  compatible with unittest) allowing it to rethink testing from the ground
-  up.
-
-* follows :pep:`8` and :pep:`20` and lets you do too.
-
-* uses modern concepts such as context managers for fixtures and decorators
-  for test registration.
-
-* makes minimal assumptions so you can write your tests however you prefer.
+* Collect tests using decorators instead of matching names against a regexp
+* Set up fixtures as context managers that can be combined and reused
+* Use the `assert` statement with arbitrary expressions that are inspected
+  on failure
+* Scan for collections by type rather than by name
+* Treat tests as Python packages rather than script files
 
 
 .. toctree::
