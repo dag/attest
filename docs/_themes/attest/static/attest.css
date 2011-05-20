@@ -99,7 +99,7 @@ div.sphinxsidebarwrapper
   overflow: auto;
 }
 
-div.sphinxsidebar a, a.headerlink, div.toctree-wrapper a, a.viewcode-link
+div.sphinxsidebar a, a.headerlink, div.toctree-wrapper a, a.viewcode-link, a.viewcode-back
 { text-decoration: none;
 }
 
