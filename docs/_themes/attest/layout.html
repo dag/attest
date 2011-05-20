@@ -16,5 +16,19 @@
   </a>
 {% endblock %}
 
+{% block document %}
+{{ super() }}
+<div class="related">
+  <ul>
+    {% if next %}
+    <li class="right"><a href="{{ next.link|e }}">{{ next.title }}</a> »
+    {% endif %}
+    {% if prev %}
+    <li>« <a href="{{ prev.link|e }}">{{ prev.title }}</a>
+    {% endif %}
+  </ul>
+</div>
+{% endblock %}
+
 {% block relbar2 %}{% endblock %}
 {% block footer %}{% endblock %}

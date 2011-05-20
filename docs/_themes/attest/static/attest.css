@@ -64,10 +64,14 @@ div.document
   position: relative;
 }
 
-div.body
+div.body, div.related
 { width: 650px;
   margin-right: 250px;
-  margin-bottom: 100px;
+}
+
+div.related
+{ margin-bottom: 100px;
+  margin-top: 50px;
 }
 
 div.body p
