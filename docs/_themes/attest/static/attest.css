@@ -42,6 +42,8 @@ pre
 
 a
 { color: #1e214f;
+  text-decoration: none;
+  border-bottom: 1px dashed #1e214f;
 }
 
 div.sphinxsidebar input
@@ -101,6 +103,7 @@ div.sphinxsidebarwrapper
 
 div.sphinxsidebar a, a.headerlink, div.toctree-wrapper a, a.viewcode-link, a.viewcode-back
 { text-decoration: none;
+  border: none;
 }
 
 div.sphinxsidebar a.current
