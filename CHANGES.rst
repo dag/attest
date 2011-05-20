@@ -47,8 +47,8 @@ Bugs fixed:
 :Code name: *Ghost Writer*
 :Release date: 2011-03-08
 
-* Support for evaluated testing with the :keyword:`assert` statement by
-  means of an import hook using the :mod:`_ast` module.
+* Support for evaluated testing with the `assert` statement by means of an
+  import hook using the :mod:`_ast` module.
 * Assertions of all kinds now run with ``python -O``.
 * Deprecated the :class:`~attest.deprecated.Assert` class in favor of the
   import hook.

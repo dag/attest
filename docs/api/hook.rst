@@ -1,11 +1,11 @@
 Hooking the Assert Statement
 ============================
 
-The most natural way to write test conditions in Python is the
-:keyword:`assert` statement, but a downside to it is that it doesn't let
-you know the values used in the conditional expression that failed. This
-makes debugging test failures more difficult as you can't easily tell *why*
-the test failed, only that it did.
+The most natural way to write test conditions in Python is the `assert`
+statement, but a downside to it is that it doesn't let you know the values
+used in the conditional expression that failed. This makes debugging test
+failures more difficult as you can't easily tell *why* the test failed,
+only that it did.
 
 Attest includes a hook for the assert statement, the effect of which is
 that assert expressions can be analyzed and inspected. Using it is easy,

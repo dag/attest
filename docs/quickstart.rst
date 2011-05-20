@@ -100,7 +100,7 @@ alone::
 
     Failures: 0/1 (0 assertions)
 
-Wait a minute, zero assertions? It's because we're using :keyword:`assert`
+Wait a minute, zero assertions? It's because we're using `assert`
 which attest can't detect. To have the assertion counted you can use
 :func:`assert_` instead::
 
@@ -133,12 +133,12 @@ overloading:
 
 .. warning::
 
-    :class:`Assert` will not behave properly with the :keyword:`is` or
+    :class:`Assert` will not behave properly with the `is` or
     ``not in`` operations because we can't override those. Instead use the
     :meth:`~Assert.is_`, :meth:`~Assert.is_not` and :meth:`~Assert.not_in`
     methods. For consistency there's also an :meth:`~Assert.in_` method.
 
-    Operations that do work: ``==``, ``!=``. :keyword:`in`, ``<``, ``<=``,
+    Operations that do work: ``==``, ``!=``. `in`, ``<``, ``<=``,
     ``>`` and ``>=``. :class:`Assert` also does a lot more, see the API
     documentation.
 
@@ -160,7 +160,7 @@ That's more like it!
 
 .. note::
 
-    It's not necessary to use :keyword:`assert` with :class:`Assert` but it
+    It's not necessary to use `assert` with :class:`Assert` but it
     can help readability and avoids some mistakes that would otherwise make
     tests pass silently, for example if an object unexpectedly is not wrapped
     in :class:`Assert`.

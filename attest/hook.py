@@ -88,10 +88,10 @@ class TestFailure(AssertionError):
 
 
 def assert_hook(expr, msg='', globals=None, locals=None):
-    """Like :keyword:`assert`, but using :class:`ExpressionEvaluator`. If
+    """Like `assert`, but using :class:`ExpressionEvaluator`. If
     you import this in test modules and the :class:`AssertImportHook` is
     installed (which it is automatically the first time you import from
-    :mod:`attest`), :keyword:`assert` statements are rewritten as a call to
+    :mod:`attest`), `assert` statements are rewritten as a call to
     this.
 
     The import must be a top-level *from* import, example::
@@ -120,7 +120,7 @@ def _build(node, **kwargs):
 
 
 class AssertTransformer(ast.NodeTransformer):
-    """Parses `source` with :mod:`_ast` and transforms :keyword:`assert`
+    """Parses `source` with :mod:`_ast` and transforms `assert`
     statements into calls to :func:`assert_hook`.
 
     .. warning::

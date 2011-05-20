@@ -21,7 +21,7 @@ class Loader(object):
 
 
 def assert_(expr, msg=None):
-    """Like :keyword:`assert`, but counts the assertion.
+    """Like `assert`, but counts the assertion.
 
     .. deprecated:: 0.5 :func:`~attest.eval.assert_hook` is preferred.
 
@@ -37,7 +37,7 @@ def assert_(expr, msg=None):
 class Assert(object):
     """Wrap an object such that boolean operations on it fails with an
     :exc:`AssertionError` if the operation results in :const:`False`,
-    with more helpful error messages on failure than :keyword:`assert`.
+    with more helpful error messages on failure than `assert`.
 
     A test failure is simply an unhandled exception, so it is completely
     optional to use this class.
@@ -146,7 +146,7 @@ class Assert(object):
         return assert_(self.obj != obj, '%r == %r' % (self.obj, obj))
 
     def is_(self, obj):
-        """The :keyword:`is` operator is not overridable, for good reasons
+        """The `is` operator is not overridable, for good reasons
         (that would defeat its purpose), so you can use this method for
         asserting identity::
 
@@ -175,11 +175,11 @@ class Assert(object):
         return assert_(self.obj is not obj, '%r is %r' % (self.obj, obj))
 
     def __contains__(self, obj):
-        """Test for membership with :keyword:`in`."""
+        """Test for membership with `in`."""
         return assert_(obj in self.obj, '%r not in %r' % (obj, self.obj))
 
     def in_(self, obj):
-        """Assert membership. While you can use the :keyword:`in` operator,
+        """Assert membership. While you can use the `in` operator,
         its order is inconsistent with the rest of the operators and doesn't
         work with the ``not in`` operation.
 
