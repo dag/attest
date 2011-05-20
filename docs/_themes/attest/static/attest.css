@@ -1,22 +1,28 @@
-@import url("http://fonts.googleapis.com/css?family=Cantarell:r,b,i|Old+Standard+TT:r,b,i|Anonymous+Pro:r,b,i");
 @import url("basic.css");
 
 body
-{ font-family: 'Cantarell', sans-serif;
+{ font-family: sans-serif;
   color: #404040;
+  font-size: 110%;
 }
 
 h1, h2, h3, h4, h5, h6
-{ font-family: 'Old Standard TT', serif;
+{ font-family: serif;
   font-weight: normal;
-  font-style: italic;
   color: #a6194d;
   margin-top: 2em;
 }
 
+h1
+{ font-size: 130%;
+}
+
+h2
+{ font-size: 120%;
+}
+
 pre, tt, tt.descname
-{ font-family: 'Anonymous Pro', monospace;
-  font-size: 90%;
+{ font-family: monospace;
 }
 
 pre, div.admonition
@@ -103,7 +109,7 @@ div.sphinxsidebar ul
 
 div.dictionary-entry dl
 { text-align: center;
-  font-family: 'Old Standard TT', serif;
+  font-family: serif;
 }
 
 div.dictionary-entry dd
