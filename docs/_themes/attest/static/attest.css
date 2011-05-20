@@ -9,7 +9,7 @@ body
 h1, h2, h3, h4, h5, h6
 { font-family: serif;
   font-weight: normal;
-  color: #a6194d;
+  color: #537b99;
   margin-top: 2em;
 }
 
@@ -25,21 +25,23 @@ pre, tt, tt.descname
 { font-family: monospace;
 }
 
-pre, div.admonition
+pre
 { margin: 1em -40px;
   padding: 1em 40px;
 }
 
+div.admonition
+{ margin: 1em -40px;
+  padding: 10px 40px;
+}
+
 pre
-{ background: #E8FFE0;
+{ background: #e6dccc;
+  border-right: 3px solid #537b99;
 }
 
 a
-{ color: #8262bf;
-}
-
-h3 a
-{ color: #a6194d;
+{ color: #1e214f;
 }
 
 div.sphinxsidebar input
@@ -47,11 +49,13 @@ div.sphinxsidebar input
 }
 
 div.admonition.warning
-{ background: #ffbfc8;
+{ background: #b5242e;
+  color: #fff;
 }
 
 div.admonition.note
-{ background: #f2ffc4;
+{ background: #1E4F34;
+  color: #fff;
 }
 
 div.admonition p.admonition-title
