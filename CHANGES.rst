@@ -4,10 +4,18 @@ Changelog
 =========
 
 
+0.6
+---
+:Release date: `in development`
+:Tested on: CPython 2.5 - 2.7 and 3.1 - 3.2, PyPy 1.5
+
+
+
 0.5.2
 -----
 
 :Release date: 2011-04-19
+:Tested on: CPython 2.5 - 2.7 and 3.1, PyPy 1.4.1
 
 Bugs fixed:
 
@@ -31,6 +39,7 @@ Bugs fixed:
 -----
 
 :Release date: 2011-03-25
+:Tested on: CPython 2.5 - 2.7 and 3.1, PyPy 1.4.1
 
 Bugs fixed:
 
@@ -46,6 +55,7 @@ Bugs fixed:
 ---
 :Code name: *Ghost Writer*
 :Release date: 2011-03-08
+:Tested on: CPython 2.5 - 2.7 and 3.1, PyPy 1.4.1
 
 * Support for evaluated testing with the `assert` statement by means of an
   import hook using the :mod:`_ast` module.
@@ -71,6 +81,7 @@ Bugs fixed:
 0.4
 ---
 :Release date: 2011-01-08
+:Tested on: CPython 2.5 - 2.7 and 3.1, PyPy 1.4.1
 
 * Support for Python 3.1 and PyPy (besides existing support for 2.5-2.7).
 * Reporters are now loaded via setuptools entry points, allowing
@@ -99,6 +110,7 @@ Bugs fixed:
 0.3
 ---
 :Release date: 2010-11-27
+:Tested on: CPython 2.6
 
 * :const:`None` if yielded from a context is no-longer passed as arguments
   to tests.
@@ -110,6 +122,7 @@ Bugs fixed:
 0.2
 ---
 :Release date: 2010-11-26
+:Tested on: CPython 2.6
 
 * Functional tests can now have multiple contexts.
 * Tests can be registered by dotted name (import path as string).
@@ -119,3 +132,4 @@ Bugs fixed:
 0.1
 ---
 :Release date: 2010-11-25
+:Tested on: CPython 2.6
