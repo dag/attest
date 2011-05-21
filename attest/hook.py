@@ -1,11 +1,22 @@
 from __future__ import with_statement
-from . import ast
-from .codegen import to_source, SourceGenerator
-from . import statistics
-import inspect
+
 import imp
+import inspect
 import os
 import sys
+
+from attest         import ast, statistics
+from attest.codegen import to_source, SourceGenerator
+
+
+__all__ = (
+    'COMPILES_AST',
+    'ExpressionEvaluator',
+    'TestFailure',
+    'assert_hook',
+    'AssertTransformer',
+    'AssertImportHook',
+)
 
 
 try:

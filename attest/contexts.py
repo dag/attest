@@ -1,15 +1,25 @@
-from contextlib import contextmanager
 import sys
-from tempfile import mkdtemp
-from shutil import rmtree
+
+from contextlib import contextmanager
+from shutil     import rmtree
+from tempfile   import mkdtemp
 
 try:
     from cStringIO import StringIO
 except ImportError:
-    from StringIO import StringIO
+    from StringIO  import StringIO
 
-from . import statistics
-from .deprecated import _repr
+from attest            import statistics
+from attest.deprecated import _repr
+
+
+__all__ = (
+    'capture_output',
+    'disable_imports',
+    'Error',
+    'raises',
+    'tempdir',
+)
 
 
 @contextmanager

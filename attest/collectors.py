@@ -2,14 +2,23 @@
 from __future__ import with_statement
 
 import inspect
-from contextlib import contextmanager
 import sys
-from functools import wraps
 
-from . import statistics
-from .contexts import capture_output
-from .utils import import_dotted_name, deep_get_members, nested
-from .reporters import auto_reporter, AbstractReporter, TestResult
+from contextlib import contextmanager
+from functools  import wraps
+
+from attest           import statistics
+from attest.contexts  import capture_output
+from attest.reporters import auto_reporter, AbstractReporter, TestResult
+from attest.utils     import import_dotted_name, deep_get_members, nested
+
+
+__all__ = (
+    'Tests',
+    'test_if',
+    'test',
+    'TestBase',
+)
 
 
 class Tests(object):

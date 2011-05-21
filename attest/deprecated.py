@@ -1,7 +1,15 @@
 import inspect
+
 from contextlib import contextmanager
 
-from . import statistics
+from attest import statistics
+
+
+__all__ = (
+    'Loader',
+    'assert_',
+    'Assert',
+)
 
 
 class Loader(object):
