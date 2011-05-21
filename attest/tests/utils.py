@@ -47,7 +47,7 @@ def string_importing():
 def iter_mods():
     core = ['attest.' + mod for mod in
             '''ast codegen collectors contexts deprecated hook __main__ reporters
-               run statistics utils'''.split()] + ['attest']
+               run statistics utils pygments'''.split()] + ['attest']
     tests = ['attest.tests.' + mod for mod in
               '''asserts classy collectors contexts hook _meta reporters
                  utils'''.split()] + ['attest.tests']
