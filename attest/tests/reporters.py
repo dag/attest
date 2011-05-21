@@ -62,7 +62,7 @@ def xml_reporter():
     with attest.capture_output() as (out, err):
         _meta.suite.run(attest.XmlReporter)
 
-    for line, expected in zip(out, [
+    for line, expected in zip(out[:5] + out[7:], [
         '<?xml version="1.0" encoding="UTF-8"?>',
         '<testreport tests="2">',
         '  <pass name="attest.tests._meta.passing"/>',
@@ -86,7 +86,7 @@ def plain_reporter():
             _meta.suite.run(attest.PlainReporter)
 
     width, _ = utils.get_terminal_size()
-    for line, expected in zip(out, [
+    for line, expected in zip(out[:7] + out[9:], [
         '.F',
         '',
         'attest.tests._meta.failing',
