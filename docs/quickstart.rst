@@ -1,239 +1,133 @@
 Quickstart
 ==========
 
-.. warning::
-
-    This document is outdated, incomplete and generally needs love. It
-    might serve to give you an idea of how to use Attest but you're better
-    of reading the API reference for most purposes.
-
-.. currentmodule:: attest
-
-Because mathematics never lie, except when it claims ``0.9… = 1``, we'll be
-testing math in this quickstart.
-
-*Attest* is quite agnostic and doesn't enforce any particular setup, but for
-sake of simplicity and because I'm only making Attest flexible in a
-self-defeating impulse of compulsive behaviour, I'll tell you how *I* like to
-write tests, and how that is done with Attest.
-
-First of all, you should know that Attest will not do any automatic discovery
-of tests behind your back. You're in control. Sit back and relax. If you worry
-about boilerplate I can assure you it is minimal.
-
-Second, there is no global collection of tests. This is related to the
-previous point. *You* write your test collections, and bind them together
-when you want to run more than a specific one.
-
-Third, because of the above points, no particular directory structure or
-naming conventions are enforced. A collection of tests is just a Python
-package. You control what should be included by importing and registering
-collections. When you run tests, just point to them.
+So, you got Attest :doc:`installed </install>`? Great! Let's get started
+writing tests!
 
 
-The Most Low-Level Assumptions
-------------------------------
+The PyPI Metadata Module
+------------------------
 
-*Attest* follows a few assumptions meant to make the core flexible.
+The `Python Package Index`_ exposes metadata for projects as :abbr:`JSON
+(JavaScript Object Notation)`. Let's write a simple module to read this
+data and test it with Attest!
 
-* A test is a callable object that takes no arguments.
-* A failure is an unhandled exception, or a return value of :const:`False`.
-* A collection is an iterable object yielding test objects.
+.. _Python Package Index:
+    http://pypi.python.org/pypi
 
-Effectively, while perhaps practically not very useful, this implies you can
-write a list of lambda expressions as a test collection.
+The first order of business is to design the API we want. A good way to do
+this is to draft the documentation first - this is dubbed `Readme Driven
+Development`_ and goes well in hand with test driven development.
 
+.. _Readme Driven Development:
+    http://tom.preston-werner.com/2010/08/23/readme-driven-development.html
 
-The More High-Level Toolbox
----------------------------
+Suppose we came up with an API like this:
 
-Attest provides a few tools to aid in the creation of tests and collections,
-abiding to the above assumptions. Each tool is carefully designed to follow
-idiomatic Python conventions and to solve the particular problem of testing
-with "the right tool for the job".
+.. testsetup::
 
-My favourite is the functional API inspired by `Flask`_. Classes
-don't really make sense unless you're going to have multiple instances or
-you're using inheritance for something. The functional API is flat, which
-ultimately is a desirable idiom in Python. Flat implies functions defined
-in the top-level rather than methods wrapped in a class. This saves you some
-indentation levels, by extension giving you more characters within the
-conventional limit of 80. Mostly, and more importantly, it makes sense because
-classes don't.
+    import json
+    import urllib2
 
-Because taste varies, and for the rare situations when classes do make sense,
-there is support for the use of tests wrapped in a class. These however are
-quite unlike the test classes of the unittest library — rather than modelling
-a Java package they, too, closely follow conventional Python idioms.
+    class Package(object):
 
-.. _Flask: http://flask.pocoo.org/
+        def __init__(self, name):
+            url = 'http://pypi.python.org/pypi/%s/json' % name
+            data = urllib2.urlopen(url).read()
+            vars(self).update(json.loads(data)['info'])
 
+>>> package = Package('Attest')
+>>> package.author
+u'Dag Odenhall'
+>>> package.summary
+u'Modern, Pythonic unit testing.'
 
-Functional Style
-----------------
+Now we want to write the tests. It's a good idea to do this before we write
+any actual code for the module itself because the tests lets us verify that
+the eventual code does what we want and we can avoid manual testing.
 
-In functional style, we make an instance of :class:`Tests` and add
-tests to it with a decorator method on the instance.
-
-.. centered:: tests/math.py
-
-::
+Here's the API defined as tests::
 
     from attest import Tests
+    from pypilib import Package  # our fictional module
 
-    math = Tests()
+    pypi = Tests()
 
-    @math.test
-    def arithmetics():
-        assert 1 + 1 == 2
-
-Optionally, we add this at the end to be able to run this collection
-alone::
+    @pypi.test
+    def properties():
+        package = Package('Attest')
+        assert package.author == 'Dag Odenhall'
+        assert package.summary == 'Modern, Pythonic unit testing.'
 
     if __name__ == '__main__':
-        math.main()
+        pypi.run()
 
-.. code-block:: text
+Save it as :file:`tests.py` and run it. What happens?
 
-    $ python tests/math.py
-    1 of 1 [Time: 00:00:00|#########################################|100%]
+.. sourcecode:: console
+
+    $ python tests.py
+    Traceback (most recent call last):
+      File "tests.py", line 2, in <module>
+        from pypilib import Package  # our fictional module
+    ImportError: No module named pypilib
+
+As expected we get an :exc:`ImportError` because we haven't created our
+module yet. So that's the next step! First we just stub the class::
+
+    class Package(object):
+        pass
+
+This should fail because this constructor doesn't take any arguments. Let's
+confirm this:
+
+.. sourcecode:: pytb
+
+    $ python tests.py
+    [100%] 1 of 1 Time: 0:00:00
+
+    properties
+    ─────────────────────────────────────────────────────────────────────
+    Traceback (most recent call last):
+      File "tests.py", line 8, in properties
+        package = Package('Attest')
+    TypeError: object.__new__() takes no parameters
+
+    Failures: 1/1 (0 assertions)
+
+Just as expected. OK - so we write a custom constructor::
+
+    class Package(object):
+        def __init__(self, name):
+            pass
+
+Still fails:
+
+.. sourcecode:: pytb
+
+    Traceback (most recent call last):
+      File "tests.py", line 9, in properties
+        assert package.author == 'Dag Odenhall'
+    AttributeError: 'Package' object has no attribute 'author'
+
+It's time to write some real code! Here's our working module::
+
+    import json
+    import urllib2
+
+    class Package(object):
+
+        def __init__(self, name):
+            url = 'http://pypi.python.org/pypi/%s/json' % name
+            data = json.loads(urllib2.urlopen(url).read())
+            self.author = data['info']['author']
+            self.summary = data['info']['summary']
+
+Now the tests pass:
+
+.. sourcecode:: console
+
+    $ python tests.py
+    [100%] 1 of 1 Time: 0:00:00
 
     Failures: 0/1 (0 assertions)
-
-Wait a minute, zero assertions? It's because we're using `assert`
-which attest can't detect. To have the assertion counted you can use
-:func:`assert_` instead::
-
-    assert_(1 + 1 == 2)
-
-.. code-block:: text
-
-    Failures: 0/1 (1 assertions)
-
-That's better, but what happens on failure?
-
-::
-
-    value = 1 + 1
-    assert_(value == 3)
-
-.. code-block:: pytb
-
-    arithmetics
-    ──────────────────────────────────────────────────────────────────────
-    Traceback (most recent call last):
-      File "math.py", line 8, in arithmetics
-        assert_(value == 3)
-    AssertionError
-
-The value of the variable is hidden from us making it harder to debug
-failed tests, that's no good! :class:`Assert` to the rescue - by
-wrapping the value we can have better failure reports using operator
-overloading:
-
-.. warning::
-
-    :class:`Assert` will not behave properly with the `is` or
-    ``not in`` operations because we can't override those. Instead use the
-    :meth:`~Assert.is_`, :meth:`~Assert.is_not` and :meth:`~Assert.not_in`
-    methods. For consistency there's also an :meth:`~Assert.in_` method.
-
-    Operations that do work: ``==``, ``!=``. `in`, ``<``, ``<=``,
-    ``>`` and ``>=``. :class:`Assert` also does a lot more, see the API
-    documentation.
-
-::
-
-    value = Assert(1 + 1)
-    assert value == 3
-
-.. code-block:: pytb
-
-    arithmetics
-    ──────────────────────────────────────────────────────────────────────
-    Traceback (most recent call last):
-      File "math.py", line 8, in arithmetics
-        assert value == 3
-    AssertionError: 2 != 3
-
-That's more like it!
-
-.. note::
-
-    It's not necessary to use `assert` with :class:`Assert` but it
-    can help readability and avoids some mistakes that would otherwise make
-    tests pass silently, for example if an object unexpectedly is not wrapped
-    in :class:`Assert`.
-
-How about testing the same precomputed value in multiple tests? In other
-testing frameworks we'd use setup and teardown; Attest uses context
-managers via :meth:`Tests.context`::
-
-    @math.context
-    def compute_value():
-        value = 1 + 1
-        yield value
-
-The value will now be passed to tests in the ``math`` collection, as an
-argument::
-
-    @math.test
-    def value_of_value(value):
-        Assert(value) == 2
-
-Now lets set up our tests so we can combine many collections into one.
-
-.. centered:: tests/__init__.py
-
-::
-
-    from attest import Tests
-    from tests.math import math
-
-    tests = Tests([math])
-
-As you make more collections, just import them here and add to the list.
-
-.. centered:: runtests.py
-
-::
-
-    from tests import tests
-    tests.main()
-
-With this we can run the full suite with ``python runtests.py``.
-
-
-Object-Oriented Style
----------------------
-
-If you prefer to write test collections as classes, there's an API for
-that. Here's the above example in object-oriented style:
-
-.. centered:: tests/math.py
-
-::
-
-    from attest import TestBase, test, Assert
-
-    class Math(TestBase):
-
-        def __context__(self):
-            self.value = 1 + 1
-            yield
-
-        @test
-        def arithmetics(self):
-            Assert(self.value) == 2
-
-.. centered:: tests/__init__.py
-
-::
-
-    from attest import Tests
-    from tests.math import Math
-
-    tests = Tests([Math])
-
-You can also list instances and have your own ``__init__()`` to create
-different tests from the same collection.
