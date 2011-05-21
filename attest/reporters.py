@@ -327,8 +327,9 @@ class FancyReporter(AbstractReporter):
 
         if self.verbose:
             for result in self.passes:
-                show(result)
-                print
+                if result.stdout or result.stderr:
+                    show(result)
+                    print
 
         for result in self.failures:
             show(result)
