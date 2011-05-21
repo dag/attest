@@ -25,19 +25,26 @@ pre, tt, tt.descname
 { font-family: monospace;
 }
 
-pre
+pre, div.admonition
 { margin: 1em -40px;
   padding: 1em 40px;
+  background: #e6dccc;
+}
+
+pre
+{ border-right: 3px solid #537b99;
 }
 
 div.admonition
-{ margin: 1em -40px;
-  padding: 10px 40px;
+{ border-top: 3px solid #1E4F34;
 }
 
-pre
-{ background: #e6dccc;
-  border-right: 3px solid #537b99;
+div.admonition.warning
+{ border-top: 3px solid #b5242e;
+}
+
+div.admonition p.admonition-title
+{ display: none;
 }
 
 a
@@ -48,20 +55,6 @@ a
 
 div.sphinxsidebar input
 { border: 1px solid #000;
-}
-
-div.admonition.warning
-{ background: #b5242e;
-  color: #fff;
-}
-
-div.admonition.note
-{ background: #1E4F34;
-  color: #fff;
-}
-
-div.admonition p.admonition-title
-{ display: none;
 }
 
 div.document
