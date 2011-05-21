@@ -246,9 +246,7 @@ class FancyReporter(AbstractReporter):
     :param colorscheme:
         If `style` is *light* or *dark*, maps token names to color names.
 
-    .. note::
-
-        .. rubric:: Styles
+    .. admonition:: Styles
 
         Available styles can be listed with ``pygmentize -L styles``. The
         special values ``'light'`` and ``'dark'`` (referring to the terminal's

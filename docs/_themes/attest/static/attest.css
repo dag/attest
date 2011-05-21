@@ -43,7 +43,7 @@ div.admonition.warning
 { border-top: 3px solid #b5242e;
 }
 
-div.admonition p.admonition-title
+div.admonition.note p.admonition-title
 { display: none;
 }
 
