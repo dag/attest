@@ -10,11 +10,14 @@ Iterable
 JSON
 JUnit
 Makefile
+PDB
 Pocoo
+PyPI
 PyPy
 Pythonic
 Quickstart
 Redistributions
+Tox
 Unhandled
 XUnit
 args
@@ -33,6 +36,7 @@ py
 pygments
 quickfix
 quickstart
+runtimes
 setuptools
 simplejson
 teardown
