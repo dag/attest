@@ -32,14 +32,18 @@ def make_parser(**kwargs):
                 metavar='NAME',
                 help='select reporter by name'
             ),
+            make_option('-l', '--list-reporters',
+                action='store_true',
+                help='list available reporters'
+            ),
             make_option('--full-tracebacks',
                 action='store_true',
                 help="don't clean tracebacks"
             ),
-            make_option('-l', '--list-reporters',
+            make_option('--fail-fast',
                 action='store_true',
-                help='list available reporters'
-            )
+                help='stop at first failure'
+            ),
         ]
     )
     args.update(kwargs)
@@ -68,7 +72,8 @@ def main(tests=None, **kwargs):
                              if path.isfile('%s/__init__.py' % name)]
             tests = Tests(packages)
 
-    tests.run(reporter, full_tracebacks=options.full_tracebacks)
+    tests.run(reporter, full_tracebacks=options.full_tracebacks,
+                        fail_fast=options.fail_fast)
 
 
 if __name__ == '__main__':

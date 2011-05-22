@@ -224,7 +224,8 @@ class Tests(object):
             suite.addTest(FunctionTestCase(test))
         return suite
 
-    def run(self, reporter=auto_reporter, full_tracebacks=False):
+    def run(self, reporter=auto_reporter,
+            full_tracebacks=False, fail_fast=False):
         """Run all tests in this collection.
 
         :param reporter:
@@ -233,8 +234,10 @@ class Tests(object):
             enforced).
         :param full_tracebacks:
             Control if the call stack of Attest is hidden in tracebacks.
+        :param fail_fast:
+            Stop after the first failure.
 
-        .. versionchanged:: 0.6 Added `full_tracebacks`.
+        .. versionchanged:: 0.6 Added `full_tracebacks` and `fail_fast`.
 
         """
         assertions, statistics.assertions = statistics.assertions, 0
@@ -254,6 +257,8 @@ class Tests(object):
                 result.stdout, result.stderr = out, err
                 result.exc_info = sys.exc_info()
                 reporter.failure(result)
+                if fail_fast:
+                    break
             else:
                 result.stdout, result.stderr = out, err
                 reporter.success(result)
