@@ -1,144 +1,138 @@
 @import url("basic.css");
 
+/* Fonts
+ ********/
+
+@import
+url("http://fonts.googleapis.com/css?family=Ubuntu:l,li,b|Arvo|Lekton:r,i,b|Josefin+Slab:r,i,b|IM+Fell+Double+Pica|IM+Fell+Double+Pica+SC");
+
 body
-{ font-family: sans-serif;
-  color: #404040;
-  font-size: 110%;
-}
+  { font-family: 'Ubuntu', sans-serif; font-weight: 300; font-size: 110%; }
 
 h1, h2, h3, h4, h5, h6
-{ font-family: serif;
-  font-weight: normal;
-  color: #537b99;
-  margin-top: 2em;
-}
+  { font-family: 'Arvo', serif; font-weight: normal; }
 
 h1
-{ font-size: 130%;
-}
+  { font-size: 190%; }
 
 h2
-{ font-size: 120%;
-}
+  { font-size: 160%; }
 
 pre, tt, tt.descname
-{ font-family: monospace;
-}
+  { font-family: 'Lekton', monospace; font-size: medium; }
 
-pre, div.admonition
-{ margin: 1em -40px;
-  padding: 1em 40px;
-  background: #e6dccc;
-}
-
-pre
-{ border-right: 3px solid #537b99;
-}
-
-div.admonition
-{ border-top: 3px solid #1E4F34;
-}
-
-div.admonition.warning
-{ border-top: 3px solid #b5242e;
-}
-
-div.admonition.note p.admonition-title
-{ display: none;
-}
-
-a
-{ color: #1e214f;
-  text-decoration: none;
-  border-bottom: 1px dashed #1e214f;
-}
-
-div.sphinxsidebar input
-{ border: 1px solid #000;
-}
-
-div.document
-{ margin: 0 auto;
-  width: 950px;
-  position: relative;
-}
-
-div.body, div.related
-{ width: 650px;
-  margin-right: 250px;
-}
-
-div.related
-{ margin-bottom: 100px;
-  margin-top: 50px;
-}
-
-div.body p
-{ text-align: justify;
-}
-
-div.body ul
-{ list-style-type: circle;
-}
-
-div.sphinxsidebar
-{ position: absolute;
-  right: 0;
-}
-
-div.sphinxsidebarwrapper
-{ position: fixed;
-  width: 250px;
-  top: 2em;
-  bottom: 0;
-  overflow: auto;
-}
-
-div.sphinxsidebar a, a.headerlink, div.toctree-wrapper a, a.viewcode-link, a.viewcode-back
-{ text-decoration: none;
-  border: none;
-}
-
-div.sphinxsidebar a.current
-{ font-weight: bold;
-}
-
-a.viewcode-link
-{ color: #bbb;
-}
-
-div.sphinxsidebar ul
-{ padding-left: 0;
-}
-
-div.dictionary-entry dl
-{ text-align: center;
-  font-family: serif;
-}
-
-div.dictionary-entry dd
-{ font-style: italic;
-}
+div.license
+  { font-family: 'IM Fell Double Pica', sans-serif; }
 
 div.small-caps
-{ font-variant: small-caps;
-}
+  { font-family: 'IM Fell Double Pica SC', sans-serif; }
 
-div.section > dl
-{ padding-top: 2em;
-}
+div.dictionary-entry dl
+  { font-family: 'Josefin Slab', serif; font-weight: normal; }
 
-div.section h2 + dl
-{ padding-top: inherit;
-}
+div.dictionary-entry dd
+  { font-style: italic; }
+
+a.reference.internal em
+  { font-style: normal; }
+
+div.sphinxsidebar a.current
+  { font-weight: bold; }
+
+div.sphinxsidebar a, a.headerlink, div.toctree-wrapper a, a.viewcode-link, a.viewcode-back
+  { text-decoration: none; border: none; }
+
+
+/* Colors
+ *********/
+
+body
+  { color: #404040; }
+
+h1, h2, h3, h4, h5, h6
+  { color: #537b99; }
+
+a
+  { color: #1e214f; border-color: #1e214f; }
+
+a.viewcode-link
+  { color: #bbb; }
+
+pre, div.admonition
+  { background: #e6dccc; }
+
+pre
+  { border-color: #537b99; }
+
+div.admonition
+  { border-color: #1e4f34; }
+
+div.admonition.warning
+  { border-color: #b5242e; }
+
+div.sphinxsidebar input
+  { border-color: #000000; }
 
 dt:target, .highlighted
-{ background: #f2ffc4;
-}
+  { background: #f2ffc4; }
+
+
+/* Positions, Sizes, &c.
+ ***********************/
+
+div.document
+  { margin: 0 auto; width: 950px; position: relative; }
+
+div.body, div.related
+  { width: 650px; margin-right: 250px; }
+
+div.related
+  { margin-bottom: 100px; margin-top: 50px; }
+
+h1, h2, h3, h4, h5, h6
+  { margin-top: 2em; }
+
+a
+  { text-decoration: none; border-bottom-width: 1px; border-bottom-style: dashed; }
+
+pre, div.admonition
+  { margin: 1em -40px; padding: 1em 40px; }
+
+pre
+  { border-right-width: 3px; border-right-style: solid; }
+
+div.admonition
+  { border-top-width: 3px; border-top-style: solid; }
+
+div.admonition.warning
+  { border-top-width: 3px; border-top-style: solid; }
+
+div.admonition.note p.admonition-title
+  { display: none; }
+
+div.dictionary-entry dl
+  { text-align: center; }
+
+div.body p
+  { text-align: justify; }
+
+div.body ul
+  { list-style-type: circle; }
+
+div.sphinxsidebar
+  { position: absolute; right: 0; }
+
+div.sphinxsidebarwrapper
+  { position: fixed; width: 250px; top: 2em; bottom: 0; overflow: auto; }
+
+div.sphinxsidebar ul
+  { padding-left: 0; }
+
+div.section > dl
+  { padding-top: 2em; }
+
+div.section h2 + dl
+  { padding-top: inherit; }
 
 dt:target
-{ margin-left: -10px;
-  margin-right: -40px;
-  padding-left: 10px;
-  padding-right: 40px;
-}
+  { margin-left: -10px; margin-right: -40px; padding-left: 10px; padding-right: 40px; }
