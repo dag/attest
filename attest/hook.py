@@ -249,6 +249,12 @@ class AssertImportHook(object):
     def __init__(self):
         self._cache = {}
 
+    def __enter__(self):
+        sys.meta_path.insert(0, self)
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        sys.meta_path.remove(self)
+
     def find_module(self, name, path=None):
         lastname = name.rsplit('.', 1)[-1]
         try:

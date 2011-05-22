@@ -7,6 +7,7 @@ from optparse import OptionParser, make_option
 from attest.collectors import Tests
 from attest.reporters import get_all_reporters, get_reporter_by_name
 from attest.utils import parse_options
+from attest.hook import AssertImportHook
 
 
 def make_parser(**kwargs):
@@ -48,6 +49,10 @@ def make_parser(**kwargs):
                 action='store_true',
                 help='stop at first failure'
             ),
+            make_option('--native-assert',
+                action='store_true',
+                help="don't hook the assert statement"
+            ),
         ]
     )
     args.update(kwargs)
@@ -68,13 +73,16 @@ def main(tests=None, **kwargs):
 
     if not tests:
         sys.path.insert(0, os.getcwd())
-        args = [arg for arg in args if '=' not in arg]
-        if args:
-            tests = Tests(args)
-        else:
-            packages = [name for name in os.listdir('.')
-                             if path.isfile('%s/__init__.py' % name)]
-            tests = Tests(packages)
+        names = [arg for arg in args if '=' not in arg]
+        if not names:
+            names = [name for name in os.listdir('.')
+                          if path.isfile('%s/__init__.py' % name)]
+
+    if options.native_assert:
+        tests = Tests(names)
+    else:
+        with AssertImportHook():
+            tests = Tests(names)
 
     tests.run(reporter, full_tracebacks=options.full_tracebacks,
                         fail_fast=options.fail_fast,
