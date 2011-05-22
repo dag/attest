@@ -28,12 +28,15 @@ def capture_output():
     tuple of the two streams as lists of lines, added after the context has
     executed.
 
-    ::
+    .. testsetup::
 
-        with capture_output() as (out, err):
-            print 'Captured'
+        from attest import capture_output
 
-        assert out == ['Captured']
+    >>> with capture_output() as (out, err):
+    ...    print 'Captured'
+    ...
+    >>> out
+    ['Captured']
 
     """
     stdout, stderr = sys.stdout, sys.stderr
@@ -52,7 +55,10 @@ def disable_imports(*names):
     """Blocks the given `names` from being imported inside the context.
     This is useful for testing import-dependent fallbacks.
 
-    >>> from attest import disable_imports
+    .. testsetup::
+
+        from attest import disable_imports
+
     >>> with disable_imports('sys'):
     ...     import sys
     ...
@@ -105,12 +111,15 @@ def raises(*exceptions):
     This reverses failure semantics and is useful for testing code that
     uses exceptions as part of its API.
 
-    ::
+    .. testsetup::
 
-        with raises(IOError) as error:
-            open('/etc/passwd', 'w')
+        from attest import raises
 
-        assert error.errno == 13
+    >>> with raises(IOError) as error:
+    ...    open('/etc/passwd', 'w')
+    ...
+    >>> error.errno
+    13
 
     :param exceptions: Expected exception classes.
     :returns: An :class:`Error` on which the caught exception is set after

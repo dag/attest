@@ -515,7 +515,10 @@ def get_reporter_by_name(name, default='auto'):
 def get_all_reporters():
     """Iterable yielding the names of all registered reporters.
 
-    >>> from attest import get_all_reporters
+    .. testsetup::
+
+        from attest import get_all_reporters
+
     >>> list(get_all_reporters())
     ['xml', 'plain', 'quickfix', 'fancy', 'auto']
 
