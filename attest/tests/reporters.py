@@ -62,14 +62,12 @@ def xml_reporter():
     with attest.capture_output() as (out, err):
         _meta.suite.run(attest.XmlReporter)
 
-    for line, expected in zip(out[:5] + out[7:], [
+    for line, expected in zip(out[:5] + out[-3:], [
         '<?xml version="1.0" encoding="UTF-8"?>',
         '<testreport tests="2">',
         '  <pass name="attest.tests._meta.passing"/>',
         '  <fail name="attest.tests._meta.failing" type="TestFailure">',
         '    Traceback (most recent call last):',
-        '      File &quot;%s&quot;, line %d, in failing' % (SOURCEFILE, LINENO),
-        '        assert value == 3',
         '    %s' % EXCEPTION,
         '  </fail>',
         '</testreport>',
@@ -86,7 +84,7 @@ def plain_reporter():
             _meta.suite.run(attest.PlainReporter)
 
     width, _ = utils.get_terminal_size()
-    for line, expected in zip(out[:7] + out[9:], [
+    for line, expected in zip(out[:7] + out[-3:], [
         '.F',
         '',
         'attest.tests._meta.failing',
@@ -94,14 +92,11 @@ def plain_reporter():
         '-> stdout',
         'E: stderr',
         'Traceback (most recent call last):',
-        '  File "%s", line %d, in failing' % (SOURCEFILE, LINENO),
-        '    assert value == 3',
         '%s' % EXCEPTION,
         '',
+        'Failures: 1/2 (1 assertions)',
     ]):
         assert line == expected
-
-    assert out[-1].split(' ')[:2] == ['Failures:', '1/2']
 
 
 @suite.test_if(COMPILES_AST)
