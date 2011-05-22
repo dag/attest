@@ -225,7 +225,7 @@ class Tests(object):
         return suite
 
     def run(self, reporter=auto_reporter,
-            full_tracebacks=False, fail_fast=False):
+            full_tracebacks=False, fail_fast=False, debugger=False):
         """Run all tests in this collection.
 
         :param reporter:
@@ -236,6 +236,8 @@ class Tests(object):
             Control if the call stack of Attest is hidden in tracebacks.
         :param fail_fast:
             Stop after the first failure.
+        :param debugger:
+            Enter PDB when tests fail.
 
         .. versionchanged:: 0.6 Added `full_tracebacks` and `fail_fast`.
 
@@ -245,7 +247,8 @@ class Tests(object):
             reporter = reporter()
         reporter.begin(self._tests)
         for test in self:
-            result = TestResult(test=test, full_tracebacks=full_tracebacks)
+            result = TestResult(test=test, full_tracebacks=full_tracebacks,
+                                debugger=debugger)
             try:
                 with capture_output() as (out, err):
                     if test() is False:

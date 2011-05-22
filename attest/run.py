@@ -28,6 +28,10 @@ def make_parser(**kwargs):
         ),
 
         option_list=[
+            make_option('-d', '--debugger',
+                action='store_true',
+                help='enter pdb for failing tests',
+            ),
             make_option('-r', '--reporter',
                 metavar='NAME',
                 help='select reporter by name'
@@ -73,7 +77,8 @@ def main(tests=None, **kwargs):
             tests = Tests(packages)
 
     tests.run(reporter, full_tracebacks=options.full_tracebacks,
-                        fail_fast=options.fail_fast)
+                        fail_fast=options.fail_fast,
+                        debugger=options.debugger)
 
 
 if __name__ == '__main__':

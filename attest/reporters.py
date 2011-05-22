@@ -48,6 +48,8 @@ class TestResult(object):
 
     full_tracebacks = False
 
+    debugger = False
+
     #: The test callable.
     test = None
 
@@ -62,6 +64,12 @@ class TestResult(object):
 
     #: A list of lines the test printed on the standard error.
     stderr = None
+
+    def debug(self):
+        if self.debugger:
+            import pdb
+            tb = self.exc_info[2]
+            pdb.post_mortem(tb)
 
     @property
     def test_name(self):
@@ -241,6 +249,7 @@ class PlainReporter(AbstractReporter):
                 print 'E:', '\n'.join(result.stderr)
             print result.traceback
             print
+            result.debug()
 
         print 'Failures: %s/%s (%s assertions)' % (len(self.failures),
                                                    self.total,
@@ -354,6 +363,8 @@ class FancyReporter(AbstractReporter):
 
             if result.assertion is not None:
                 print highlight(result.assertion, PythonLexer(), formatter)
+
+            result.debug()
 
         if self.failures:
             failed = colorize('red', str(len(self.failures)))
