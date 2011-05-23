@@ -1,5 +1,5 @@
-Deprecated Utilities
-====================
+Deprecated Features
+===================
 
 .. module:: attest.deprecated
 

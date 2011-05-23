@@ -1,5 +1,5 @@
-Hooking the Assert Statement
-============================
+The Assert Statement
+====================
 
 The most natural way to write test conditions in Python is the `assert`
 statement, but a downside to it is that it doesn't let you know the values
