@@ -35,12 +35,32 @@ Features
 * Treat tests as Python packages rather than script files
 
 
-.. toctree::
-   :hidden:
+Documentation
+-------------
 
-   install
-   quickstart 
-   api/index
-   glossary
-   changes
-   meta
+.. toctree::
+
+    install
+    quickstart 
+
+
+API Reference
+"""""""""""""
+
+.. toctree::
+
+    api/collectors
+    api/reporters
+    api/hook
+    api/contexts
+    api/deprecated
+
+
+Notes
+"""""
+
+.. toctree::
+
+    glossary
+    changes
+    meta
