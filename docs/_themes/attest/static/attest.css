@@ -81,10 +81,16 @@ dt:target, .highlighted
  ***********************/
 
 div.document
-  { margin: 0 auto; width: 950px; position: relative; }
+  { margin: 0 auto; padding: 0 1em; max-width: 900px; position: relative; }
 
 div.body, div.related
-  { width: 650px; margin-right: 250px; }
+  { max-width: 630px; margin-right: 270px; }
+
+div.sphinxsidebar
+  { position: absolute; right: 0; }
+
+div.sphinxsidebarwrapper
+  { position: fixed; max-width: 250px; top: 2em; bottom: 0; overflow: auto; }
 
 div.related
   { margin-bottom: 100px; margin-top: 50px; }
@@ -118,12 +124,6 @@ div.body p
 
 div.body ul
   { list-style-type: circle; }
-
-div.sphinxsidebar
-  { position: absolute; right: 0; }
-
-div.sphinxsidebarwrapper
-  { position: fixed; width: 250px; top: 2em; bottom: 0; overflow: auto; }
 
 div.sphinxsidebar ul
   { padding-left: 0; }
