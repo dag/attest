@@ -1,6 +1,5 @@
 from __future__ import with_statement
 import inspect
-import sys
 from contextlib import contextmanager
 from attest import Tests, assert_hook, utils, disable_imports, raises
 import attest

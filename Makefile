@@ -1,9 +1,12 @@
-.PHONY: test tags clean release official
+.PHONY: test flakes tags clean release official
 
 all: test
 
 test:
 	@attest -rquickfix
+
+flakes:
+	@pyflakes attest
 
 tags:
 	@ctags -R attest

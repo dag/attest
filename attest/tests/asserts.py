@@ -1,7 +1,6 @@
 from __future__ import with_statement
 
 from attest import Tests, Assert
-import attest
 
 
 suite = Tests()

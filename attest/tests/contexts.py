@@ -4,7 +4,7 @@ import sys
 import os
 from os import path
 
-from attest import Tests, assert_hook, Assert, TestFailure
+from attest import Tests, assert_hook, Assert
 import attest
 
 
