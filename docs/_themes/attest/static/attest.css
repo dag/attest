@@ -4,10 +4,10 @@
  ********/
 
 @import
-url("http://fonts.googleapis.com/css?family=Ubuntu:l,li,b|Arvo|Lekton:r,i,b|Josefin+Slab:r,i,b|IM+Fell+Double+Pica|IM+Fell+Double+Pica+SC");
+url("http://fonts.googleapis.com/css?family=Ubuntu:r,i,b|Arvo|Lekton:r,i,b|Josefin+Slab:r,i,b|IM+Fell+Double+Pica|IM+Fell+Double+Pica+SC");
 
 body
-  { font-family: 'Ubuntu', sans-serif; font-weight: 300; font-size: 110%; }
+  { font-family: 'Ubuntu', sans-serif; font-size: 110%; }
 
 h1, h2, h3, h4, h5, h6
   { font-family: 'Arvo', serif; font-weight: normal; }
