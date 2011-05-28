@@ -31,8 +31,18 @@ add_module_names = False
 modindex_common_prefix = ['attest.']
 
 
-html_theme = 'attest' if 'dev' not in release else 'default'
-html_theme_path = ['_themes']
+if 'dev' in release:  # RTD
+    html_theme = 'default'
+    html_theme_options =\
+        {'rightsidebar': True,
+         'stickysidebar': True,
+         'collapsiblesidebar': False,
+         'externalrefs': True,
+        }
+else:
+    html_theme = 'attest'
+    html_theme_path = ['_themes']
+
 html_static_path = ['_static']
 html_use_opensearch = 'http://packages.python.org/Attest'
 html_sidebars =\
