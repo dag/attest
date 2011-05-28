@@ -33,12 +33,6 @@ modindex_common_prefix = ['attest.']
 
 if 'dev' in release:  # RTD
     html_theme = 'default'
-    html_theme_options =\
-        {'rightsidebar': True,
-         'stickysidebar': True,
-         'collapsiblesidebar': False,
-         'externalrefs': True,
-        }
 else:
     html_theme = 'attest'
     html_theme_path = ['_themes']
