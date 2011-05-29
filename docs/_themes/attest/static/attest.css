@@ -4,7 +4,7 @@
  ********/
 
 @import
-url("http://fonts.googleapis.com/css?family=Ubuntu:r,i,b|Arvo|Lekton:r,i,b|Josefin+Slab:r,i,b|IM+Fell+Double+Pica|IM+Fell+Double+Pica+SC");
+url("http://fonts.googleapis.com/css?family=Ubuntu:r,i,b|Arvo|Cousine:r,i,b|Josefin+Slab:r,i,b|IM+Fell+Double+Pica|IM+Fell+Double+Pica+SC");
 
 body
   { font-family: 'Ubuntu', sans-serif; font-size: 110%; line-height: 160%; }
@@ -19,7 +19,7 @@ h2
   { font-size: 160%; }
 
 pre, tt, tt.descname
-  { font-family: 'Lekton', monospace; font-size: medium; }
+  { font-family: 'Cousine', monospace; font-size: medium; }
 
 pre
   { line-height: 130%; }
