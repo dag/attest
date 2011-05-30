@@ -6,14 +6,13 @@ from inspect    import getmembers
 from pkgutil    import iter_modules
 
 
-__all__ = (
-    'get_terminal_size',
-    'import_dotted_name',
-    'deep_iter_modules',
-    'deep_get_members',
-    'parse_options',
-    'nested',
-)
+__all__ = ['get_terminal_size',
+           'import_dotted_name',
+           'deep_iter_modules',
+           'deep_get_members',
+           'parse_options',
+           'nested',
+          ]
 
 
 def get_terminal_size(default=(80, 24)):

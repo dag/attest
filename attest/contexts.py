@@ -13,13 +13,12 @@ from attest            import statistics
 from attest.deprecated import _repr
 
 
-__all__ = (
-    'capture_output',
-    'disable_imports',
-    'Error',
-    'raises',
-    'tempdir',
-)
+__all__ = ['capture_output',
+           'disable_imports',
+           'Error',
+           'raises',
+           'tempdir',
+          ]
 
 
 @contextmanager

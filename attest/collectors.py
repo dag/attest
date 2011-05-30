@@ -13,12 +13,11 @@ from attest.reporters import auto_reporter, AbstractReporter, TestResult
 from attest.utils     import import_dotted_name, deep_get_members, nested
 
 
-__all__ = (
-    'Tests',
-    'test_if',
-    'test',
-    'TestBase',
-)
+__all__ = ['Tests',
+           'test_if',
+           'test',
+           'TestBase',
+          ]
 
 
 class Tests(object):

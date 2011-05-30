@@ -5,11 +5,10 @@ from contextlib import contextmanager
 from attest import statistics
 
 
-__all__ = (
-    'Loader',
-    'assert_',
-    'Assert',
-)
+__all__ = ['Loader',
+           'assert_',
+           'Assert',
+          ]
 
 
 class Loader(object):

@@ -9,14 +9,13 @@ from attest         import ast, statistics
 from attest.codegen import to_source, SourceGenerator
 
 
-__all__ = (
-    'COMPILES_AST',
-    'ExpressionEvaluator',
-    'TestFailure',
-    'assert_hook',
-    'AssertTransformer',
-    'AssertImportHook',
-)
+__all__ = ['COMPILES_AST',
+           'ExpressionEvaluator',
+           'TestFailure',
+           'assert_hook',
+           'AssertTransformer',
+           'AssertImportHook',
+          ]
 
 
 try:

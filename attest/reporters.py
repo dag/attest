@@ -22,17 +22,16 @@ from attest.hook import (ExpressionEvaluator,
                          AssertImportHook)
 
 
-__all__ = (
-    'TestResult',
-    'AbstractReporter',
-    'PlainReporter',
-    'FancyReporter',
-    'auto_reporter',
-    'XmlReporter',
-    'QuickFixReporter',
-    'get_reporter_by_name',
-    'get_all_reporters',
-)
+__all__ = ['TestResult',
+           'AbstractReporter',
+           'PlainReporter',
+           'FancyReporter',
+           'auto_reporter',
+           'XmlReporter',
+           'QuickFixReporter',
+           'get_reporter_by_name',
+           'get_all_reporters',
+          ]
 
 
 class TestResult(object):
