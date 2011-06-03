@@ -80,11 +80,11 @@ def main(tests=None, **kwargs):
             names = [name for name in os.listdir('.')
                           if path.isfile('%s/__init__.py' % name)]
 
-    if options.native_assert:
-        tests = Tests(names)
-    else:
-        with AssertImportHook():
+        if options.native_assert:
             tests = Tests(names)
+        else:
+            with AssertImportHook():
+                tests = Tests(names)
 
     tests.run(reporter, full_tracebacks=options.full_tracebacks,
                         fail_fast=options.fail_fast,
