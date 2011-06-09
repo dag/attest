@@ -108,3 +108,8 @@ def quickfix_reporter():
             _meta.suite.run(attest.QuickFixReporter)
 
     assert out == ['%s:%d: TestFailure' % (SOURCEFILE, LINENO)]
+
+
+@suite.test
+def empty_run_zero_division_regression():
+    Tests().run(attest.FancyReporter)

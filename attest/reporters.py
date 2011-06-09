@@ -300,7 +300,8 @@ class FancyReporter(AbstractReporter):
         widgets = ['[', Percentage(), '] ', SimpleProgress(), ' ', ETA()]
         self.counter = 0
         self.progress = ProgressBar(maxval=len(tests), widgets=widgets)
-        self.progress.start()
+        if tests:
+            self.progress.start()
         self.passes = []
         self.failures = []
 
@@ -331,7 +332,8 @@ class FancyReporter(AbstractReporter):
             from pygments.formatters import Terminal256Formatter
             formatter = Terminal256Formatter(style=self.style)
 
-        self.progress.finish()
+        if self.counter:
+            self.progress.finish()
         print
 
         width, _ = utils.get_terminal_size()
