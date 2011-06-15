@@ -18,6 +18,8 @@ def eval():
     }
 
     for expr, result in samples.iteritems():
-        ev = repr(ExpressionEvaluator(expr, globals(), locals()))
+        expr = ExpressionEvaluator(expr, globals(), locals())
+        expr.late_visit()
+        ev = repr(expr)
         assert ev == result
         assert bool(ev) is True

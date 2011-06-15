@@ -50,8 +50,12 @@ class ExpressionEvaluator(SourceGenerator):
         self.expr = expr
         self.globals, self.locals = globals, locals
         self.result = []
-        node = ast.parse(self.expr).body[0].value
-        self.visit(node)
+        self.node = ast.parse(self.expr).body[0].value
+
+    # Trigger visit after init because we don't want to
+    # evaluate twice in case of a successful assert
+    def late_visit(self):
+        self.visit(self.node)
 
     def __repr__(self):
         return ''.join(self.result)
@@ -121,6 +125,8 @@ def assert_hook(expr, msg='', globals=None, locals=None):
         locals = inspect.stack()[1][0].f_locals
     value = ExpressionEvaluator(expr, globals, locals)
     if not value:
+        # Visit only if assertion fails
+        value.late_visit()
         raise TestFailure(value, msg)
 
 
