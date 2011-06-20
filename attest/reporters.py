@@ -48,7 +48,6 @@ class TestResult(object):
     full_tracebacks = False
 
     debugger = False
-    ipdb_debugger = False
 
     #: The test callable.
     test = None
@@ -70,10 +69,6 @@ class TestResult(object):
             import pdb
             tb = self.exc_info[2]
             pdb.post_mortem(tb)
-        elif self.ipdb_debugger:
-            import ipdb
-            tb = self.exc_info[2]
-            ipdb.post_mortem(tb)
 
     @property
     def test_name(self):

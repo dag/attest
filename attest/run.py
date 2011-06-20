@@ -35,10 +35,6 @@ def make_parser(**kwargs):
                 action='store_true',
                 help='enter pdb for failing tests',
             ),
-            make_option('-i', '--ipdb-debugger',
-                action='store_true',
-                help='enter ipdb for failing tests',
-            ),
             make_option('-r', '--reporter',
                 metavar='NAME',
                 help='select reporter by name'
@@ -92,8 +88,7 @@ def main(tests=None, **kwargs):
 
     tests.run(reporter, full_tracebacks=options.full_tracebacks,
                         fail_fast=options.fail_fast,
-                        debugger=options.debugger,
-                        ipdb_debugger=options.ipdb_debugger)
+                        debugger=options.debugger)
 
 
 if __name__ == '__main__':
