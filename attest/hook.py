@@ -48,7 +48,11 @@ class ExpressionEvaluator(SourceGenerator):
 
     def __init__(self, expr, globals, locals):
         self.expr = expr
-        self.globals, self.locals = globals, locals
+        # Putting locals in globals for closures
+        self.globals = dict(globals)
+        self.locals = locals
+        self.globals.update(self.locals)
+
         self.result = []
         self.node = ast.parse(self.expr).body[0].value
 
