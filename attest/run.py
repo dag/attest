@@ -43,6 +43,10 @@ def make_parser(**kwargs):
                 action='store_true',
                 help='list available reporters'
             ),
+            make_option('-n', '--no-capture',
+                action='store_true',
+                help="don't capture stderr and stdout"
+            ),
             make_option('--full-tracebacks',
                 action='store_true',
                 help="don't clean tracebacks"
@@ -88,7 +92,8 @@ def main(tests=None, **kwargs):
 
     tests.run(reporter, full_tracebacks=options.full_tracebacks,
                         fail_fast=options.fail_fast,
-                        debugger=options.debugger)
+                        debugger=options.debugger,
+                        no_capture=options.no_capture)
 
 
 if __name__ == '__main__':
