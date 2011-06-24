@@ -224,7 +224,8 @@ class Tests(object):
         return suite
 
     def run(self, reporter=auto_reporter,
-            full_tracebacks=False, fail_fast=False, debugger=False):
+            full_tracebacks=False, fail_fast=False,
+            debugger=False, no_capture=False):
         """Run all tests in this collection.
 
         :param reporter:
@@ -249,9 +250,14 @@ class Tests(object):
             result = TestResult(test=test, full_tracebacks=full_tracebacks,
                                 debugger=debugger)
             try:
-                with capture_output() as (out, err):
+                out, err = [], []
+                if no_capture:
                     if test() is False:
                         raise AssertionError('test() is False')
+                else:
+                    with capture_output() as (out, err):
+                        if test() is False:
+                            raise AssertionError('test() is False')
             except BaseException, e:
                 if isinstance(e, KeyboardInterrupt):
                     break
