@@ -37,6 +37,7 @@ BINOP_SYMBOLS = {
     Add:        '+',
     Sub:        '-',
     Mult:       '*',
+    Pow:        '**',
     Div:        '/',
     FloorDiv:   '//',
     Mod:        '%',
