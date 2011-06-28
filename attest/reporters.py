@@ -130,6 +130,8 @@ class TestResult(object):
 
     @property
     def equality_diff(self):
+        if not isinstance(self.error, TestFailure):
+            return
         # Create a dummy test case to use its assert* methods
         case = unittest.FunctionTestCase(lambda: None)
         # Type-specific methods are only available since Python 2.7
@@ -340,7 +342,8 @@ class FancyReporter(AbstractReporter):
     def finished(self):
         from pygments.console import colorize
         from pygments import highlight
-        from pygments.lexers import PythonTracebackLexer, PythonLexer
+        from pygments.lexers import (PythonTracebackLexer, PythonLexer,
+                                     DiffLexer)
 
         if self.style in ('light', 'dark'):
             from pygments.formatters import TerminalFormatter
@@ -390,7 +393,7 @@ class FancyReporter(AbstractReporter):
 
             equality_diff = result.equality_diff
             if equality_diff is not None:
-                print equality_diff
+                print highlight(equality_diff, DiffLexer(), formatter)
 
             result.debug()
 
