@@ -5,6 +5,8 @@ import inspect
 import os
 import sys
 import traceback
+import unittest
+import _ast
 
 from os            import path
 from pkg_resources import iter_entry_points
@@ -125,6 +127,26 @@ class TestResult(object):
             expressions = str(self.error.value)
             return '\n'.join('assert %s' % expr
                              for expr in expressions.splitlines())
+
+    @property
+    def equality_diff(self):
+        # Create a dummy test case to use its assert* methods
+        case = unittest.FunctionTestCase(lambda: None)
+        # Type-specific methods are only available since Python 2.7
+        if hasattr(case, '_type_equality_funcs'):
+            node = self.error.value.node
+            if (isinstance(node, _ast.Compare) and len(node.ops) == 1 and
+                    isinstance(node.ops[0], _ast.Eq)):
+                # The assertion is something like 'left == right'
+                left = self.error.value.eval(node.left)
+                right = self.error.value.eval(node.comparators[0])
+                if type(left) is type(right):
+                    asserter = case._type_equality_funcs.get(type(left))
+                    if asserter is not None:
+                        try:
+                            asserter(left, right)
+                        except AssertionError, exc:
+                            return '%s\n' % exc.args[0]
 
 
 def _test_loader_factory(reporter):
@@ -362,8 +384,13 @@ class FancyReporter(AbstractReporter):
                             PythonTracebackLexer(),
                             formatter)
 
-            if result.assertion is not None:
-                print highlight(result.assertion, PythonLexer(), formatter)
+            assertion = result.assertion
+            if assertion is not None:
+                print highlight(assertion, PythonLexer(), formatter)
+
+            equality_diff = result.equality_diff
+            if equality_diff is not None:
+                print equality_diff
 
             result.debug()
 
