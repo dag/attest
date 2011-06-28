@@ -130,6 +130,8 @@ class TestResult(object):
 
     @property
     def equality_diff(self):
+        if not isinstance(self.error, TestFailure):
+            return
         # Create a dummy test case to use its assert* methods
         case = unittest.FunctionTestCase(lambda: None)
         # Type-specific methods are only available since Python 2.7
