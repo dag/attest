@@ -291,6 +291,9 @@ class Tests(object):
         ``-l``, ``--list-reporters``
             List the names of all installed reporters
 
+        ``-p FILENAME``, ``--profile FILENAME``
+            Run the tests in cProfile and store the results in FILENAME
+
 
         Remaining arguments are passed to the reporter.
 
