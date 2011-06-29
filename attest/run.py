@@ -59,6 +59,10 @@ def make_parser(**kwargs):
                 action='store_true',
                 help="don't hook the assert statement"
             ),
+            make_option('-p', '--profile',
+                metavar='FILENAME',
+                help='enable tests profiling and store results in filename'
+            ),
         ]
     )
     args.update(kwargs)
@@ -90,10 +94,19 @@ def main(tests=None, **kwargs):
             with AssertImportHook():
                 tests = Tests(names)
 
-    tests.run(reporter, full_tracebacks=options.full_tracebacks,
-                        fail_fast=options.fail_fast,
-                        debugger=options.debugger,
-                        no_capture=options.no_capture)
+    def run():
+        tests.run(reporter, full_tracebacks=options.full_tracebacks,
+                            fail_fast=options.fail_fast,
+                            debugger=options.debugger,
+                            no_capture=options.no_capture)
+
+    if options.profile:
+        filename = options.profile
+        import cProfile
+        cProfile.runctx('run()', globals(), locals(), filename)
+        print 'Wrote profiling results to %r.' % (filename,)
+    else:
+        run()
 
 
 if __name__ == '__main__':
