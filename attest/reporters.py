@@ -10,7 +10,7 @@ import _ast
 
 from os            import path
 from pkg_resources import iter_entry_points
-
+from datetime      import datetime
 try:
     from abc import ABCMeta, abstractmethod
 except ImportError:
@@ -30,6 +30,7 @@ __all__ = ['TestResult',
            'FancyReporter',
            'auto_reporter',
            'XmlReporter',
+           'XUnitReporter',
            'QuickFixReporter',
            'get_reporter_by_name',
            'get_all_reporters',
@@ -466,6 +467,70 @@ class XmlReporter(AbstractReporter):
 
     def finished(self):
         print '</testreport>'
+
+
+class XUnitReporter(AbstractReporter):
+    """Report the result of a testrun in an XUnit XML format.
+    """
+
+    def __init__(self):
+        self.escape = __import__('cgi').escape
+        self.reports = []
+        self.errors = 0
+        self.failures = 0
+        self.successes = 0
+        try:
+            import socket
+            self.hostname = socket.gethostname()
+        except:
+            self.hostname = 'unknown'
+        self.timestamp = datetime.isoformat(datetime.today())
+
+    def begin(self, tests):
+        pass
+
+    def success(self, result):
+        self.successes += 1
+        self.reports.append(
+            '<testcase classname="%s" name="%s" time="0" />' % (
+                result.test_name, result.test.__name__))
+
+    def failure(self, result):
+        if isinstance(result.error, AssertionError):
+            tag = 'failure'
+            self.failures += 1
+        else:
+            tag = 'error'
+            self.errors += 1
+
+        error = '<testcase classname="%s" name="%s" time="0">\n' % (
+            result.test_name, result.test.__name__)
+
+        error += '<%s type="%s" message="%s"><![CDATA[\n' % (
+            tag,
+            result.exc_info[0].__name__,
+            result.exc_info[1])
+        error += self.escape(
+            '\n'.join(line
+                    for line in
+                    result.traceback.splitlines()),
+            quote=True)
+        error += '\n]]>\n</%s>\n</testcase>' % tag
+        self.reports.append(error)
+
+    def finished(self):
+        print '<?xml version="1.0" encoding="UTF-8"?>'
+        print ('<testsuite name="attest" tests="%d" ' +
+               'errors="%d" failures="%d" ' +
+               'hostname="%s" timestamp="%s" time="0">') % (
+            (self.errors + self.failures + self.successes),
+            self.errors,
+            self.failures,
+            self.hostname,
+            self.timestamp)
+        print '<properties />'
+        print '\n'.join(self.reports)
+        print '</testsuite>'
 
 
 class QuickFixReporter(AbstractReporter):

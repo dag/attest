@@ -47,9 +47,10 @@ setup(
         'Pygments',
     ],
 
-    entry_points = {
+    entry_points={
         'attest.reporters': [
             'xml = attest:XmlReporter',
+            'xunit = attest:XUnitReporter',
             'quickfix = attest:QuickFixReporter',
             'plain = attest:PlainReporter',
             'fancy = attest:FancyReporter',
