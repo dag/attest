@@ -473,7 +473,8 @@ class XUnitReporter(AbstractReporter):
     """Report the result of a testrun in an XUnit XML format.
     """
 
-    def __init__(self):
+    def __init__(self, file=None):
+        self.file = file
         self.escape = __import__('cgi').escape
         self.reports = []
         self.errors = 0
@@ -494,6 +495,8 @@ class XUnitReporter(AbstractReporter):
         self.reports.append(
             '<testcase classname="%s" name="%s" time="0" />' % (
                 result.test_name, result.test.__name__))
+        if self.file:
+            print result.test_name, "... ok"
 
     def failure(self, result):
         if isinstance(result.error, AssertionError):
@@ -517,20 +520,31 @@ class XUnitReporter(AbstractReporter):
             quote=True)
         error += '\n]]>\n</%s>\n</testcase>' % tag
         self.reports.append(error)
+        if self.file:
+            print result.test_name, "... ", tag
 
     def finished(self):
-        print '<?xml version="1.0" encoding="UTF-8"?>'
-        print ('<testsuite name="attest" tests="%d" ' +
-               'errors="%d" failures="%d" ' +
-               'hostname="%s" timestamp="%s" time="0">') % (
-            (self.errors + self.failures + self.successes),
-            self.errors,
-            self.failures,
-            self.hostname,
-            self.timestamp)
-        print '<properties />'
-        print '\n'.join(self.reports)
-        print '</testsuite>'
+        out = '<?xml version="1.0" encoding="UTF-8"?>\n'
+        out += ('<testsuite name="attest" tests="%d" ' +
+                   'errors="%d" failures="%d" ' +
+                   'hostname="%s" timestamp="%s" time="0">\n') % (
+                (self.errors + self.failures + self.successes),
+                self.errors,
+                self.failures,
+                self.hostname,
+                self.timestamp)
+        out += '<properties />\n'
+        out += '\n'.join(self.reports)
+        out += '\n</testsuite>\n'
+
+        if not self.file:
+            print out
+        else:
+            with open(self.file, "w") as f:
+                f.write(out)
+
+        if self.failures + self.errors:
+            raise SystemExit(1)
 
 
 class QuickFixReporter(AbstractReporter):
