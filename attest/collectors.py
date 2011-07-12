@@ -6,6 +6,7 @@ import sys
 
 from contextlib import contextmanager
 from functools  import wraps
+from time import time
 
 from attest           import statistics
 from attest.contexts  import capture_output
@@ -249,6 +250,7 @@ class Tests(object):
         for test in self:
             result = TestResult(test=test, full_tracebacks=full_tracebacks,
                                 debugger=debugger)
+            result.time = time()
             try:
                 out, err = [], []
                 if no_capture:
@@ -261,6 +263,7 @@ class Tests(object):
             except BaseException, e:
                 if isinstance(e, KeyboardInterrupt):
                     break
+                result.time = time() - result.time
                 result.error = e
                 result.stdout, result.stderr = out, err
                 result.exc_info = sys.exc_info()
@@ -268,6 +271,7 @@ class Tests(object):
                 if fail_fast:
                     break
             else:
+                result.time = time() - result.time
                 result.stdout, result.stderr = out, err
                 reporter.success(result)
         try:

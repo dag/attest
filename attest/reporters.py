@@ -493,8 +493,8 @@ class XUnitReporter(AbstractReporter):
     def success(self, result):
         self.successes += 1
         self.reports.append(
-            '<testcase classname="%s" name="%s" time="0" />' % (
-                result.test_name, result.test.__name__))
+            '<testcase classname="%s" name="%s" time="%f" />' % (
+                result.test_name, result.test.__name__, result.time))
         if self.file:
             print result.test_name, "... ok"
 
@@ -506,8 +506,8 @@ class XUnitReporter(AbstractReporter):
             tag = 'error'
             self.errors += 1
 
-        error = '<testcase classname="%s" name="%s" time="0">\n' % (
-            result.test_name, result.test.__name__)
+        error = '<testcase classname="%s" name="%s" time="%d">\n' % (
+            result.test_name, result.test.__name__, result.time)
 
         error += '<%s type="%s" message="%s"><![CDATA[\n' % (
             tag,
