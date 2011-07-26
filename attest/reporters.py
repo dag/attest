@@ -134,6 +134,7 @@ class TestResult(object):
             return
         # Create a dummy test case to use its assert* methods
         case = unittest.FunctionTestCase(lambda: None)
+        case.maxDiff = 2000
         # Type-specific methods are only available since Python 2.7
         if hasattr(case, '_type_equality_funcs'):
             node = self.error.value.node
