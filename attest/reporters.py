@@ -384,17 +384,25 @@ class FancyReporter(AbstractReporter):
         for result in self.failures:
             show(result)
 
+            # result.traceback seems to be in UTF-8 on my system (eg. for
+            # literal unicode strings) but I guess this depends on the source
+            # file encoding. Tell Pygments to guess: try UTF-8 and then latin1.
+            # Without an `encoding` argument, Pygments just uses latin1.
             print highlight(result.traceback,
-                            PythonTracebackLexer(),
+                            PythonTracebackLexer(encoding='guess'),
                             formatter)
 
             assertion = result.assertion
             if assertion is not None:
-                print highlight(assertion, PythonLexer(), formatter)
+                print highlight(assertion,
+                                PythonLexer(encoding='guess'),
+                                formatter)
 
             equality_diff = result.equality_diff
             if equality_diff is not None:
-                print highlight(equality_diff, DiffLexer(), formatter)
+                print highlight(equality_diff,
+                                DiffLexer(encoding='guess'),
+                                formatter)
 
             result.debug()
 
