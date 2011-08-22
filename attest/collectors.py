@@ -225,7 +225,7 @@ class Tests(object):
 
     def run(self, reporter=auto_reporter,
             full_tracebacks=False, fail_fast=False,
-            debugger=False, no_capture=False):
+            debugger=False, no_capture=False, keyboard_interrupt=False):
         """Run all tests in this collection.
 
         :param reporter:
@@ -238,6 +238,8 @@ class Tests(object):
             Stop after the first failure.
         :param debugger:
             Enter PDB when tests fail.
+        :param keyboard_interrupt:
+            Let KeyboardInterrupt exceptions (CTRL+C) propagate.
 
         .. versionchanged:: 0.6 Added `full_tracebacks` and `fail_fast`.
 
@@ -258,9 +260,12 @@ class Tests(object):
                     with capture_output() as (out, err):
                         if test() is False:
                             raise AssertionError('test() is False')
-            except BaseException, e:
-                if isinstance(e, KeyboardInterrupt):
+            except KeyboardInterrupt:
+                if keyboard_interrupt:
+                    raise
+                else:
                     break
+            except BaseException, e:
                 result.error = e
                 result.stdout, result.stderr = out, err
                 result.exc_info = sys.exc_info()
