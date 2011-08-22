@@ -318,6 +318,7 @@ class FancyReporter(AbstractReporter):
         self.style = style
         self.verbose = verbose
         self.colorscheme = colorscheme
+        self.total_time  = 0
         if style is None:
             self.style = os.environ.get('ATTEST_PYGMENTS_STYLE', 'light')
 
@@ -333,11 +334,13 @@ class FancyReporter(AbstractReporter):
 
     def success(self, result):
         self.counter += 1
+        self.total_time += result.time
         self.progress.update(self.counter)
         self.passes.append(result)
 
     def failure(self, result):
         self.counter += 1
+        self.total_time += result.time
         self.progress.update(self.counter)
         self.failures.append(result)
 
@@ -411,8 +414,8 @@ class FancyReporter(AbstractReporter):
             failed = colorize('red', str(len(self.failures)))
         else:
             failed = len(self.failures)
-        print 'Failures: %s/%s (%s assertions)' % (failed, self.counter,
-                                                   statistics.assertions)
+        print 'Failures: %s/%s (%s assertions, %.3f seconds)' % (
+            failed, self.counter, statistics.assertions, self.total_time)
 
         if self.failures:
             raise SystemExit(1)
@@ -489,6 +492,7 @@ class XUnitReporter(AbstractReporter):
         self.errors = 0
         self.failures = 0
         self.successes = 0
+        self.total_time = 0
         try:
             import socket
             self.hostname = socket.gethostname()
@@ -501,6 +505,7 @@ class XUnitReporter(AbstractReporter):
 
     def success(self, result):
         self.successes += 1
+        self.total_time += result.time
         self.reports.append(
             '<testcase classname="%s" name="%s" time="%f" />' % (
                 result.test_name, result.test.__name__, result.time))
@@ -508,6 +513,7 @@ class XUnitReporter(AbstractReporter):
             print result.test_name, "... ok"
 
     def failure(self, result):
+        self.total_time += result.time
         if isinstance(result.error, AssertionError):
             tag = 'failure'
             self.failures += 1
@@ -515,7 +521,7 @@ class XUnitReporter(AbstractReporter):
             tag = 'error'
             self.errors += 1
 
-        error = '<testcase classname="%s" name="%s" time="%d">\n' % (
+        error = '<testcase classname="%s" name="%s" time="%f">\n' % (
             result.test_name, result.test.__name__, result.time)
 
         error += '<%s type="%s" message="%s"><![CDATA[\n' % (
@@ -536,12 +542,13 @@ class XUnitReporter(AbstractReporter):
         out = '<?xml version="1.0" encoding="UTF-8"?>\n'
         out += ('<testsuite name="attest" tests="%d" ' +
                    'errors="%d" failures="%d" ' +
-                   'hostname="%s" timestamp="%s" time="0">\n') % (
+                   'hostname="%s" timestamp="%s" time="%f">\n') % (
                 (self.errors + self.failures + self.successes),
                 self.errors,
                 self.failures,
                 self.hostname,
-                self.timestamp)
+                self.timestamp,
+                self.total_time)
         out += '<properties />\n'
         out += '\n'.join(self.reports)
         out += '\n</testsuite>\n'
