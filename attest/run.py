@@ -63,6 +63,10 @@ def make_parser(**kwargs):
                 metavar='FILENAME',
                 help='enable tests profiling and store results in filename'
             ),
+            make_option('-k', '--keyboard-interrupt',
+                action='store_true',
+                help="Let KeyboardInterrupt exceptions (CTRL+C) propagate"
+            ),
         ]
     )
     args.update(kwargs)
@@ -98,7 +102,8 @@ def main(tests=None, **kwargs):
         tests.run(reporter, full_tracebacks=options.full_tracebacks,
                             fail_fast=options.fail_fast,
                             debugger=options.debugger,
-                            no_capture=options.no_capture)
+                            no_capture=options.no_capture,
+                            keyboard_interrupt=options.keyboard_interrupt)
 
     if options.profile:
         filename = options.profile
