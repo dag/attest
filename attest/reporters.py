@@ -527,7 +527,7 @@ class XUnitReporter(AbstractReporter):
         error += '<%s type="%s" message="%s"><![CDATA[\n' % (
             tag,
             result.exc_info[0].__name__,
-            result.exc_info[1])
+            repr(result.exc_info[1]).replace('"', '\\"'))
         error += self.escape(
             '\n'.join(line
                     for line in
