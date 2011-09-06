@@ -21,6 +21,36 @@ __all__ = ['Tests',
           ]
 
 
+class UnitTestTestResult(object):
+    def __init__(self):
+        self.problem = None
+
+    def startTest(self, test): pass
+    def addSuccess(self, test): pass
+    def stopTest(self, test): pass
+
+    def addError(self, test, exc_info):
+        self.problem = exc_info
+    def addFailure(self, test, exc_info):
+        self.problem = exc_info
+
+    def thaw(self):
+        """If any exception is reported during execution of TestCase.run(),
+        re-raise it."""
+        if self.problem:
+            raise self.problem[0], self.problem[1], self.problem[2]
+
+
+class UnitTestTestCaseMixin(object):
+    def run(self):
+        """Run test case with custom result collector to undo damage made by
+        TestCase."""
+        self.__name__ = self.__class__.__name__
+        result = UnitTestTestResult()
+        super(UnitTestTestCaseMixin, self).run(result)
+        result.thaw()
+
+
 class Tests(object):
     """Collection of test functions.
 
@@ -215,6 +245,12 @@ class Tests(object):
         for test in tests:
             if not test in self._tests:
                 self._tests.append(test)
+
+    def unittest_wrap(self, test):
+        """Merge in @unittest.TestCase test case."""
+        class Test(UnitTestTestCaseMixin, test):
+            pass
+        self._tests.append(Test())
 
     def test_suite(self):
         """Create a :class:`unittest.TestSuite` from this collection."""
