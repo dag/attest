@@ -4,6 +4,8 @@ from __future__ import with_statement
 import inspect
 import re
 import sys
+import types
+import unittest
 
 from contextlib import contextmanager
 from functools  import wraps
@@ -22,6 +24,44 @@ __all__ = ['Tests',
            'TestBase',
           ]
 
+class TestCaseProxy(object):
+    def __init__(self, testcase):
+        self.testcase = testcase
+
+        def _testcase_debug(self):
+            """Run the test without collecting errors in a TestResult"""
+            self.setUp()
+            try:
+                getattr(self, self._testMethodName)()
+            finally:
+                self.tearDown()
+                while self._cleanups:
+                    function, args, kwargs = self._cleanups.pop(-1)
+                    function(*args, **kwargs)
+        self.testcase.debug = types.MethodType(_testcase_debug, self.testcase)
+
+    def __call__(self):
+        return self.testcase.debug()
+
+    def __eq__(self, rhs):
+        if not isinstance(rhs, TestCaseProxy):
+            return False
+        return self.testcase == rhs.testcase
+
+
+def find_test_case_methods(test_class):
+    def is_test_method(attrname):
+        return attrname.startswith('test') \
+            and callable(getattr(test_class, attrname))
+    return sorted(filter(is_test_method, dir(test_class)))
+
+def find_test_case_entries(test_class):
+    method_names = find_test_case_methods(test_class)
+    if method_names:
+        for method_name in method_names:
+            yield TestCaseProxy(test_class(method_name))
+    else:
+        yield TestCaseProxy(test_class())
 
 class Tests(object):
     """Collection of test functions.
@@ -203,7 +243,15 @@ class Tests(object):
 
         """
         if inspect.isclass(tests):
-            self._tests.extend(tests())
+            if issubclass(tests, unittest.TestCase):
+                self.register(find_test_case_entries(tests))
+            else:
+                test = tests()
+                try:
+                    iterable = iter(test)
+                except TypeError:
+                    iterable = [test]
+                self.register(iterable)
             return tests
         elif isinstance(tests, basestring):
             def istests(obj):
@@ -215,6 +263,8 @@ class Tests(object):
                 return
             tests = obj
         for test in tests:
+            if isinstance(test, unittest.TestCase):
+                test = TestCaseProxy(test)
             if not test in self._tests:
                 self._tests.append(test)
 

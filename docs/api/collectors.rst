@@ -16,6 +16,7 @@ and separation.
   * Lists of lambdas and function references.
   * :class:`Tests` instances.
   * Instances of subclasses of :class:`TestBase`.
+  * Instances of subclasses of :class:`unittest.TestCase`.
   * Classes are instantiated and returned, allowing :meth:`Tests.register`
     to be used as a class decorator in Python 2.6 or later.
 

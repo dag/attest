@@ -4,7 +4,8 @@ Attest
 
 Attest is a unit testing framework built from the ground up with idiomatic
 Python in mind. Unlike others, it is not built on top of unittest though it
-provides compatibility by creating TestSuites from Attest collections.
+provides compatibility by creating TestSuites from Attest collections and adding
+TestCases to Attest collections.
 
 It has a functional API inspired by `Flask`_ and a class-based API that
 mimics Python itself. The core avoids complicated assumptions leaving you

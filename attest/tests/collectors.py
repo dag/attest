@@ -1,6 +1,7 @@
 from __future__ import with_statement
 from attest import (AbstractReporter, Tests, TestBase, Assert, assert_hook,
                     test, TestFailure)
+import unittest
 
 
 class TestReporter(AbstractReporter):
@@ -177,7 +178,7 @@ def conditional():
 
 
 @suite.test
-def unittest():
+def unittest_compat():
     """Compatibility with Python's unittest package"""
     signals = set()
 
@@ -238,3 +239,134 @@ def testcase_naming():
     assert TestCase.test_something
     assert TestCase.test_lambda
 
+def unittest_wrap():
+    """@Tests().unittest_wrap"""
+
+    col = Tests()
+
+    class UnitTestTestCase(unittest.TestCase):
+        def runTest(self):
+            pass
+    UnitTestTestCase = col.register(UnitTestTestCase)
+
+    assert len(col) == 1
+
+@suite.test
+def unittest_run_pass():
+    """Wrapping passing TestCase"""
+
+    col = Tests()
+
+    class UnitTestTestCase(unittest.TestCase):
+        def runTest(self):
+            pass
+    UnitTestTestCase = col.register(UnitTestTestCase)
+
+    result = TestReporter()
+    col.run(result)
+    assert len(result.failed) == 0
+    assert len(result.succeeded) == 1
+
+@suite.test
+def unittest_run_fail_assert():
+    """Wrapping TestCase failing with assert"""
+
+    col = Tests()
+
+    class UnitTestTestCase(unittest.TestCase):
+        def runTest(self):
+            assert 2 + 2 == 5
+    UnitTestTestCase = col.register(UnitTestTestCase)
+
+    result = TestReporter()
+    col.run(result)
+
+    assert len(result.failed) == 1
+    assert len(result.succeeded) == 0
+
+@suite.test
+def unittest_add_instance():
+    """Wrapping TestCase instances"""
+
+    col = Tests()
+
+    class PassingUnitTestTestCase(unittest.TestCase):
+        def runTest(self):
+            pass
+    class FailingUnitTestTestCase(unittest.TestCase):
+        def runTest(self):
+            assert 2 + 2 == 5
+
+    col.register([PassingUnitTestTestCase(), FailingUnitTestTestCase()])
+
+    result = TestReporter()
+    col.run(result)
+
+    assert len(result.failed) == 1
+    assert len(result.succeeded) == 1
+
+@suite.test
+def unittest_check_setup_teardown():
+    """Checking setUp/tearDown functioning"""
+
+    col = Tests()
+
+    class SetUpTearDownTestCase(unittest.TestCase):
+        def __init__(self):
+            self.set_up_invoked = False
+            self.tear_down_invoked = False
+            super(SetUpTearDownTestCase, self).__init__()
+
+        def setUp(self):
+            self.set_up_invoked = True
+        def runTest(self):
+            pass
+        def tearDown(self):
+            if not self.set_up_invoked:
+                raise RuntimeError()
+            self.tear_down_invoked = True
+
+    t = SetUpTearDownTestCase()
+    col.register([t])
+
+    result = TestReporter()
+    col.run(result)
+
+    assert len(result.succeeded) == 1
+    assert t.set_up_invoked == True
+    assert t.tear_down_invoked == True
+
+@suite.test
+def unittest_check_test_functions():
+    """Checking test* functions"""
+
+    col = Tests()
+
+    class MultiTestCase(unittest.TestCase):
+        def setUp(self):
+            MultiTestCase.set_up_invoked += 1
+        def testFailOne(self):
+            assert False
+        def testFailTwo(self):
+            assert False
+        def testPassOne(self):
+            assert True
+        def testPassTwo(self):
+            assert True
+        def testPassThree(self):
+            assert True
+        def tearDown(self):
+            MultiTestCase.tear_down_invoked += 1
+
+    MultiTestCase.set_up_invoked = 0
+    MultiTestCase.tear_down_invoked = 0
+
+    col.register(MultiTestCase)
+
+    result = TestReporter()
+    col.run(result)
+
+    assert MultiTestCase.set_up_invoked == 5
+    assert MultiTestCase.tear_down_invoked == 5
+    assert len(result.succeeded) == 3
+    assert len(result.failed) == 2
