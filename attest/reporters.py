@@ -24,6 +24,17 @@ from attest.hook import (ExpressionEvaluator,
                          AssertImportHook)
 
 
+# TODO: find some better test
+ANSI_COLORS_SUPPORT = True
+if sys.platform == 'win32':
+    try:
+        import colorama
+    except ImportError:
+        ANSI_COLORS_SUPPORT = False
+    else:
+        colorama.init()
+
+
 __all__ = ['TestResult',
            'AbstractReporter',
            'PlainReporter',
@@ -345,22 +356,31 @@ class FancyReporter(AbstractReporter):
         self.failures.append(result)
 
     def finished(self):
-        from pygments.console import colorize
-        from pygments import highlight
         from pygments.lexers import (PythonTracebackLexer, PythonLexer,
                                      DiffLexer)
+        if ANSI_COLORS_SUPPORT:
+            from pygments.console import colorize
+            from pygments import highlight
 
-        if self.style in ('light', 'dark'):
-            from pygments.formatters import TerminalFormatter
-            formatter = TerminalFormatter(bg=self.style)
-            if self.colorscheme is not None:
-                from pygments.token import string_to_tokentype
-                for token, value in self.colorscheme.iteritems():
-                    token = string_to_tokentype(token.capitalize())
-                    formatter.colorscheme[token] = (value, value)
+            if self.style in ('light', 'dark'):
+                from pygments.formatters import TerminalFormatter
+                formatter = TerminalFormatter(bg=self.style)
+                if self.colorscheme is not None:
+                    from pygments.token import string_to_tokentype
+                    for token, value in self.colorscheme.iteritems():
+                        token = string_to_tokentype(token.capitalize())
+                        formatter.colorscheme[token] = (value, value)
+            else:
+                from pygments.formatters import Terminal256Formatter
+                formatter = Terminal256Formatter(style=self.style)
         else:
-            from pygments.formatters import Terminal256Formatter
-            formatter = Terminal256Formatter(style=self.style)
+            # ANSI color codes seem not to be supported, make colorize()
+            # and highlight() no-ops.
+            formatter = None
+            def colorize(_format, text):
+                return text
+            def highlight(text, _lexer, _formatter):
+                return text
 
         if self.counter:
             self.progress.finish()
