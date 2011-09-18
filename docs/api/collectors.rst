@@ -18,6 +18,8 @@ and separation.
   * Instances of subclasses of :class:`TestBase`.
   * Classes are instantiated and returned, allowing :meth:`Tests.register`
     to be used as a class decorator in Python 2.6 or later.
+* Register `unittest.TestCase` classes with the :meth:`Test.unittest_wrap`
+  decorator.
 
 
 Using Functions
