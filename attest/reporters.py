@@ -438,7 +438,7 @@ def auto_reporter(**opts):
         :meth:`AbstractReporter.test_loader`.
 
     """
-    if sys.stdout.isatty():
+    if hasattr(sys.stdout, 'isatty') and sys.stdout.isatty():
         try:
             return FancyReporter(**opts)
         except ImportError:
