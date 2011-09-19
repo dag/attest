@@ -3,6 +3,8 @@ from __future__ import with_statement
 
 import inspect
 import sys
+import types
+import unittest
 
 from contextlib import contextmanager
 from functools  import wraps
@@ -19,6 +21,48 @@ __all__ = ['Tests',
            'test',
            'TestBase',
           ]
+
+
+class UnitTestTestResult(object):
+    def __init__(self):
+        self.problem = None
+
+    def startTest(self, test): pass
+    def addSuccess(self, test): pass
+    def stopTest(self, test): pass
+
+    def addError(self, test, exc_info):
+        self.problem = exc_info
+    def addFailure(self, test, exc_info):
+        self.problem = exc_info
+
+    def thaw(self):
+        """If any exception is reported during execution of TestCase.run(),
+        re-raise it."""
+        if self.problem:
+            raise self.problem[0], self.problem[1], self.problem[2]
+
+
+class TestCaseProxy(object):
+    def __init__(self, testcase):
+        self.testcase = testcase
+
+        def _testcase_run(self):
+            """Run test case with custom result collector to undo damage made by
+            TestCase."""
+            self.__name__ = self.__class__.__name__
+            result = UnitTestTestResult()
+            super(testcase.__class__, self).run(result)
+            result.thaw()
+        self.testcase.run = types.MethodType(_testcase_run, self.testcase, self.testcase.__class__)
+
+    def __call__(self):
+        return self.testcase()
+
+    def __eq__(self, rhs):
+        if not isinstance(rhs, TestCaseProxy):
+            return False
+        return self.testcase == rhs.testcase
 
 
 class Tests(object):
@@ -201,7 +245,12 @@ class Tests(object):
 
         """
         if inspect.isclass(tests):
-            self._tests.extend(tests())
+            test = tests()
+            try:
+                iterable = iter(test)
+            except TypeError:
+                iterable = [test]
+            self.register(iterable)
             return tests
         elif isinstance(tests, basestring):
             def istests(obj):
@@ -213,6 +262,8 @@ class Tests(object):
                 return
             tests = obj
         for test in tests:
+            if isinstance(test, unittest.TestCase):
+                test = TestCaseProxy(test)
             if not test in self._tests:
                 self._tests.append(test)
 

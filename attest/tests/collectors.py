@@ -2,6 +2,7 @@ from __future__ import with_statement
 
 from attest import (AbstractReporter, Tests, Assert, assert_hook,
                     TestFailure)
+import unittest
 
 
 class TestReporter(AbstractReporter):
@@ -175,3 +176,69 @@ def conditional():
 
     assert include in col
     assert exclude not in col
+
+
+@suite.test
+def unittest_wrap2():
+    """@Tests().unittest_wrap7"""
+
+    col = Tests()
+    @col.register
+    class UnitTestTestCase(unittest.TestCase):
+        def runTest(self):
+            pass
+    assert len(col) == 1
+
+@suite.test
+def unittest_run_pass():
+    """Wrapping passing TestCase"""
+
+    col = Tests()
+
+    @col.register
+    class UnitTestTestCase(unittest.TestCase):
+        def runTest(self):
+            pass
+
+    result = TestReporter()
+    col.run(result)
+    assert len(result.failed) == 0
+    assert len(result.succeeded) == 1
+
+@suite.test
+def unittest_run_fail_assert():
+    """Wrapping TestCase failing with assert"""
+
+    col = Tests()
+
+    @col.register
+    class UnitTestTestCase(unittest.TestCase):
+        def runTest(self):
+            assert 2 + 2 == 5
+
+    result = TestReporter()
+    col.run(result)
+
+    assert len(result.failed) == 1
+    assert len(result.succeeded) == 0
+
+@suite.test
+def unittest_add_instance():
+    """Wrapping TestCase instances"""
+
+    col = Tests()
+
+    class PassingUnitTestTestCase(unittest.TestCase):
+        def runTest(self):
+            pass
+    class FailingUnitTestTestCase(unittest.TestCase):
+        def runTest(self):
+            assert 2 + 2 == 5
+
+    col.register([PassingUnitTestTestCase(), FailingUnitTestTestCase()])
+
+    result = TestReporter()
+    col.run(result)
+
+    assert len(result.failed) == 1
+    assert len(result.succeeded) == 1
