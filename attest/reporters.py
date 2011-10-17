@@ -158,6 +158,8 @@ class TestResult(object):
                 if type(left) is type(right):
                     asserter = case._type_equality_funcs.get(type(left))
                     if asserter is not None:
+                        if isinstance(asserter, basestring):
+                            asserter = getattr(case, asserter)
                         try:
                             asserter(left, right)
                         except AssertionError, exc:
