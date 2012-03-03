@@ -43,7 +43,7 @@ setup(
     packages=find_packages(),
 
     install_requires=[
-        'progressbar>=2.3-dev',
+        'progressbar>=2.3',
         'Pygments',
     ],
 

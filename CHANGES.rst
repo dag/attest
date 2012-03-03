@@ -4,6 +4,15 @@ Changelog
 =========
 
 
+0.5.3
+-----
+
+:Release date: 2011-03-03
+
+Fix the installation: depend on progressbar>=2.3, not 2.3-dev.
+(setuptools considers 2.3 earlier than 2.3-dev.)
+
+
 0.5.2
 -----
 
