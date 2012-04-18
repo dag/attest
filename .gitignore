@@ -4,6 +4,7 @@
 docs/_build/
 *.egg-info
 *.egg
+*.sublime-*
 dist/
 build/
 .tox/
