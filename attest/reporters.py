@@ -645,6 +645,7 @@ def get_reporter_by_name(name, default='auto'):
 
     * ``'fancy'`` — :class:`FancyReporter`
     * ``'plain'`` — :class:`PlainReporter`
+    * ``'xunit'`` – :class:`XUnitReporter`
     * ``'quickfix'`` — :class:`QuickFixReporter`
     * ``'xml'`` — :class:`XmlReporter`
     * ``'auto'`` — :func:`auto_reporter`
@@ -679,7 +680,7 @@ def get_all_reporters():
         from attest import get_all_reporters
 
     >>> list(get_all_reporters())
-    ['xml', 'plain', 'quickfix', 'fancy', 'auto']
+    ['xml', 'plain', 'xunit', 'fancy', 'auto', 'quickfix']
 
     .. versionadded:: 0.4
 

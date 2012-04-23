@@ -200,7 +200,9 @@ class Assert(object):
 
     def not_in(self, obj):
         """The negated form of :meth:`in_`, corresponding to the ``not in``
-        operation::
+        operation
+
+        ::
 
             Assert(0).not_in([1, 2, 3])
 

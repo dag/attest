@@ -27,8 +27,8 @@ else:
 
 
 class ExpressionEvaluator(SourceGenerator):
-    """Evaluates `expr` in the context of `globals` and `locals`, expanding
-    the values of variables and the results of binary operations, but
+    """Evaluates ``expr`` in the context of ``globals`` and ``locals``,
+    expanding the values of variables and the results of binary operations, but
     keeping comparison and boolean operators.
 
     .. testsetup::
@@ -37,6 +37,7 @@ class ExpressionEvaluator(SourceGenerator):
 
     >>> var = 1 + 2
     >>> value = ExpressionEvaluator('var == 5 - 3', globals(), locals())
+    >>> value.late_visit()
     >>> repr(value)
     '(3 == 2)'
     >>> bool(value)
@@ -109,10 +110,10 @@ class TestFailure(AssertionError):
 
 
 def assert_hook(expr, msg='', globals=None, locals=None):
-    """Like `assert`, but using :class:`ExpressionEvaluator`. If
+    """Like ``assert``, but using :class:`ExpressionEvaluator`. If
     you import this in test modules and the :class:`AssertImportHook` is
     installed (which it is automatically the first time you import from
-    :mod:`attest`), `assert` statements are rewritten as a call to
+    :mod:`attest`), ``assert`` statements are rewritten as a call to
     this.
 
     The import must be a top-level *from* import, example::
