@@ -8,7 +8,8 @@
     :copyright: Copyright 2008 by Armin Ronacher.
     :license: BSD.
 """
-from attest.ast import *
+from attest.ast import (BINOP_SYMBOLS, BOOLOP_SYMBOLS, CMPOP_SYMBOLS,
+                        UNARYOP_SYMBOLS, NodeVisitor)
 
 
 def to_source(node, indent_with=' ' * 4, add_line_information=False):
