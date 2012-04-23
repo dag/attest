@@ -1,23 +1,26 @@
-# Modern Test Automation for Python
+Modern Test Automation for Python
+=================================
 
 Attest is a test automation framework for Python emphasising modern idioms
 and conventions.
 
-```python
-from attest import Tests
-math = Tests()
+.. code-block:: python
 
-@math.test
-def arithmetics():
-    """Ensure that the laws of physics are in check."""
-    assert 1 + 1 == 2
+    from attest import Tests
+    math = Tests()
 
-if __name__ == '__main__':
-    math.run()
-```
+    @math.test
+    def arithmetics():
+        """Ensure that the laws of physics are in check."""
+        assert 1 + 1 == 2
+
+    if __name__ == '__main__':
+        math.run()
 
 
-## Features
+
+Features
+========
 
 * Collect tests using decorators instead of matching names against a regexp
 * Set up fixtures as context managers that can be combined and reused
