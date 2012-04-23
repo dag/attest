@@ -1,7 +1,6 @@
 from __future__ import with_statement
-
-from attest import (AbstractReporter, Tests, Assert, assert_hook,
-                    TestFailure)
+from attest import (AbstractReporter, Tests, TestBase, Assert, assert_hook,
+                    test, TestFailure)
 
 
 class TestReporter(AbstractReporter):
@@ -175,3 +174,67 @@ def conditional():
 
     assert include in col
     assert exclude not in col
+
+
+@suite.test
+def unittest():
+    """Compatibility with Python's unittest package"""
+    signals = set()
+
+    example = Tests()
+
+    @example.test
+    def simple():
+        signals.add("one")
+
+    @example.register
+    class Test(TestBase):
+        @test
+        def simple(self):
+            signals.add("two")
+
+    # unittest.TestCase
+    TestCase = example.test_case()
+
+    TestCase("test_simple").debug()
+    assert signals == set(["one"])
+
+    # unittest.TestSuite
+    test_suite = example.test_suite()
+
+    signals.clear()
+    test_suite.debug()
+    assert signals == set(["one", "two"])
+
+
+@suite.test
+def testcase_naming():
+    example = Tests()
+
+    @example.test
+    def simple():
+        pass
+
+    @example.test
+    def simple():
+        """Duplicate name, should have ``_2`` appended."""
+
+    @example.register
+    class Test(TestBase):
+        @test
+        def simple():
+            """Another duplicate, should have ``_3`` appended."""
+
+    @example.test
+    def test_something():
+        """Already prepended with ``test_`` - should be used verbatim."""
+
+    example.test(lambda self: None)
+
+    TestCase = example.test_case()
+    assert TestCase.test_simple
+    assert TestCase.test_simple_2
+    assert TestCase.test_simple_3
+    assert TestCase.test_something
+    assert TestCase.test_lambda
+

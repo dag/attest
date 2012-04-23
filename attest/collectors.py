@@ -2,16 +2,18 @@
 from __future__ import with_statement
 
 import inspect
+import re
 import sys
 
 from contextlib import contextmanager
 from functools  import wraps
-from time import time
+from time       import time
 
 from attest           import statistics
 from attest.contexts  import capture_output
 from attest.reporters import auto_reporter, AbstractReporter, TestResult
-from attest.utils     import import_dotted_name, deep_get_members, nested
+from attest.utils     import (counter, import_dotted_name, deep_get_members,
+                              nested)
 
 
 __all__ = ['Tests',
@@ -217,12 +219,57 @@ class Tests(object):
                 self._tests.append(test)
 
     def test_suite(self):
-        """Create a :class:`unittest.TestSuite` from this collection."""
+        """Create a :class:`unittest.TestSuite` instance from this collection.
+
+        """
         from unittest import TestSuite, FunctionTestCase
         suite = TestSuite()
         for test in self:
             suite.addTest(FunctionTestCase(test))
         return suite
+
+    def test_case(self):
+        """Create a :class:`unittest.TestCase` class from this collection.
+
+        Tests in the collection are added as instance methods on the
+        ``TestCase``. Method names are prefixed with ``test_`` if they're not
+        already. Duplicate method names are given a ``_#`` suffix.
+
+        .. testsetup::
+
+            from attest import Tests
+
+        Example::
+
+            >>> suite = Tests()
+            >>> @suite.test
+            ... def simple():
+            ...     pass
+            ...
+            >>> @suite.test
+            ... def simple():
+            ...     pass
+            ...
+            >>> TestCase = suite.test_case()
+            >>> assert TestCase.test_simple
+            >>> assert TestCase.test_simple_2
+
+        """
+        from unittest import TestCase
+        counts = counter()
+        methods = {}
+        for func in self:
+            # handle <lambda>
+            name = re.sub("[^a-zA-Z0-9_]", "", func.__name__)
+            if not name:
+                name = "unnamed"
+            if not name.startswith("test_"):
+                name = "test_{}".format(name)
+            count = counts.increment(name)
+            if count > 1:
+                name = "{}_{}".format(name, count)
+            methods[name] = staticmethod(func)
+        return type("Tests", (TestCase, ), methods)
 
     def run(self, reporter=auto_reporter,
             full_tracebacks=False, fail_fast=False,

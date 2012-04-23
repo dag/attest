@@ -24,7 +24,8 @@ Using Functions
 ---------------
 
 .. autoclass:: Tests
-   :members: test, test_if, context, register, register_if, test_suite
+   :members: test, test_if, context, register, register_if, test_suite,
+             test_case
 
    .. automethod:: run(reporter=auto_reporter)
 

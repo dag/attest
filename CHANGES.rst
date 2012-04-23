@@ -9,6 +9,7 @@ Changelog
 :Release date: `in development`
 :Tested on: CPython 2.5 - 2.7 and 3.1 - 3.2, PyPy 1.5
 
+* Added :meth:`~Tests.test_case` to complement :meth:`~Tests.test_suite`.
 
 
 0.5.2

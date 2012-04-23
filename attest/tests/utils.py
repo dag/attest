@@ -183,3 +183,10 @@ def nesting_contexts():
 
     assert signals == ['inner one', 'inner two', 'outer one']
     assert args is None
+
+
+@suite.test
+def counter():
+    counter = utils.counter()
+    assert counter.increment("a") == 1
+    assert counter == {"a": 1}

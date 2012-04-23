@@ -12,7 +12,7 @@ __all__ = ['get_terminal_size',
            'deep_get_members',
            'parse_options',
            'nested',
-          ]
+           'counter']
 
 
 def get_terminal_size(default=(80, 24)):
@@ -154,3 +154,12 @@ def nested(constructors):
                 exc = sys.exc_info()
         if exc != (None, None, None):
             raise exc[0], exc[1], exc[2]
+
+
+class counter(dict):
+    def increment(self, key):
+        if key not in self:
+            self[key] = 1
+        else:
+            self[key] += 1
+        return self[key]
