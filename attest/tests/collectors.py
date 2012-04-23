@@ -187,11 +187,11 @@ def unittest():
     def simple():
         signals.add("one")
 
-    @example.register
     class Test(TestBase):
         @test
         def simple(self):
             signals.add("two")
+    Test = example.register(Test)  # Python 2.5
 
     # unittest.TestCase
     TestCase = example.test_case()
@@ -219,11 +219,11 @@ def testcase_naming():
     def simple():
         """Duplicate name, should have ``_2`` appended."""
 
-    @example.register
     class Test(TestBase):
         @test
         def simple():
             """Another duplicate, should have ``_3`` appended."""
+    Test = example.register(Test)  # Python 2.5
 
     @example.test
     def test_something():
