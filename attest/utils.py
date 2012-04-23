@@ -26,8 +26,11 @@ def get_terminal_size(default=(80, 24)):
         import fcntl, termios
     except ImportError:
         return default
-    ary = array('h', fcntl.ioctl(sys.stdin, termios.TIOCGWINSZ, chr(0) * 8))
-    return ary[1], ary[0]
+    try:
+        ary = array('h', fcntl.fcntl(sys.stdin, termios.TIOCGWINSZ, chr(0) * 8))
+        return ary[1], ary[0]
+    except IOError:
+        return default
 
 
 def import_dotted_name(name):
