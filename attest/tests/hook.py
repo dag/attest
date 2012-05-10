@@ -4,6 +4,7 @@ from attest.hook import ExpressionEvaluator
 
 suite = Tests()
 
+
 @suite.test
 def eval():
     value = 1 + 1
@@ -23,3 +24,10 @@ def eval():
         ev = repr(expr)
         assert ev == result
         assert bool(ev) is True
+
+
+@suite.test
+def initpy_with_relative_import():
+    # Ensure that packages with an __init__.py file that use both assert_hook
+    # and relative imports are hooked properly.
+    from . import dummy

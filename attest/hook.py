@@ -192,8 +192,8 @@ class AssertTransformer(ast.NodeTransformer):
         module.__file__ = self.filename
         if newpath:
             module.__path__ = newpath
-        exec self.code in vars(module)
         sys.modules[name] = module
+        exec self.code in vars(module)
         return module
 
     @property

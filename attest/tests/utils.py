@@ -44,12 +44,12 @@ def string_importing():
 
 @suite.test
 def iter_mods():
-    core = ['attest.' + mod for mod in
-            '''ast codegen collectors contexts deprecated hook __main__ reporters
-               run statistics utils pygments'''.split()] + ['attest']
-    tests = ['attest.tests.' + mod for mod in
-              '''asserts classy collectors contexts hook _meta reporters
-                 utils'''.split()] + ['attest.tests']
+    core = ['attest'] + ['attest.' + mod for mod in
+            '''ast codegen collectors contexts deprecated hook __main__
+               reporters run statistics utils pygments'''.split()]
+    tests = ['attest.tests'] + ['attest.tests.' + mod for mod in
+            '''asserts classy collectors contexts hook _meta reporters utils
+               dummy dummy.foo'''.split()]
 
     found = list(utils.deep_iter_modules('attest'))
     expected = core + tests
