@@ -18,6 +18,7 @@ __all__ = ['capture_output',
            'Error',
            'raises',
            'tempdir',
+           'warns',
           ]
 
 
@@ -101,7 +102,7 @@ class Error(object):
         return str(self.exc)
 
     def __repr__(self):
-        return '<Error %s>' % repr(self.exc)
+        return u'<Error %s>' % repr(self.exc)
 
 
 @contextmanager
@@ -160,3 +161,60 @@ def tempdir(*args, **kwargs):
         yield d
     finally:
         rmtree(d)
+
+
+@contextmanager
+def warns(*warnings, **opts):
+    """Context manager that succeeds if all `warnings` are seen inside the
+    context. Yields a list of matching captured warnings as
+    :class:`warnings.WarningMessage` objects.
+
+    .. testsetup::
+
+        from attest import warns
+        import warnings
+
+    >>> with warns(UserWarning) as captured:
+    ...     warnings.warn("Example warning", UserWarning)
+    ...
+    >>> captured[0].message == "Example warning"
+    True
+
+    :param any: Require only *one* of the warnings to be observed.
+
+    .. note::
+
+        1. :mod:`warnings` filtering is overridden to ``"always"`` for
+           monitored warnings.
+        2. :attr:`WarningMessage.message` differs from Python's default.
+           Rather than being the warning instance, it is ``unicode(warning)``.
+
+    """
+    import warnings as mod
+
+    captured = []
+    old_filters, old_showwarning = mod.filters, mod.showwarning
+    mod.filters = old_filters[:]
+
+    def showwarning(message, category, *args, **kwargs):
+        if category not in warnings:
+            old_showwarning(message, category, *args, **kwargs)
+            return
+        # It's more useful to have the message as the text representation of
+        # the warning, rather than an exception instance
+        message = unicode(message)
+        captured.append(mod.WarningMessage(message, category, *args, **kwargs))
+    mod.showwarning = showwarning
+
+    for warning in warnings:
+        mod.simplefilter("always", warning)
+
+    try:
+        yield captured
+        if opts.get("any", False):
+            assert captured
+        else:
+            assert set(warnings) == set([w.category for w in captured])
+    finally:
+        mod.filters = old_filters
+        mod.showwarning = old_showwarning

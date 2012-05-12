@@ -3,6 +3,7 @@ from __future__ import with_statement
 import sys
 import os
 from os import path
+import warnings
 
 from attest import Tests, assert_hook, Assert
 import attest
@@ -86,3 +87,30 @@ def tempdir():
         open(path.join(d, 'tempfile'), 'w').close()
         assert os.listdir(d) == ['tempfile']
     assert not path.exists(d)
+
+
+@suite.test
+def warns():
+    with attest.warns(UserWarning) as captured:
+        warnings.warn("foo", UserWarning)
+
+    assert unicode(captured[0].message) == "foo"
+
+    with attest.raises(AssertionError):
+        with attest.warns(UserWarning):
+            pass
+
+    with attest.raises(AssertionError):
+        with attest.warns(UserWarning, DeprecationWarning):
+            warnings.warn("foo", UserWarning)
+
+    with attest.warns(UserWarning, DeprecationWarning, any=True):
+        warnings.warn("foo", UserWarning)
+
+    if hasattr(warnings, "catch_warnings"):  # not available in Python 2.5
+        with warnings.catch_warnings():
+            warnings.simplefilter("error", UserWarning)
+            with attest.warns(UserWarning):
+                warnings.warn("foo")
+            with attest.raises(UserWarning):
+                warnings.warn("bar")
