@@ -92,9 +92,11 @@ def tempdir():
 @suite.test
 def warns():
     with attest.warns(UserWarning) as captured:
-        warnings.warn("foo", UserWarning)
+        warnings.warn("foo")
+        warnings.warn("bar", DeprecationWarning)
 
-    assert unicode(captured[0].message) == "foo"
+    assert len(captured) == 1
+    assert unicode(captured[0]) == "foo"
 
     with attest.raises(AssertionError):
         with attest.warns(UserWarning):
@@ -102,10 +104,10 @@ def warns():
 
     with attest.raises(AssertionError):
         with attest.warns(UserWarning, DeprecationWarning):
-            warnings.warn("foo", UserWarning)
+            warnings.warn("foo")
 
     with attest.warns(UserWarning, DeprecationWarning, any=True):
-        warnings.warn("foo", UserWarning)
+        warnings.warn("foo")
 
     if hasattr(warnings, "catch_warnings"):  # not available in Python 2.5
         with warnings.catch_warnings():

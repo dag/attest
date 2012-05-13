@@ -165,9 +165,8 @@ def tempdir(*args, **kwargs):
 
 @contextmanager
 def warns(*warnings, **opts):
-    """Context manager that succeeds if all `warnings` are seen inside the
-    context. Yields a list of matching captured warnings as
-    :class:`warnings.WarningMessage` objects.
+    """Context manager that succeeds if all `warnings` are issued inside the
+    context. Yields a list of matching captured warnings as exception objects.
 
     .. testsetup::
 
@@ -177,44 +176,40 @@ def warns(*warnings, **opts):
     >>> with warns(UserWarning) as captured:
     ...     warnings.warn("Example warning", UserWarning)
     ...
-    >>> captured[0].message == "Example warning"
+    >>> unicode(captured[0]) == "Example warning"
     True
 
-    :param any: Require only *one* of the warnings to be observed.
+    :param any: Require only *one* of the warnings to be issued (rather than
+        all).
 
     .. note::
 
-        1. :mod:`warnings` filtering is overridden to ``"always"`` for
-           monitored warnings.
-        2. :attr:`WarningMessage.message` differs from Python's default.
-           Rather than being the warning instance, it is ``unicode(warning)``.
+        :mod:`warnings` filtering is overridden to ``"always"`` for monitored
+        warnings.
 
     """
-    import warnings as mod
+    import warnings as warnings_
 
     captured = []
-    old_filters, old_showwarning = mod.filters, mod.showwarning
-    mod.filters = old_filters[:]
+    old_filters, old_showwarning = warnings_.filters, warnings_.showwarning
+    warnings_.filters = old_filters[:]
 
     def showwarning(message, category, *args, **kwargs):
         if category not in warnings:
             old_showwarning(message, category, *args, **kwargs)
             return
-        # It's more useful to have the message as the text representation of
-        # the warning, rather than an exception instance
-        message = unicode(message)
-        captured.append(mod.WarningMessage(message, category, *args, **kwargs))
-    mod.showwarning = showwarning
+        captured.append(message)
+    warnings_.showwarning = showwarning
 
     for warning in warnings:
-        mod.simplefilter("always", warning)
+        warnings_.simplefilter("always", warning)
 
     try:
         yield captured
         if opts.get("any", False):
             assert captured
         else:
-            assert set(warnings) == set([w.category for w in captured])
+            assert set(warnings) == set(map(type, captured))
     finally:
-        mod.filters = old_filters
-        mod.showwarning = old_showwarning
+        warnings_.filters = old_filters
+        warnings_.showwarning = old_showwarning
