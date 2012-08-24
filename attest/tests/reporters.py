@@ -1,3 +1,4 @@
+# coding:utf-8
 from __future__ import with_statement
 
 import sys
@@ -111,3 +112,24 @@ def quickfix_reporter():
             _meta.suite.run(attest.QuickFixReporter)
 
     assert out == ['%s:%d: TestFailure' % (SOURCEFILE, LINENO)]
+
+
+@suite.test_if(COMPILES_AST)
+def fancy_reporter_detects_encoding():
+    """FancyReporter should detect code encoding."""
+
+    from pygments.style import Style
+    class NoStyle(Style):
+        default_style = ''
+        styles = {}
+
+    suite_ = Tests()
+    @suite_.test
+    def unicode_failing():
+        assert u'유니코드' == u'테스트'
+
+    with attest.capture_output() as (out, err):
+        with Assert.raises(SystemExit):
+            suite_.run(attest.FancyReporter(NoStyle))
+
+    assert 'assert u\'유니코드\' == u\'테스트\'' in map(str.strip, out)

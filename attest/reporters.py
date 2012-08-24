@@ -248,7 +248,8 @@ class FancyReporter(AbstractReporter):
         from progressbar import ProgressBar, Percentage, ETA, SimpleProgress
         widgets = ['[', Percentage(), '] ', SimpleProgress(), ' ', ETA()]
         self.counter = 0
-        self.progress = ProgressBar(maxval=len(tests), widgets=widgets)
+        self.progress = ProgressBar(maxval=len(tests), widgets=widgets,
+                                    fd=sys.stderr)
         self.progress.start()
         self.failures = []
 
@@ -282,9 +283,10 @@ class FancyReporter(AbstractReporter):
                 print line
 
             formatter = Terminal256Formatter(style=self.style)
-            print highlight(result.traceback,
+            encoding = self._detect_code_encoding(result.raw_traceback[-1][0])
+            print highlight(result.traceback.decode(encoding),
                             PythonTracebackLexer(),
-                            formatter)
+                            formatter).encode(encoding)
 
             if result.assertion is not None:
                 print highlight(result.assertion, PythonLexer(), formatter)
@@ -298,6 +300,22 @@ class FancyReporter(AbstractReporter):
 
         if self.failures:
             raise SystemExit(1)
+
+    def _detect_code_encoding(self, filename):
+        """Detects code encoding from the magic encoding comment.
+
+        """
+        import re
+        comment_pattern = re.compile(r'\s*#?')
+        hint_pattern = re.compile(r'\s*#.*?coding(?::|\s*=)\s*([^\s]+)')
+        with open(filename) as pyfile:
+            for line in pyfile.xreadlines():
+                if not comment_pattern.match(line):
+                    break
+                match = hint_pattern.match(line)
+                if match is not None:
+                    return match.group(1)
+        return 'ascii'
 
 
 def auto_reporter(style=None):
