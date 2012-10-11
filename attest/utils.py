@@ -4,6 +4,7 @@ from array      import array
 from contextlib import contextmanager
 from inspect    import getmembers
 from pkgutil    import iter_modules
+from six        import reraise
 
 
 __all__ = ['get_terminal_size',
@@ -153,7 +154,7 @@ def nested(constructors):
             except:
                 exc = sys.exc_info()
         if exc != (None, None, None):
-            raise exc[0], exc[1], exc[2]
+            reraise(*exc)
 
 
 class counter(dict):

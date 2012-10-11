@@ -190,3 +190,14 @@ def counter():
     counter = utils.counter()
     assert counter.increment("a") == 1
     assert counter == {"a": 1}
+
+
+@suite.test
+def nested():
+    try:
+        with utils.nested([]):
+            assert 1 == 0, "message"
+
+    except AssertionError as e:
+        print e.args
+        assert e.args == ("message", )

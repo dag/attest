@@ -45,6 +45,7 @@ setup(
     install_requires=[
         'progressbar>=2.3',
         'Pygments',
+        'six',
     ],
 
     entry_points={
