@@ -198,6 +198,6 @@ def nested():
         with utils.nested([]):
             assert 1 == 0, "message"
 
-    except AssertionError as e:
+    except AssertionError, e:
         print e.args
         assert e.args == ("message", )
