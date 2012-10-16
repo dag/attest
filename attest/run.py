@@ -77,6 +77,14 @@ def main(tests=None, **kwargs):
     parser = make_parser(**kwargs)
     options, args = parser.parse_args()
 
+    # When run as a console script (i.e. ``attest``), the CWD isn't
+    # ``sys.path[0]``, but it should be. It's important to do this early in
+    # case custom reporters are being used that make the assumption that CWD is
+    # on ``sys.path``.
+    cwd = os.getcwd()
+    if sys.path[0] not in ('', cwd):
+        sys.path.insert(0, cwd)
+
     if options.list_reporters:
         for reporter in get_all_reporters():
             print reporter
@@ -86,7 +94,6 @@ def main(tests=None, **kwargs):
     reporter = get_reporter_by_name(options.reporter)(**opts)
 
     if not tests:
-        sys.path.insert(0, os.getcwd())
         names = [arg for arg in args if '=' not in arg]
         if not names:
             names = [name for name in os.listdir('.')
