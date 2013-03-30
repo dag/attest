@@ -42,6 +42,7 @@ Documentation
 
     install
     quickstart 
+    running
 
 
 API Reference

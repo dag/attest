@@ -9,7 +9,31 @@ Changelog
 :Release date: `in development`
 :Tested on: CPython 2.5 - 2.7 and 3.1 - 3.2, PyPy 1.5
 
+* New :doc:`attest command </running>` for discovering and running tests.
+* Added the 16-color styles *light* and *dark* and the complementary 
+  `colorscheme` option to :class:`~attest.reporters.FancyReporter`.
+* New :func:`~attest.contexts.tempdir` context for creating a temporary 
+  directory.
+* New :func:`~attest.contexts.warns` context to check for warnings.
+* The decorator methods now default to simply registering functions and 
+  leaving the original in place. Added `replace_tests` and `replace_contexts`
+  parameters to the :class:`Tests` constructor for backwards compatibility.
+* Added a bunch of new options to :meth:`Tests.run`:
+
+  * `debugger` – enter PDB when tests fail
+  * `fail_fast` – stop at first failure
+  * `full_tracebacks` – don't clean tracebacks
+  * `ipdb_debugger` – enter IPDB when tests fail
+  * `keyboard_interrupt` – let CTRL+C propagate
+  * `native_assert` – don't hook the assert statement
+  * `no_capture` – don't capture stderr and stdout
+* Added :class:`~attest.reporters.XUnitReporter`.
 * Added :meth:`~Tests.test_case` to complement :meth:`~Tests.test_suite`.
+* The :class:`Tests` constructor can now be passed a single string without
+  wrapping it in iterable.
+* :meth:`Tests.register` now recursively scans modules and only adds tests if 
+  they haven't already been added.
+* Support for CPython 3.2 and PyPy 1.5.
 
 
 0.5.2
