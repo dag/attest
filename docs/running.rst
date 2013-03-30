@@ -1,7 +1,10 @@
 Running tests
 =============
 
-In the :doc:`quickstart </quickstart>` guide, tests were run by treating them as scripts and calling :meth:`Tests.run()` directly on the test suite. When your tests grow beyond a single file, however, you may want to use the :command:`attest` command line tool.
+In the :doc:`quickstart </quickstart>` guide, tests were run by 
+treating them as scripts and calling :meth:`Tests.run()` directly on 
+the test suite. When your tests grow beyond a single file, however, 
+you may want to use the :command:`attest` command line tool.
 
 Usage
 -----
@@ -10,13 +13,13 @@ Usage
 
     $ attest [options] [tests...] [key=value...]
 
-The positional ``tests`` are dotted names for modules or packages that are scanned 
-recursively for :class:`Tests` instances, or dotted names for any other object that 
-iterates over tests. If no position arguments are provided, all packages in the 
-working directory are scanned.
+The positional ``tests`` are dotted names for modules or packages that 
+are scanned recursively for :class:`Tests` instances, or dotted names for 
+any other object that iterates over tests. If no position arguments are 
+provided, all packages in the working directory are scanned.
 
-The key/value pairs are passed to the reporter constructor, after some command-line 
-friendly parsing.
+The key/value pairs are passed to the reporter constructor, after some 
+command-line friendly parsing.
 
 Options
 """""""
