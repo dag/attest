@@ -1,5 +1,7 @@
+import types
+
 from attest import Tests, assert_hook
-from attest.hook import ExpressionEvaluator
+from attest.hook import AssertImportHook, ExpressionEvaluator
 
 
 suite = Tests()
@@ -31,3 +33,14 @@ def initpy_with_relative_import():
     # Ensure that packages with an __init__.py file that use both assert_hook
     # and relative imports are hooked properly.
     from . import dummy
+
+
+@suite.test
+def get_code():
+    loader = AssertImportHook()
+    loader.find_module('sys')
+    assert loader.get_code('sys') is None
+    loader.find_module('cStringIO')
+    assert loader.get_code('cStringIO') is None
+    loader.find_module('StringIO')
+    assert isinstance(loader.get_code('StringIO'), types.CodeType)

@@ -2,6 +2,7 @@ from __future__ import with_statement
 
 import imp
 import inspect
+import marshal
 import os
 import sys
 
@@ -277,8 +278,14 @@ class AssertImportHook(object):
         if name in sys.modules:
             return sys.modules[name]
 
-        source, filename, newpath = self.get_source(name)
+        source = self.get_source(name)
+        filename = self.get_filename(name)
         (fd, fn, info), path = self._cache[name]
+
+        if self.is_package(name):
+            newpath = [fn]
+        else:
+            newpath = None
 
         if source is None:
             return imp.load_module(name, fd, fn, info)
@@ -300,19 +307,46 @@ class AssertImportHook(object):
         except KeyError:
             raise ImportError(name)
 
-        code = filename = newpath = None
         if info[2] == imp.PY_SOURCE:
-            filename = fn
             with fd:
-                code = fd.read()
-        elif info[2] == imp.PY_COMPILED:
-            filename = fn[:-1]
-            with open(filename, 'U') as f:
-                code = f.read()
+                return fd.read()
         elif info[2] == imp.PKG_DIRECTORY:
-            filename = os.path.join(fn, '__init__.py')
-            newpath = [fn]
-            with open(filename, 'U') as f:
-                code = f.read()
+            with open(self.get_filename(name), 'U') as f:
+                return f.read()
 
-        return code, filename, newpath
+    def is_package(self, name):
+        try:
+            (fd, fn, info), path = self._cache[name]
+        except KeyError:
+            raise ImportError(name)
+        return info[2] == imp.PKG_DIRECTORY
+
+    def get_filename(self, name):
+        try:
+            (fd, fn, info), path = self._cache[name]
+        except KeyError:
+            raise ImportError(name)
+
+        if info[2] == imp.PY_SOURCE:
+            return fn
+        elif info[2] == imp.PY_COMPILED:
+            return fn[:-1]
+        elif info[2] == imp.PKG_DIRECTORY:
+            return os.path.join(fn, '__init__.py')
+
+    def get_code(self, name):
+        source = self.get_source(name)
+        filename = self.get_filename(name)
+
+        if filename is None:
+            # when it's builtin or extension
+            return None
+
+        if source:
+            code = compile(source, filename, 'exec')
+        else:
+            with open(filename, 'rb') as f:
+                f.seek(8)
+                code = marshal.load(f)
+
+        return code
