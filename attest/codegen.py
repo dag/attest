@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
     codegen
     ~~~~~~~
@@ -59,7 +58,7 @@ class SourceGenerator(NodeVisitor):
     def newline(self, node=None, extra=0):
         self.new_lines = max(self.new_lines, 1 + extra)
         if node is not None and self.add_line_information:
-            self.write('# line: %s' % node.lineno)
+            self.write(f'# line: {node.lineno}')
             self.new_lines = 1
 
     def body(self, statements):
@@ -127,7 +126,7 @@ class SourceGenerator(NodeVisitor):
 
     def visit_ImportFrom(self, node):
         self.newline(node)
-        self.write('from %s%s import ' % ('.' * node.level, node.module))
+        self.write(f'from {"." * node.level}{node.module} import ')
         for idx, item in enumerate(node.names):
             if idx:
                 self.write(', ')
@@ -147,7 +146,7 @@ class SourceGenerator(NodeVisitor):
         self.newline(extra=1)
         self.decorators(node)
         self.newline(node)
-        self.write('def %s(' % node.name)
+        self.write(f'def {node.name}(')
         self.signature(node.args)
         self.write('):')
         self.body(node.body)
@@ -164,7 +163,7 @@ class SourceGenerator(NodeVisitor):
         self.newline(extra=2)
         self.decorators(node)
         self.newline(node)
-        self.write('class %s' % node.name)
+        self.write(f'class {node.name}')
         for base in node.bases:
             paren_or_comma()
             self.visit(base)
@@ -236,23 +235,6 @@ class SourceGenerator(NodeVisitor):
     def visit_Pass(self, node):
         self.newline(node)
         self.write('pass')
-
-    def visit_Print(self, node):
-        # XXX: python 2.6 only
-        self.newline(node)
-        self.write('print ')
-        want_comma = False
-        if node.dest is not None:
-            self.write(' >> ')
-            self.visit(node.dest)
-            want_comma = True
-        for value in node.values:
-            if want_comma:
-                self.write(', ')
-            self.visit(value)
-            want_comma = True
-        if not node.nl:
-            self.write(',')
 
     def visit_Delete(self, node):
         self.newline(node)
@@ -341,11 +323,11 @@ class SourceGenerator(NodeVisitor):
             write_comma()
             self.write(keyword.arg + '=')
             self.visit(keyword.value)
-        if node.starargs is not None:
+        if hasattr(node, 'starargs') and node.starargs is not None:
             write_comma()
             self.write('*')
             self.visit(node.starargs)
-        if node.kwargs is not None:
+        if hasattr(node, 'kwargs') and node.kwargs is not None:
             write_comma()
             self.write('**')
             self.visit(node.kwargs)
@@ -354,14 +336,8 @@ class SourceGenerator(NodeVisitor):
     def visit_Name(self, node):
         self.write(node.id)
 
-    def visit_Str(self, node):
-        self.write(repr(node.s))
-
-    def visit_Bytes(self, node):
-        self.write(repr(node.s))
-
-    def visit_Num(self, node):
-        self.write(repr(node.n))
+    def visit_Constant(self, node):
+        self.write(repr(node.value))
 
     def visit_Tuple(self, node):
         self.write('(')
@@ -399,7 +375,7 @@ class SourceGenerator(NodeVisitor):
     def visit_BinOp(self, node):
         self.write('(')
         self.visit(node.left)
-        self.write(' %s ' % BINOP_SYMBOLS[type(node.op)])
+        self.write(f' {BINOP_SYMBOLS[type(node.op)]} ')
         self.visit(node.right)
         self.write(')')
 
@@ -407,7 +383,7 @@ class SourceGenerator(NodeVisitor):
         self.write('(')
         for idx, value in enumerate(node.values):
             if idx:
-                self.write(' %s ' % BOOLOP_SYMBOLS[type(node.op)])
+                self.write(f' {BOOLOP_SYMBOLS[type(node.op)]} ')
             self.visit(value)
         self.write(')')
 
@@ -415,7 +391,7 @@ class SourceGenerator(NodeVisitor):
         self.write('(')
         self.visit(node.left)
         for op, right in zip(node.ops, node.comparators):
-            self.write(' %s ' % CMPOP_SYMBOLS[type(op)])
+            self.write(f' {CMPOP_SYMBOLS[type(op)]} ')
             self.visit(right)
         self.write(')')
 
@@ -549,4 +525,5 @@ class SourceGenerator(NodeVisitor):
 
 if __name__ == '__main__':
     import sys
-    print to_source(parse(open(sys.argv[1]).read()))
+    from attest.ast import parse
+    print(to_source(parse(open(sys.argv[1]).read())))

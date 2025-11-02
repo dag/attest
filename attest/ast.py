@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
     ast
     ~~~
@@ -86,15 +85,13 @@ def literal_eval(node_or_string):
     dicts, booleans or None.
     """
     _safe_names = {'None': None, 'True': True, 'False': False}
-    if isinstance(node_or_string, basestring):
+    if isinstance(node_or_string, str):
         node_or_string = parse(node_or_string, mode='eval')
     if isinstance(node_or_string, Expression):
         node_or_string = node_or_string.body
     def _convert(node):
-        if isinstance(node, Str):
-            return node.s
-        elif isinstance(node, Num):
-            return node.n
+        if isinstance(node, Constant):
+            return node.value
         elif isinstance(node, Tuple):
             return tuple(map(_convert, node.elts))
         elif isinstance(node, List):
@@ -120,21 +117,21 @@ def dump(node, annotate_fields=True, include_attributes=False):
     def _format(node):
         if isinstance(node, AST):
             fields = [(a, _format(b)) for a, b in iter_fields(node)]
-            rv = '%s(%s' % (node.__class__.__name__, ', '.join(
-                ('%s=%s' % field for field in fields)
-                if annotate_fields else
-                (b for a, b in fields)
-            ))
+            if annotate_fields:
+                fields_str = ", ".join(f"{a}={b}" for a, b in fields)
+            else:
+                fields_str = ", ".join(b for a, b in fields)
+            rv = f'{node.__class__.__name__}({fields_str}'
             if include_attributes and node._attributes:
                 rv += fields and ', ' or ' '
-                rv += ', '.join('%s=%s' % (a, _format(getattr(node, a)))
+                rv += ', '.join(f'{a}={_format(getattr(node, a))}'
                                 for a in node._attributes)
             return rv + ')'
         elif isinstance(node, list):
-            return '[%s]' % ', '.join(_format(x) for x in node)
+            return f'[{", ".join(_format(x) for x in node)}]'
         return repr(node)
     if not isinstance(node, AST):
-        raise TypeError('expected AST, got %r' % node.__class__.__name__)
+        raise TypeError(f'expected AST, got {node.__class__.__name__!r}')
     return _format(node)
 
 
@@ -230,10 +227,14 @@ def get_docstring(node, trim=True):
     will be raised.
     """
     if not isinstance(node, (FunctionDef, ClassDef, Module)):
-        raise TypeError("%r can't have docstrings" % node.__class__.__name__)
-    if node.body and isinstance(node.body[0], Expr) and \
-       isinstance(node.body[0].value, Str):
-        doc = node.body[0].value.s
+        raise TypeError(f"{node.__class__.__name__!r} can't have docstrings")
+    if (
+        node.body
+        and isinstance(node.body[0], Expr)
+        and isinstance(node.body[0].value, Constant)
+        and isinstance(node.body[0].value.value, str)
+    ):
+        doc = node.body[0].value.value
         if trim:
             doc = trim_docstring(doc)
         return doc
@@ -244,8 +245,8 @@ def trim_docstring(docstring):
     lines = docstring.expandtabs().splitlines()
 
     # Find minimum indentation of any non-blank lines after first line.
-    from sys import maxint
-    margin = maxint
+    from sys import maxsize
+    margin = maxsize
     for line in lines[1:]:
         content = len(line.lstrip())
         if content:
@@ -255,7 +256,7 @@ def trim_docstring(docstring):
     # Remove indentation.
     if lines:
         lines[0] = lines[0].lstrip()
-    if margin < maxint:
+    if margin < maxsize:
         for i in range(1, len(lines)):
             lines[i] = lines[i][margin:]
 
@@ -274,7 +275,7 @@ def get_symbol(operator):
     try:
         return ALL_SYMBOLS[operator]
     except KeyError:
-        raise LookupError('no known symbol for %r' % operator)
+        raise LookupError(f'no known symbol for {operator!r}')
 
 
 def walk(node):
@@ -290,7 +291,7 @@ def walk(node):
         yield node
 
 
-class NodeVisitor(object):
+class NodeVisitor:
     """Walks the abstract syntax tree and call visitor functions for every
     node found.  The visitor functions may return values which will be
     forwarded by the `visit` method.

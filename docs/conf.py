@@ -1,16 +1,14 @@
-# coding:utf-8
-
 import sys
 import os
 
-from pkg_resources import get_distribution
+from importlib.metadata import version as get_version
 
 sys.path.insert(0, os.path.abspath('..'))
 
 
 project = u'Attest'
 copyright = u'2010-2011, Dag Odenhall'
-release = get_distribution(project).version
+release = get_version('attest')
 version = release.split('dev', 1)[0]
 
 

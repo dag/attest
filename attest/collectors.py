@@ -1,6 +1,3 @@
-# coding:utf-8
-from __future__ import with_statement
-
 import inspect
 import re
 import sys
@@ -23,7 +20,7 @@ __all__ = ['Tests',
           ]
 
 
-class Tests(object):
+class Tests:
     """Collection of test functions.
 
     :param tests:
@@ -54,7 +51,7 @@ class Tests(object):
     def __init__(self, tests=(), contexts=None,
                  replace_tests=False, replace_contexts=False):
         self._tests = []
-        if isinstance(tests, basestring):
+        if isinstance(tests, str):
             self.register(tests)
         else:
             for collection in tests:
@@ -87,7 +84,8 @@ class Tests(object):
         def wrapper():
             with nested(self._contexts) as context:
                 context = [c for c in context if c is not None]
-                argc = len(inspect.getargspec(func)[0])
+                sig = inspect.signature(func)
+                argc = len(sig.parameters)
                 args = []
                 for arg in context:
                     if type(arg) is tuple:  # type() is intentional
@@ -205,7 +203,7 @@ class Tests(object):
         if inspect.isclass(tests):
             self._tests.extend(tests())
             return tests
-        elif isinstance(tests, basestring):
+        elif isinstance(tests, str):
             def istests(obj):
                 return isinstance(obj, Tests)
             obj = import_dotted_name(tests)
@@ -264,10 +262,10 @@ class Tests(object):
             if not name:
                 name = "unnamed"
             if not name.startswith("test_"):
-                name = "test_%s" % (name, )
+                name = f"test_{name}"
             count = counts.increment(name)
             if count > 1:
-                name = "%s_%s" % (name, count)
+                name = f"{name}_{count}"
             methods[name] = staticmethod(func)
         return type("Tests", (TestCase, ), methods)
 
@@ -314,7 +312,7 @@ class Tests(object):
                     raise
                 else:
                     break
-            except BaseException, e:
+            except BaseException as e:
                 result.time = time() - result.time
                 result.error = e
                 result.stdout, result.stderr = out, err
@@ -388,7 +386,7 @@ def test(meth):
     return wrapper
 
 
-class TestBase(object):
+class TestBase:
     """Base for test classes. Decorate test methods with :func:`test`. Needs
     to be registered with a :class:`Tests` collection to be run. For setup
     and teardown, override :meth:`__context__` like a

@@ -1,13 +1,9 @@
 import sys
 
 from contextlib import contextmanager
+from io         import StringIO
 from shutil     import rmtree
 from tempfile   import mkdtemp
-
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from StringIO  import StringIO
 
 from attest            import statistics
 from attest.deprecated import _repr
@@ -33,7 +29,7 @@ def capture_output():
         from attest import capture_output
 
     >>> with capture_output() as (out, err):
-    ...    print 'Captured'
+    ...    print('Captured')
     ...
     >>> out
     ['Captured']
@@ -68,20 +64,20 @@ def disable_imports(*names):
     .. versionadded:: 0.4
 
     """
-    import __builtin__
-    import_ = __builtin__.__import__
+    import builtins
+    import_ = builtins.__import__
     def __import__(name, *args, **kwargs):
         if name in names:
-            raise ImportError('%r is disabled' % name)
+            raise ImportError(f'{name!r} is disabled')
         return import_(name, *args, **kwargs)
-    __builtin__.__import__ = __import__
+    builtins.__import__ = __import__
     try:
         yield
     finally:
-        __builtin__.__import__ = import_
+        builtins.__import__ = import_
 
 
-class Error(object):
+class Error:
     """Container of metadata for an exception caught by :func:`raises`.
 
     Attribute access and string adaption is forwarded to the exception
@@ -102,7 +98,7 @@ class Error(object):
         return str(self.exc)
 
     def __repr__(self):
-        return u'<Error %s>' % repr(self.exc)
+        return f'<Error {self.exc!r}>'
 
 
 @contextmanager
@@ -137,11 +133,11 @@ def raises(*exceptions):
     error = Error()
     try:
         yield error
-    except exceptions, e:
+    except exceptions as e:
         error.exc = e
     else:
         exceptions = exceptions[0] if len(exceptions) == 1 else exceptions
-        raise AssertionError("didn't raise %s when expected" % _repr(exceptions))
+        raise AssertionError(f"didn't raise {_repr(exceptions)} when expected")
 
 
 @contextmanager
@@ -176,7 +172,7 @@ def warns(*warnings, **opts):
     >>> with warns(UserWarning) as captured:
     ...     warnings.warn("Example warning", UserWarning)
     ...
-    >>> unicode(captured[0]) == "Example warning"
+    >>> str(captured[0]) == "Example warning"
     True
 
     :param any: Require only *one* of the warnings to be issued (rather than

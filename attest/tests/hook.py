@@ -18,7 +18,7 @@ def eval():
         '[v for v in [value]]': '[2]',
     }
 
-    for expr, result in samples.iteritems():
+    for expr, result in samples.items():
         expr = ExpressionEvaluator(expr, globals(), locals())
         expr.late_visit()
         ev = repr(expr)

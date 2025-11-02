@@ -1,5 +1,3 @@
-from __future__ import with_statement
-
 import sys
 import inspect
 from traceback import format_exception_only
@@ -13,7 +11,7 @@ from . import _meta
 
 SOURCEFILE = inspect.getsourcefile(_meta)
 LINENO = 21
-EXCEPTION = format_exception_only(TestFailure, '')[0].rstrip()
+EXCEPTION = format_exception_only(TestFailure, TestFailure(''))[0].rstrip()
 
 
 suite = Tests()
@@ -21,7 +19,7 @@ suite = Tests()
 
 @suite.test
 def get_all_reporters():
-    reporters = set(['auto', 'fancy', 'plain', 'xml', 'quickfix', 'xunit'])
+    reporters = {'auto', 'fancy', 'plain', 'xml', 'quickfix', 'xunit'}
     assert set(attest.get_all_reporters()) == reporters
 
 
@@ -32,7 +30,7 @@ def get_reporter_by_name():
                      plain=attest.PlainReporter,
                      xml=attest.XmlReporter,
                     )
-    for name, reporter in reporters.iteritems():
+    for name, reporter in reporters.items():
         assert attest.get_reporter_by_name(name) == reporter
 
 
@@ -41,7 +39,7 @@ def auto_reporter():
     # Inside tests, sys.stdout is not a tty
     assert isinstance(attest.auto_reporter(), attest.PlainReporter)
 
-    class FakeTTY(object):
+    class FakeTTY:
 
         def isatty(self):
             return True
@@ -68,7 +66,7 @@ def xml_reporter():
         '  <pass name="attest.tests._meta.passing"/>',
         '  <fail name="attest.tests._meta.failing" type="TestFailure">',
         '    Traceback (most recent call last):',
-        '    %s' % EXCEPTION,
+        f'    {EXCEPTION}',
         '  </fail>',
         '</testreport>',
     ]):
@@ -92,7 +90,7 @@ def plain_reporter():
         '-> stdout',
         'E: stderr',
         'Traceback (most recent call last):',
-        '%s' % EXCEPTION,
+        f'{EXCEPTION}',
         '',
         'Failures: 1/2 (1 assertions)',
     ]):
@@ -107,7 +105,8 @@ def quickfix_reporter():
         with Assert.raises(SystemExit):
             _meta.suite.run(attest.QuickFixReporter)
 
-    assert out == ['%s:%d: TestFailure' % (SOURCEFILE, LINENO)]
+    expected = f'{SOURCEFILE}:{LINENO}: TestFailure'
+    assert out == [expected]
 
 
 @suite.test

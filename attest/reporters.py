@@ -1,6 +1,3 @@
-# coding:utf-8
-from __future__ import absolute_import, with_statement
-
 import inspect
 import os
 import sys
@@ -8,9 +5,9 @@ import traceback
 import unittest
 import _ast
 
-from os            import path
-from pkg_resources import iter_entry_points
-from datetime      import datetime
+from os                  import path
+from importlib.metadata  import entry_points
+from datetime            import datetime
 try:
     from abc import ABCMeta, abstractmethod
 except ImportError:
@@ -48,7 +45,7 @@ __all__ = ['TestResult',
           ]
 
 
-class TestResult(object):
+class TestResult:
     """Container for result data from running a test.
 
     .. versionadded:: 0.4
@@ -56,7 +53,7 @@ class TestResult(object):
     """
 
     def __init__(self, **kwargs):
-        for key, value in kwargs.iteritems():
+        for key, value in kwargs.items():
             setattr(self, key, value)
 
     full_tracebacks = False
@@ -129,15 +126,17 @@ class TestResult(object):
         clean = self.raw_traceback
         lines = ['Traceback (most recent call last):\n']
         lines += traceback.format_list(clean)
-        msg = str(self.error)
-        lines += traceback.format_exception_only(self.exc_info[0], msg)
+        lines += traceback.format_exception_only(
+            self.exc_info[0],
+            self.exc_info[1],
+        )
         return ''.join(lines)[:-1]
 
     @property
     def assertion(self):
         if isinstance(self.error, TestFailure):
             expressions = str(self.error.value)
-            return '\n'.join('assert %s' % expr
+            return '\n'.join(f'assert {expr}'
                              for expr in expressions.splitlines())
 
     @property
@@ -158,16 +157,16 @@ class TestResult(object):
                 if type(left) is type(right):
                     asserter = case._type_equality_funcs.get(type(left))
                     if asserter is not None:
-                        if isinstance(asserter, basestring):
+                        if isinstance(asserter, str):
                             asserter = getattr(case, asserter)
                         try:
                             asserter(left, right)
-                        except AssertionError, exc:
-                            return '%s\n' % exc.args[0]
+                        except AssertionError as exc:
+                            return f'{exc.args[0]}\n'
 
 
 def _test_loader_factory(reporter):
-    class Loader(object):
+    class Loader:
         def loadTestsFromNames(self, names, module=None):
             from .collectors import Tests
             Tests(names).run(reporter)
@@ -175,7 +174,7 @@ def _test_loader_factory(reporter):
     return Loader()
 
 
-class AbstractReporter(object):
+class AbstractReporter:
     """Optional base for reporters, serves as documentation and improves
     errors for incomplete reporters.
 
@@ -272,26 +271,27 @@ class PlainReporter(AbstractReporter):
         self.failures.append(result)
 
     def finished(self):
-        print
-        print
+        print()
+        print()
 
         width, _ = utils.get_terminal_size()
         for result in self.failures:
-            print result.test_name
+            print(result.test_name)
             if result.test.__doc__:
-                print inspect.getdoc(result.test)
-            print '-' * width
+                print(inspect.getdoc(result.test))
+            print('-' * width)
             if result.stdout:
-                print '->', '\n'.join(result.stdout)
+                print('->', '\n'.join(result.stdout))
             if result.stderr:
-                print 'E:', '\n'.join(result.stderr)
-            print result.traceback
-            print
+                print('E:', '\n'.join(result.stderr))
+            print(result.traceback)
+            print()
             result.debug()
 
-        print 'Failures: %s/%s (%s assertions)' % (len(self.failures),
-                                                   self.total,
-                                                   statistics.assertions)
+        print(
+            f'Failures: {len(self.failures)}/{self.total} '
+            f'({statistics.assertions} assertions)'
+        )
 
         if self.failures:
             raise SystemExit(1)
@@ -369,7 +369,7 @@ class FancyReporter(AbstractReporter):
                 formatter = TerminalFormatter(bg=self.style)
                 if self.colorscheme is not None:
                     from pygments.token import string_to_tokentype
-                    for token, value in self.colorscheme.iteritems():
+                    for token, value in self.colorscheme.items():
                         token = string_to_tokentype(token.capitalize())
                         formatter.colorscheme[token] = (value, value)
             else:
@@ -386,26 +386,26 @@ class FancyReporter(AbstractReporter):
 
         if self.counter:
             self.progress.finish()
-        print
+        print()
 
         width, _ = utils.get_terminal_size()
         def show(result):
-            print colorize('bold', result.test_name)
+            print(colorize('bold', result.test_name))
             if result.test.__doc__:
-                print inspect.getdoc(result.test)
-            print colorize('faint', '─' * width)
+                print(inspect.getdoc(result.test))
+            print(colorize('faint', '─' * width))
             for line in result.stdout:
-                print colorize('bold', '→'),
-                print line
+                print(colorize('bold', '→'), end=' ')
+                print(line)
             for line in result.stderr:
-                print colorize('red', '→'),
-                print line
+                print(colorize('red', '→'), end=' ')
+                print(line)
 
         if self.verbose:
             for result in self.passes:
                 if result.stdout or result.stderr:
                     show(result)
-                    print
+                    print()
 
         for result in self.failures:
             show(result)
@@ -414,21 +414,21 @@ class FancyReporter(AbstractReporter):
             # literal unicode strings) but I guess this depends on the source
             # file encoding. Tell Pygments to guess: try UTF-8 and then latin1.
             # Without an `encoding` argument, Pygments just uses latin1.
-            print highlight(result.traceback,
+            print(highlight(result.traceback,
                             PythonTracebackLexer(encoding='guess'),
-                            formatter)
+                            formatter))
 
             assertion = result.assertion
             if assertion is not None:
-                print highlight(assertion,
+                print(highlight(assertion,
                                 PythonLexer(encoding='guess'),
-                                formatter)
+                                formatter))
 
             equality_diff = result.equality_diff
             if equality_diff is not None:
-                print highlight(equality_diff,
+                print(highlight(equality_diff,
                                 DiffLexer(encoding='guess'),
-                                formatter)
+                                formatter))
 
             result.debug()
 
@@ -436,8 +436,11 @@ class FancyReporter(AbstractReporter):
             failed = colorize('red', str(len(self.failures)))
         else:
             failed = len(self.failures)
-        print 'Failures: %s/%s (%s assertions, %.3f seconds)' % (
-            failed, self.counter, statistics.assertions, self.total_time)
+        print(
+            f'Failures: {failed}/{self.counter} '
+            f'({statistics.assertions} assertions, '
+            f'{self.total_time:.3f} seconds)'
+        )
 
         if self.failures:
             raise SystemExit(1)
@@ -477,30 +480,32 @@ class XmlReporter(AbstractReporter):
     """
 
     def __init__(self):
-        self.escape = __import__('cgi').escape
+        self.escape = __import__('html').escape
 
     def begin(self, tests):
-        print '<?xml version="1.0" encoding="UTF-8"?>'
-        print '<testreport tests="%d">' % len(tests)
+        print('<?xml version="1.0" encoding="UTF-8"?>')
+        print(f'<testreport tests="{len(tests)}">')
 
     def success(self, result):
-        print '  <pass name="%s"/>' % result.test_name
+        print(f'  <pass name="{result.test_name}"/>')
 
     def failure(self, result):
         if isinstance(result.error, AssertionError):
             tag = 'fail'
         else:
             tag = 'error'
-        print '  <%s name="%s" type="%s">' % (tag, result.test_name,
-                                              result.exc_info[0].__name__)
-        print self.escape('\n'.join(' ' * 4 + line
+        print(
+            f'  <{tag} name="{result.test_name}" '
+            f'type="{result.exc_info[0].__name__}">'
+        )
+        print(self.escape('\n'.join(' ' * 4 + line
                                     for line in
                                     result.traceback.splitlines()),
-                          quote=True)
-        print '  </%s>' % tag
+                          quote=True))
+        print(f'  </{tag}>')
 
     def finished(self):
-        print '</testreport>'
+        print('</testreport>')
 
 
 class XUnitReporter(AbstractReporter):
@@ -509,7 +514,7 @@ class XUnitReporter(AbstractReporter):
 
     def __init__(self, file=None):
         self.file = file
-        self.escape = __import__('cgi').escape
+        self.escape = __import__('html').escape
         self.reports = []
         self.errors = 0
         self.failures = 0
@@ -518,7 +523,7 @@ class XUnitReporter(AbstractReporter):
         try:
             import socket
             self.hostname = socket.gethostname()
-        except:
+        except:  # noqa: E722 - Intentionally catch all exceptions for fallback
             self.hostname = 'unknown'
         self.timestamp = datetime.isoformat(datetime.today())
 
@@ -529,10 +534,12 @@ class XUnitReporter(AbstractReporter):
         self.successes += 1
         self.total_time += result.time
         self.reports.append(
-            '<testcase classname="%s" name="%s" time="%f" />' % (
-                result.test_name, result.test.__name__, result.time))
+            f'<testcase classname="{result.test_name}" '
+            f'name="{result.test.__name__}" '
+            f'time="{result.time:f}" />'
+        )
         if self.file:
-            print result.test_name, "... ok"
+            print(result.test_name, "... ok")
 
     def failure(self, result):
         self.total_time += result.time
@@ -543,40 +550,44 @@ class XUnitReporter(AbstractReporter):
             tag = 'error'
             self.errors += 1
 
-        error = '<testcase classname="%s" name="%s" time="%f">\n' % (
-            result.test_name, result.test.__name__, result.time)
+        error = (
+            f'<testcase classname="{result.test_name}" '
+            f'name="{result.test.__name__}" '
+            f'time="{result.time:f}">\n'
+        )
 
-        error += '<%s type="%s" message="%s"><![CDATA[\n' % (
-            tag,
-            result.exc_info[0].__name__,
-            self.escape(repr(result.exc_info[1]), quote=True))
+        error += (
+            f'<{tag} type="{result.exc_info[0].__name__}" '
+            f'message="{self.escape(repr(result.exc_info[1]), quote=True)}">'
+            f'<![CDATA[\n'
+        )
         error += self.escape(
             '\n'.join(line
                     for line in
                     result.traceback.splitlines()),
             quote=True)
-        error += '\n]]>\n</%s>\n</testcase>' % tag
+        error += f'\n]]>\n</{tag}>\n</testcase>'
         self.reports.append(error)
         if self.file:
-            print result.test_name, "... ", tag
+            print(result.test_name, "... ", tag)
 
     def finished(self):
         out = '<?xml version="1.0" encoding="UTF-8"?>\n'
-        out += ('<testsuite name="attest" tests="%d" ' +
-                   'errors="%d" failures="%d" ' +
-                   'hostname="%s" timestamp="%s" time="%f">\n') % (
-                (self.errors + self.failures + self.successes),
-                self.errors,
-                self.failures,
-                self.hostname,
-                self.timestamp,
-                self.total_time)
+        out += (
+            f'<testsuite name="attest" '
+            f'tests="{self.errors + self.failures + self.successes}" '
+            f'errors="{self.errors}" '
+            f'failures="{self.failures}" '
+            f'hostname="{self.hostname}" '
+            f'timestamp="{self.timestamp}" '
+            f'time="{self.total_time:f}">\n'
+        )
         out += '<properties />\n'
         out += '\n'.join(self.reports)
         out += '\n</testsuite>\n'
 
         if not self.file:
-            print out
+            print(out)
         else:
             with open(self.file, "w") as f:
                 f.write(out)
@@ -619,7 +630,7 @@ class QuickFixReporter(AbstractReporter):
         type, msg = result.exc_info[0].__name__, str(result.exc_info[1])
         if msg:
             msg = ': ' + msg
-        print "%s:%s: %s%s" % (fn, lineno, type, msg)
+        print(f"{fn}:{lineno}: {type}{msg}")
 
     def finished(self):
         if self.failed:
@@ -662,14 +673,15 @@ def get_reporter_by_name(name, default='auto'):
         Reporters are registered via setuptools entry points.
 
     """
+    eps = entry_points(group='attest.reporters')
     reporter = None
     if name is not None:
-        reporter = list(iter_entry_points('attest.reporters', name))
+        reporter = list(eps.select(name=name))
     if not reporter:
-        reporter = list(iter_entry_points('attest.reporters', default))
+        reporter = list(eps.select(name=default))
     if not reporter:
         raise KeyError
-    return reporter[0].load(require=False)
+    return reporter[0].load()
 
 
 def get_all_reporters():
@@ -685,5 +697,5 @@ def get_all_reporters():
     .. versionadded:: 0.4
 
     """
-    for ep in iter_entry_points('attest.reporters'):
+    for ep in entry_points(group='attest.reporters'):
         yield ep.name

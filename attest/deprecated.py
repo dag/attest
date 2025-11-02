@@ -11,7 +11,7 @@ __all__ = ['Loader',
           ]
 
 
-class Loader(object):
+class Loader:
     """Run tests with Attest via distribute.
 
     .. deprecated:: 0.5
@@ -41,7 +41,7 @@ def assert_(expr, msg=None):
     return expr
 
 
-class Assert(object):
+class Assert:
     """Wrap an object such that boolean operations on it fails with an
     :exc:`AssertionError` if the operation results in :const:`False`,
     with more helpful error messages on failure than `assert`.
@@ -99,7 +99,7 @@ class Assert(object):
             name = predicate.__name__
             arglist = ', '.join(map(_repr, args))
             self.obj = assert_(predicate(*args),
-                               'not %s(%s)' % (name, arglist))
+                               f'not {name}({arglist})')
 
     @property
     def __class__(self):
@@ -146,11 +146,11 @@ class Assert(object):
 
     def __eq__(self, obj):
         """Test for equality with ``==``."""
-        return assert_(self.obj == obj, '%r != %r' % (self.obj, obj))
+        return assert_(self.obj == obj, f'{self.obj!r} != {obj!r}')
 
     def __ne__(self, obj):
         """Test for inequality with ``!=``."""
-        return assert_(self.obj != obj, '%r == %r' % (self.obj, obj))
+        return assert_(self.obj != obj, f'{self.obj!r} == {obj!r}')
 
     def is_(self, obj):
         """The `is` operator is not overridable, for good reasons
@@ -165,7 +165,7 @@ class Assert(object):
         """
         if isinstance(obj, Assert):
             obj = obj.obj
-        return assert_(self.obj is obj, '%r is not %r' % (self.obj, obj))
+        return assert_(self.obj is obj, f'{self.obj!r} is not {obj!r}')
 
     def is_not(self, obj):
         """The negated form of :meth:`is_`, corresponding to the ``is not``
@@ -179,11 +179,11 @@ class Assert(object):
         """
         if isinstance(obj, Assert):
             obj = obj.obj
-        return assert_(self.obj is not obj, '%r is %r' % (self.obj, obj))
+        return assert_(self.obj is not obj, f'{self.obj!r} is {obj!r}')
 
     def __contains__(self, obj):
         """Test for membership with `in`."""
-        return assert_(obj in self.obj, '%r not in %r' % (obj, self.obj))
+        return assert_(obj in self.obj, f'{obj!r} not in {self.obj!r}')
 
     def in_(self, obj):
         """Assert membership. While you can use the `in` operator,
@@ -196,7 +196,7 @@ class Assert(object):
             Assert(2).in_([1, 2, 3])
 
         """
-        return assert_(self.obj in obj, '%r not in %r' % (self.obj, obj))
+        return assert_(self.obj in obj, f'{self.obj!r} not in {obj!r}')
 
     def not_in(self, obj):
         """The negated form of :meth:`in_`, corresponding to the ``not in``
@@ -207,27 +207,27 @@ class Assert(object):
             Assert(0).not_in([1, 2, 3])
 
         """
-        return assert_(self.obj not in obj, '%r in %r' % (self.obj, obj))
+        return assert_(self.obj not in obj, f'{self.obj!r} in {obj!r}')
 
     def __lt__(self, obj):
         """Test for lesserness with ``<``."""
-        return assert_(self.obj < obj, '%r >= %r' % (self.obj, obj))
+        return assert_(self.obj < obj, f'{self.obj!r} >= {obj!r}')
 
     def __le__(self, obj):
         """Test for lesserness or equality with ``<=``."""
-        return assert_(self.obj <= obj, '%r > %r' % (self.obj, obj))
+        return assert_(self.obj <= obj, f'{self.obj!r} > {obj!r}')
 
     def __gt__(self, obj):
         """Test for greaterness with ``>``."""
-        return assert_(self.obj > obj, '%r <= %r' % (self.obj, obj))
+        return assert_(self.obj > obj, f'{self.obj!r} <= {obj!r}')
 
     def __ge__(self, obj):
         """Test for greaterness or equality with ``>=``."""
-        return assert_(self.obj >= obj, '%r < %r' % (self.obj, obj))
+        return assert_(self.obj >= obj, f'{self.obj!r} < {obj!r}')
 
-    def __nonzero__(self):
+    def __bool__(self):
         """Test for truthiness in boolean context."""
-        return bool(assert_(self.obj, 'not %r' % self.obj))
+        return bool(assert_(self.obj, f'not {self.obj!r}'))
 
     @staticmethod
     @contextmanager
@@ -250,14 +250,14 @@ class Assert(object):
         proxy = Assert()
         try:
             yield proxy
-        except exceptions, error:
+        except exceptions as error:
             proxy.obj = error
         else:
             if len(exceptions) > 1:
                 errors = '(' + ', '.join(e.__name__ for e in exceptions) + ')'
             else:
                 errors = exceptions[0].__name__
-            raise AssertionError("didn't raise %s" % errors)
+            raise AssertionError(f"didn't raise {errors}")
 
     @staticmethod
     @contextmanager
@@ -278,7 +278,7 @@ class Assert(object):
         try:
             yield
         except exception:
-            raise AssertionError('raised %s' % exception.__name__)
+            raise AssertionError(f'raised {exception.__name__}')
 
     @staticmethod
     def isinstance(obj, classinfo):
@@ -291,7 +291,7 @@ class Assert(object):
         if isinstance(obj, Assert):
             obj = obj.obj
         return assert_(isinstance(obj, classinfo),
-                       'not isinstance(%r, %s)' % (obj, _repr(classinfo)))
+                       f'not isinstance({obj!r}, {_repr(classinfo)})')
 
     @staticmethod
     def not_isinstance(obj, classinfo):
@@ -303,7 +303,7 @@ class Assert(object):
         if isinstance(obj, Assert):
             obj = obj.obj
         return assert_(not isinstance(obj, classinfo),
-                       'isinstance(%r, %s)' % (obj, _repr(classinfo)))
+                       f'isinstance({obj!r}, {_repr(classinfo)})')
 
     @staticmethod
     def issubclass(obj, cls):
@@ -316,7 +316,7 @@ class Assert(object):
         if isinstance(obj, Assert):
             obj = obj.obj
         return assert_(issubclass(obj, cls),
-                       'not issubclass(%s, %s)' % (_repr(obj), _repr(cls)))
+                       f'not issubclass({_repr(obj)}, {_repr(cls)})')
 
     @staticmethod
     def not_issubclass(obj, cls):
@@ -328,7 +328,7 @@ class Assert(object):
         if isinstance(obj, Assert):
             obj = obj.obj
         return assert_(not issubclass(obj, cls),
-                       'issubclass(%s, %s)' % (_repr(obj), _repr(cls)))
+                       f'issubclass({_repr(obj)}, {_repr(cls)})')
 
     @property
     def json(self):
@@ -410,7 +410,7 @@ class Assert(object):
             Assert(repr(obj)) == 'expectation'
 
         """
-        return 'Assert(%r)' % self.obj
+        return f'Assert({self.obj!r})'
 
 
 def _repr(obj):
@@ -421,5 +421,5 @@ def _repr(obj):
     if inspect.isclass(obj):
         return obj.__name__
     elif type(obj) is tuple:
-        return '(%s)' % ', '.join(map(_repr, obj))
+        return f'({", ".join(map(_repr, obj))})'
     return repr(obj)

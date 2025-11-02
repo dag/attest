@@ -1,5 +1,3 @@
-from __future__ import with_statement
-
 import sys
 import os
 from os import path
@@ -19,8 +17,8 @@ def capture():
     stdout, stderr = sys.stdout, sys.stderr
 
     with attest.capture_output() as (out, err):
-        print 'Capture the flag!'
-        print >>sys.stderr, 'Rapture the flag?'
+        print('Capture the flag!')
+        print('Rapture the flag?', file=sys.stderr)
 
     assert out == ['Capture the flag!']
     assert err == ['Rapture the flag?']
@@ -51,7 +49,7 @@ def raises():
     try:
         with attest.raises(RuntimeError):
             pass
-    except AssertionError, e:
+    except AssertionError as e:
         assert type(e) is AssertionError
         assert str(e) == "didn't raise RuntimeError when expected"
     else:
@@ -61,9 +59,11 @@ def raises():
     try:
         with attest.raises(RuntimeError, ValueError):
             pass
-    except AssertionError, e:
+    except AssertionError as e:
         assert type(e) is AssertionError
-        assert str(e) == "didn't raise (RuntimeError, ValueError) when expected"
+        assert str(e) == (
+            "didn't raise (RuntimeError, ValueError) when expected"
+        )
     else:
         raise AssertionError
 
@@ -96,7 +96,7 @@ def warns():
         warnings.warn("bar", DeprecationWarning)
 
     assert len(captured) == 1
-    assert unicode(captured[0]) == "foo"
+    assert str(captured[0]) == "foo"
 
     with attest.raises(AssertionError):
         with attest.warns(UserWarning):
@@ -109,10 +109,9 @@ def warns():
     with attest.warns(UserWarning, DeprecationWarning, any=True):
         warnings.warn("foo")
 
-    if hasattr(warnings, "catch_warnings"):  # not available in Python 2.5
-        with warnings.catch_warnings():
-            warnings.simplefilter("error", UserWarning)
-            with attest.warns(UserWarning):
-                warnings.warn("foo")
-            with attest.raises(UserWarning):
-                warnings.warn("bar")
+    with warnings.catch_warnings():
+        warnings.simplefilter("error", UserWarning)
+        with attest.warns(UserWarning):
+            warnings.warn("foo")
+        with attest.raises(UserWarning):
+            warnings.warn("bar")

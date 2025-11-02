@@ -1,4 +1,3 @@
-from __future__ import with_statement
 from attest import (AbstractReporter, Tests, TestBase, Assert, assert_hook,
                     test, TestFailure)
 

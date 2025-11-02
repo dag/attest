@@ -27,12 +27,12 @@ Suppose we came up with an API like this:
 .. testsetup::
 
     import json
-    import urllib2
+    import urllib.request
 
-    class Package(object):
+    class Package:
 
         def __init__(self, name):
-            url = 'http://pypi.python.org/pypi/%s/json' % name
+            url = f'http://pypi.python.org/pypi/{name}/json'
             data = urllib2.urlopen(url).read()
             vars(self).update(json.loads(data)['info'])
 
@@ -75,7 +75,7 @@ Save it as :file:`tests.py` and run it. What happens?
 As expected we get an :exc:`ImportError` because we haven't created our
 module yet. So that's the next step! First we just stub the class::
 
-    class Package(object):
+    class Package:
         pass
 
 This should fail because this constructor doesn't take any arguments. Let's
@@ -97,7 +97,7 @@ confirm this:
 
 Just as expected. OK - so we write a custom constructor::
 
-    class Package(object):
+    class Package:
         def __init__(self, name):
             pass
 
@@ -113,12 +113,12 @@ Still fails:
 It's time to write some real code! Here's our working module::
 
     import json
-    import urllib2
+    import urllib.request
 
-    class Package(object):
+    class Package:
 
         def __init__(self, name):
-            url = 'http://pypi.python.org/pypi/%s/json' % name
+            url = f'http://pypi.python.org/pypi/{name}/json'
             data = json.loads(urllib2.urlopen(url).read())
             self.author = data['info']['author']
             self.summary = data['info']['summary']

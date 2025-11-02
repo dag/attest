@@ -4,7 +4,6 @@ from array      import array
 from contextlib import contextmanager
 from inspect    import getmembers
 from pkgutil    import iter_modules
-from six        import reraise
 
 
 __all__ = ['get_terminal_size',
@@ -28,7 +27,7 @@ def get_terminal_size(default=(80, 24)):
     except ImportError:
         return default
     try:
-        ary = array('h', fcntl.fcntl(sys.stdin, termios.TIOCGWINSZ, chr(0) * 8))
+        ary = array('h', fcntl.fcntl(sys.stdin, termios.TIOCGWINSZ, b'\0' * 8))
         return ary[1], ary[0]
     except IOError:
         return default
@@ -144,17 +143,17 @@ def nested(constructors):
             args.append(manager.__enter__())
             exits.append(manager.__exit__)
         yield args
-    except:
+    except:  # noqa: E722 - Context manager protocol requires catching all exceptions
         exc = sys.exc_info()
     finally:
         for exit in reversed(exits):
             try:
                 if exit(*exc):
                     exc = None, None, None
-            except:
+            except:  # noqa: E722 - Must catch all exceptions from exit handlers for proper cleanup
                 exc = sys.exc_info()
         if exc != (None, None, None):
-            reraise(*exc)
+            raise exc[1].with_traceback(exc[2])
 
 
 class counter(dict):

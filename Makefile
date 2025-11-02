@@ -1,12 +1,27 @@
-.PHONY: test flakes tags clean release official
+.PHONY: test flakes lint format tags clean install sync build release official
 
 all: test
 
+install:
+	@uv sync
+
+sync:
+	@uv sync --all-extras
+
 test:
-	@attest -rquickfix
+	@uv run attest -rquickfix
 
 flakes:
-	@pyflakes attest
+	@uv run ruff check attest
+
+lint:
+	@uv run ruff check attest
+
+format:
+	@uv run ruff format attest
+
+fix:
+	@uv run ruff check --fix attest
 
 tags:
 	@ctags -R attest
@@ -16,9 +31,12 @@ clean:
 	@echo
 	@echo | xargs -p git clean -fdx
 
-release:
-	@python setup.py release sdist build_sphinx -Ea
+build:
+	@uv build
+
+release: build
+	@echo "Built distribution packages"
 
 official:
-	@tox -e ALL
-	@echo | xargs -p python setup.py upload_docs release sdist upload
+	@uv run tox -e ALL
+	@echo "Run 'uv publish' to upload to PyPI"

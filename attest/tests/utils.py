@@ -1,4 +1,3 @@
-from __future__ import with_statement
 import inspect
 from contextlib import contextmanager
 from attest import Tests, assert_hook, utils, disable_imports, raises
@@ -48,8 +47,8 @@ def iter_mods():
             '''ast codegen collectors contexts deprecated hook __main__
                reporters run statistics utils pygments'''.split()]
     tests = ['attest.tests'] + ['attest.tests.' + mod for mod in
-            '''asserts classy collectors contexts hook _meta reporters utils
-               dummy dummy.foo'''.split()]
+            '''asserts classy collectors contexts hook import_hook _meta
+               reporters utils dummy dummy.foo'''.split()]
 
     found = list(utils.deep_iter_modules('attest'))
     expected = core + tests
@@ -151,7 +150,7 @@ def nesting_contexts():
         with ctx as args:
             assert signals == ['inner one', 'inner two']
             assert args == ['one', 'two']
-            1/0
+            1/0  # noqa: B018
     assert signals == ['inner one', 'inner two', 'outer two', 'outer one']
 
     args = None
@@ -168,7 +167,7 @@ def nesting_contexts():
     @contextmanager
     def two():
         signals.append('inner two')
-        1/0
+        1/0  # noqa: B018
         try:
             yield 'two'
         finally:
@@ -198,6 +197,6 @@ def nested():
         with utils.nested([]):
             assert 1 == 0, "message"
 
-    except AssertionError, e:
-        print e.args
+    except AssertionError as e:
+        print(e.args)
         assert e.args == ("message", )

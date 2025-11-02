@@ -15,7 +15,7 @@ def passing():
 
 @suite.test
 def failing():
-    print 'stdout'
-    print >>sys.stderr, 'stderr'
+    print('stdout')
+    print('stderr', file=sys.stderr)
     value = 1 + 1
     assert value == 3

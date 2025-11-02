@@ -1,5 +1,3 @@
-from __future__ import with_statement
-
 from attest import Tests, Assert
 
 
@@ -13,7 +11,7 @@ def raises():
     try:
         with Assert.raises(RuntimeError):
             pass
-    except AssertionError, e:
+    except AssertionError as e:
         Assert(e).__str__() == "didn't raise RuntimeError"
     else:
         raise AssertionError("didn't fail for missing exception")
@@ -22,7 +20,7 @@ def raises():
     try:
         with Assert.raises(RuntimeError, ValueError):
             pass
-    except AssertionError, e:
+    except AssertionError as e:
         Assert(e).__str__() == "didn't raise (RuntimeError, ValueError)"
     else:
         raise AssertionError("didn't fail for missing exception")
@@ -191,7 +189,7 @@ def isinstance():
         Assert.isinstance('hello', int)
     error.__str__() == "not isinstance('hello', int)"
 
-    Assert.isinstance('hello', basestring)
+    Assert.isinstance('hello', str)
 
 
 @suite.test
